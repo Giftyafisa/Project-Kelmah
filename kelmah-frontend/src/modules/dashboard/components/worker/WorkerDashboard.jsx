@@ -20,6 +20,9 @@ import MailIcon from '@mui/icons-material/Mail';
 import EarningsChart from './EarningsChart';
 import UpcomingAppointments from './UpcomingAppointments';
 import ProfileCompletion from './ProfileCompletion';
+import WorkerReviews from './WorkerReviews';
+import NotificationsPanel from './NotificationsPanel';
+import AvailabilityCalendar from '../../../worker/components/AvailabilityCalendar';
 
 /**
  * Worker-specific dashboard displaying relevant information and actions
@@ -89,6 +92,17 @@ const WorkerDashboard = ({ user = {} }) => {
     { name: 'Electrical', verified: false },
   ];
 
+  const mockReviews = [
+    { id: 1, reviewer: 'John Doe', rating: 5, comment: 'Great work, very professional!', date: '2025-06-10' },
+    { id: 2, reviewer: 'Jane Smith', rating: 4, comment: 'Good job, timely and precise.', date: '2025-06-05' },
+  ];
+
+  const mockNotifications = [
+    { id: 1, message: 'New message from Alice', time: '5 min ago' },
+    { id: 2, message: 'Your application was viewed', time: '2 hours ago' },
+    { id: 3, message: 'Contract approved with Bob', time: 'Yesterday' },
+  ];
+
   const MainContent = () => (
     <Grid item lg={8} md={7} xs={12} container spacing={3} alignContent="flex-start">
       <Grid item xs={12}>
@@ -99,6 +113,15 @@ const WorkerDashboard = ({ user = {} }) => {
       </Grid>
       <Grid item xs={12}>
         <Portfolio projects={mockProjects} />
+      </Grid>
+      <Grid item xs={12}>
+        <WorkerReviews reviews={mockReviews} />
+      </Grid>
+      <Grid item xs={12}>
+        <NotificationsPanel notifications={mockNotifications} />
+      </Grid>
+      <Grid item xs={12}>
+        <AvailabilityCalendar />
       </Grid>
     </Grid>
   );
