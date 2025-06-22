@@ -479,7 +479,13 @@ const JobDetailsPage = () => {
                   About the Client
                 </Typography>
                 
-                <ProfileLink onClick={() => navigate(`/profile/${job.hirer.id}`)}>
+                <ProfileLink
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View profile of ${job.hirer.name}`}
+                  onKeyDown={e => e.key === 'Enter' && navigate(`/profile/${job.hirer.id}`)}
+                  onClick={() => navigate(`/profile/${job.hirer.id}`)}
+                >
                   <Avatar
                     src={job.hirer.avatar}
                     alt={job.hirer.name}

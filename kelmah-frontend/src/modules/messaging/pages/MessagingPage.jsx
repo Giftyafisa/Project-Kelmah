@@ -95,7 +95,7 @@ const MessagingPage = () => {
                         <Grid item xs={12}>
                             <AppBar position="static" color="transparent" elevation={0} sx={{ borderBottom: '1px solid rgba(255,215,0,0.2)' }}>
                               <Toolbar>
-                                <IconButton edge="start" color="inherit" onClick={handleCloseChat}>
+                                <IconButton edge="start" color="inherit" onClick={handleCloseChat} aria-label="Back to conversations">
                                   <ArrowBackIcon />
                                 </IconButton>
                                 <Typography variant="h6" sx={{ flexGrow: 1, color: '#FFD700' }}>

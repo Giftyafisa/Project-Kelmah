@@ -569,11 +569,13 @@ function JobApplication() {
                     <Button
                       variant="outlined"
                       component="label"
+                      aria-label="Attach files to application"
                       startIcon={<AttachFileIcon />}
                       sx={{ width: 'fit-content' }}
                     >
                       Add File
                       <input
+                        aria-label="Choose files to attach"
                         type="file"
                         multiple
                         hidden
@@ -862,6 +864,7 @@ function JobApplication() {
               variant="outlined"
               onClick={handleBack}
               disabled={activeStep === 0}
+              aria-label="Go to previous step"
               sx={{ borderRadius: theme.shape.borderRadius * 4 }}
             >
               Back
@@ -874,19 +877,21 @@ function JobApplication() {
                   color="primary"
                   onClick={handleSubmit}
                   disabled={submitting}
+                  aria-label="Submit application"
                   endIcon={submitting ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
                 >
                   {submitting ? 'Submitting...' : 'Submit Application'}
                 </ApplicationButton>
               ) : (
                 <ApplicationButton
-                                variant="contained"
+                  variant="contained"
                   color="primary"
-                                onClick={handleNext}
-                            >
-                                Next
+                  onClick={handleNext}
+                  aria-label="Go to next step"
+                >
+                  Next
                 </ApplicationButton>
-            )}
+              )}
             </Box>
           </Box>
         </Box>
