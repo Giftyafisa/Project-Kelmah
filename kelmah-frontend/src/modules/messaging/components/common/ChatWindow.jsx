@@ -759,9 +759,9 @@ const ChatWindow = ({
           size="small"
         />
         
-        <ActionButton onClick={handleSendMessage} disabled={isLoading || (newMessage.trim() === '' && files.length === 0)}>
+        <IconButton onClick={handleSendMessage} aria-label="Send message" disabled={isLoading || (newMessage.trim() === '' && files.length === 0)}>
           <Send />
-        </ActionButton>
+        </IconButton>
       </InputContainer>
       
       {/* Context Popover */}

@@ -364,6 +364,7 @@ const Portfolio = () => {
         <DialogContent>
           <TextField
             label="Title"
+            inputProps={{ label: 'Title' }}
             fullWidth
             margin="dense"
             value={newProject.title}
@@ -371,6 +372,7 @@ const Portfolio = () => {
           />
           <TextField
             label="Description"
+            inputProps={{ label: 'Description' }}
             fullWidth
             margin="dense"
             multiline rows={4}

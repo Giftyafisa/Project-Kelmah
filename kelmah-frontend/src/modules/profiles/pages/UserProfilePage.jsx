@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
     Container,
     Grid,
@@ -27,7 +27,8 @@ import {
     Star,
     BusinessCenter,
     LocationOn,
-    CalendarToday
+    CalendarToday,
+    Message
 } from '@mui/icons-material';
 import { format } from 'date-fns';
 import { Helmet } from 'react-helmet';
@@ -35,6 +36,7 @@ import axiosInstance from '../../common/services/axios';
 
 function UserProfilePage() {
     const { userId } = useParams();
+    const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [ratings, setRatings] = useState(null);
@@ -193,6 +195,17 @@ function UserProfilePage() {
                                     </Box>
                                 </Box>
                             )}
+
+                            <Box sx={{ mt: 3 }}>
+                                <Button
+                                    fullWidth
+                                    variant="contained"
+                                    startIcon={<Message />}
+                                    onClick={() => navigate(`/messages?participantId=${userId}`)}
+                                >
+                                    Message
+                                </Button>
+                            </Box>
                         </Box>
                     </Paper>
                 </Grid>

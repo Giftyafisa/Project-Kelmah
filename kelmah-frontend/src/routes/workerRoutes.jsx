@@ -9,7 +9,7 @@ import SchedulingPage from '../modules/scheduling/pages/SchedulingPage';
 import WorkerReviewsPage from '../modules/reviews/pages/WorkerReviewsPage';
 import WorkerProfileEditPage from '../modules/worker/pages/WorkerProfileEditPage';
 import WorkerProfile from '../modules/worker/components/WorkerProfile';
-import JobSearchPage from '../modules/worker/pages/JobSearchPage';
+import JobSearchPage from '../modules/worker/pages/JobApplicationPage';
 import ContractManagementPage from '../modules/contracts/pages/ContractManagementPage';
 import PaymentCenterPage from '../modules/payment/pages/PaymentCenterPage';
 import WalletPage from '../modules/payment/pages/WalletPage';

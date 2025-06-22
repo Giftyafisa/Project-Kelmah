@@ -41,7 +41,7 @@ import {
   WorkOutline as WorkOutlineIcon,
   AccessTime as AccessTimeIcon
 } from '@mui/icons-material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 const JobSearchPage = () => {
   const theme = useTheme();
@@ -57,45 +57,37 @@ const JobSearchPage = () => {
   const jobsPerPage = 5;
   const [totalPages, setTotalPages] = useState(1);
   const [sortBy, setSortBy] = useState('recent');
+  const navigate = useNavigate();
 
-  // Fetch jobs from API
-  useEffect(() => {
-    const fetchJobs = async () => {
-      setLoading(true);
-      try {
-        const params = { page, limit: jobsPerPage };
-        if (searchTerm) params.search = searchTerm;
-        if (location) params.location = location;
-        if (category) params.category = category;
-        if (jobType) params.type = jobType;
-        // Map sortBy to API sort parameter
-        switch (sortBy) {
-      case 'salary-high':
-            params.sort = '-budget';
-            break;
-      case 'salary-low':
-            params.sort = 'budget';
-            break;
-      case 'recent':
-            params.sort = '-createdAt';
-            break;
-          // 'relevant' not directly supported by API
-      default:
-            break;
-        }
-        const response = await jobsApi.getJobs(params);
-        const { data, meta } = response;
-        setJobs(data);
-        setTotalPages(meta.pagination.totalPages);
-        setTotalItems(meta.pagination.totalItems);
-      } catch (error) {
-        console.error('Error fetching jobs:', error);
-      } finally {
-        setLoading(false);
+  // Function to fetch jobs with current filters
+  const fetchJobs = async () => {
+    setLoading(true);
+    try {
+      const params = { page, limit: jobsPerPage };
+      if (searchTerm) params.search = searchTerm;
+      if (location) params.location = location;
+      if (category) params.category = category;
+      if (jobType) params.type = jobType;
+      switch (sortBy) {
+        case 'salary-high': params.sort = '-budget'; break;
+        case 'salary-low': params.sort = 'budget'; break;
+        case 'recent': params.sort = '-createdAt'; break;
+        default: break;
       }
-    };
-    fetchJobs();
-  }, [searchTerm, location, category, jobType, page, sortBy]);
+      const response = await jobsApi.getJobs(params);
+      const { data, meta } = response;
+      setJobs(data);
+      setTotalPages(meta.pagination.totalPages);
+      setTotalItems(meta.pagination.totalItems);
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initial fetch on filter change
+  useEffect(() => { fetchJobs(); }, [searchTerm, location, category, jobType, page, sortBy]);
 
   const currentJobs = jobs;
 
@@ -205,9 +197,18 @@ const JobSearchPage = () => {
                 </Select>
               </FormControl>
                     </Grid>
-            {/* Removed redundant Filter button */}
-                  </Grid>
-                </Paper>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={fetchJobs}
+                aria-label="Search Jobs"
+              >
+                Search Jobs
+              </Button>
+            </Box>
+          </Grid>
+        </Paper>
 
         {/* Clear all filters button */}
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
@@ -350,8 +351,7 @@ const JobSearchPage = () => {
                           <Button
                             size="medium"
                             variant="outlined"
-                            component={RouterLink}
-                            to={`/jobs/${job._id || job.id}`}
+                            onClick={() => navigate(`/jobs/${job._id || job.id}`)}
                             sx={{ fontSize: '1rem', flex: { xs: '1 1 100%', sm: 'initial' } }}
                           >
                             View Details
@@ -360,8 +360,7 @@ const JobSearchPage = () => {
                             size="medium"
                             variant="contained"
                             color="primary"
-                            component={RouterLink}
-                            to={`/jobs/${job._id || job.id}?apply=true`}
+                            onClick={() => navigate(`/jobs/${job._id || job.id}?apply=true`)}
                             sx={{ fontSize: '1rem', flex: { xs: '1 1 100%', sm: 'initial' } }}
                           >
                             Apply Now

@@ -12,7 +12,7 @@ describe('Messaging System', () => {
     cy.get('li').first().click();
     // Send a message
     cy.get('textarea').type('Hello from worker');
-    cy.get('button').contains('Send').click();
+    cy.get('button[aria-label="Send message"]').click();
     cy.contains('Hello from worker').should('exist');
     // Simulate hirer response in same session
     cy.loginAsHirer();
