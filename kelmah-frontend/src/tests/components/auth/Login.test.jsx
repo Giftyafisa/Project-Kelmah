@@ -31,12 +31,16 @@ const createMockStore = (initialState = {}) => {
   });
 };
 
-// Mock the react-router-dom hooks
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn(),
-  useLocation: () => ({ state: { from: '/dashboard' } }),
-}));
+// Mock react-router-dom to stub BrowserRouter and hooks
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom');
+  return {
+    ...actual,
+    BrowserRouter: ({ children }) => children,
+    useNavigate: () => jest.fn(),
+    useLocation: () => ({ state: { from: '/dashboard' } }),
+  };
+});
 
 // Mock Material-UI components that use portal
 jest.mock('@mui/material/Modal', () => {
