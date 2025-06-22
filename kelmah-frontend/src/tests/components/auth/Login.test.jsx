@@ -3,12 +3,12 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { configureStore } from '@reduxjs/toolkit';
-import Login from '../../../components/auth/Login';
-import authReducer, { login } from '../../../store/slices/authSlice';
+import Login from '../../../modules/auth/components/login/Login';
+import authReducer, { login } from '../../../modules/auth/services/authSlice';
 import * as apiUtils from '../../../modules/common/utils/apiUtils';
 
 // Mock the APIs and slices
-jest.mock('../../../utils/apiUtils', () => ({
+jest.mock('../../../modules/common/utils/apiUtils', () => ({
   checkApiHealth: jest.fn(() => Promise.resolve(true)),
   handleApiError: jest.fn(() => ({ message: 'Mock API error' })),
 }));
@@ -41,6 +41,17 @@ jest.mock('react-router-dom', () => ({
 // Mock Material-UI components that use portal
 jest.mock('@mui/material/Modal', () => {
   return ({ children, open }) => (open ? <div data-testid="modal">{children}</div> : null);
+});
+
+// Mock react-redux to bypass context and use mockStore
+jest.mock('react-redux', () => {
+  const ActualRedux = jest.requireActual('react-redux');
+  return {
+    ...ActualRedux,
+    Provider: ({ children }) => children,
+    useSelector: (selector) => selector(mockStore.getState()),
+    useDispatch: () => mockStore.dispatch,
+  };
 });
 
 describe('Login Component', () => {

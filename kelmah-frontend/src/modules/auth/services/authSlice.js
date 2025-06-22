@@ -70,7 +70,7 @@ export const verifyAuth = createAsyncThunk(
             console.log('Verifying auth status...');
             
             // In development mode, always use mock authentication
-            if (import.meta.env.DEV || process.env.NODE_ENV === 'development') {
+            if (process.env.NODE_ENV === 'development') {
                 console.log('Development mode: Using mock authentication');
                 const storedUser = localStorage.getItem('user');
                 

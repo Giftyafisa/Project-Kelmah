@@ -4,6 +4,7 @@ module.exports = {
     {
       displayName: 'frontend',
       testEnvironment: 'jsdom',
+      collectCoverage: false,
       rootDir: './kelmah-frontend',
       testMatch: ['<rootDir>/src/**/*.test.{js,jsx}', '<rootDir>/src/**/*.spec.{js,jsx}'],
       transform: {
@@ -67,7 +68,7 @@ module.exports = {
     {
       displayName: 'notification-service',
       testEnvironment: 'node',
-      rootDir: './kelmah-backend/services/notification-service',
+      rootDir: './kelmah-backend/services/messaging-service',
       testMatch: ['<rootDir>/**/*.test.js', '<rootDir>/**/*.spec.js'],
       moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',
