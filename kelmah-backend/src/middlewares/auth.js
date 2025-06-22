@@ -37,6 +37,11 @@ exports.authenticate = async (req, res, next) => {
       return next(new AppError('User not found', 401));
     }
     
+    // Verify token version to enforce revocation
+    if (decoded.tokenVersion !== user.tokenVersion) {
+      return next(new AppError('Invalid token version, please login again', 401));
+    }
+    
     // Check if user is verified
     if (!user.isEmailVerified) {
       return next(new AppError('Please verify your email address before proceeding', 403));

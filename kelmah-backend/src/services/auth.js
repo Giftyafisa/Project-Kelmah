@@ -17,7 +17,8 @@ exports.generateAuthTokens = (user) => {
   const payload = {
     id: user.id,
     email: user.email,
-    role: user.role
+    role: user.role,
+    tokenVersion: user.tokenVersion
   };
 
   // Generate access token
