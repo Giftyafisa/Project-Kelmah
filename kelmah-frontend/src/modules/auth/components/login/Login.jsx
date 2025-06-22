@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -24,9 +24,12 @@ import {
   LinkedIn as LinkedInIcon
 } from '@mui/icons-material';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import { useAuth } from '../../../auth/contexts/AuthContext';
+import { useDispatch } from 'react-redux';
+import { login as loginThunk } from '../../services/authSlice';
+import { checkApiHealth } from '../../../common/utils/apiUtils';
 
 const Login = () => {
+  const [requireMFA, setRequireMFA] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -35,13 +38,28 @@ const Login = () => {
   const [submitting, setSubmitting] = useState(false);
   const [loginError, setLoginError] = useState('');
   
-  const { login } = useAuth();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    let isMounted = true;
+    checkApiHealth()
+      .then((ok) => {
+        if (!ok && isMounted) {
+          setLoginError('Cannot connect to the server');
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setLoginError('Cannot connect to the server');
+        }
+      });
+    return () => { isMounted = false; };
+  }, []);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Reset errors
+    setRequireMFA(false);
     setErrors({});
     setLoginError('');
     
@@ -53,7 +71,7 @@ const Login = () => {
       newErrors.email = 'Email is required';
       valid = false;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = 'Please enter a valid email address';
       valid = false;
     }
     
@@ -71,8 +89,12 @@ const Login = () => {
     setSubmitting(true);
     
     try {
-      await login({ email, password });
-      navigate('/dashboard');
+      const result = await dispatch(loginThunk({ email, password })).unwrap();
+      if (result.requireMFA) {
+        setRequireMFA(true);
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       console.error('Login error:', err);
       setLoginError(
@@ -84,6 +106,20 @@ const Login = () => {
     }
   };
   
+  if (requireMFA) {
+    return (
+      <Paper elevation={6} sx={{ p: { xs: 2, sm: 4 }, maxWidth: 480, mx: 'auto', borderRadius: 4 }}>
+        <Box sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography variant="h6" component="h2">Two-Factor Authentication</Typography>
+        </Box>
+        <Box component="form" sx={{ mt: 2 }}>
+          <TextField label="Authentication Code" variant="outlined" fullWidth sx={{ mb: 2 }} />
+          <Button type="button" fullWidth variant="contained">Verify</Button>
+        </Box>
+      </Paper>
+    );
+  }
+
   return (
     <Paper elevation={6} sx={{
       p: { xs: 2, sm: 4 },
@@ -110,6 +146,17 @@ const Login = () => {
         </Alert>
       )}
       
+      {errors.email && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {errors.email}
+        </Alert>
+      )}
+      {errors.password && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {errors.password}
+        </Alert>
+      )}
+      
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
         <TextField
           label="Email Address"
@@ -118,6 +165,8 @@ const Login = () => {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          error={!!errors.email}
+          helperText={errors.email}
           InputProps={{
             sx: {
               fontSize: '1.1rem',
@@ -142,10 +191,12 @@ const Login = () => {
           type={showPassword ? 'text' : 'password'}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          error={!!errors.password}
+          helperText={errors.password}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                <IconButton aria-label="toggle visibility" onClick={() => setShowPassword(!showPassword)} edge="end">
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
