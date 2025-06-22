@@ -8,6 +8,7 @@ import ChatWindow from '../components/common/ChatWindow';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 
 const MessagingPage = () => {
     const { user } = useAuth();
@@ -73,6 +74,7 @@ const MessagingPage = () => {
         ) : (
             <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(26, 26, 26, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 215, 0, 0.1)' }}>
                 <Box textAlign="center">
+                    <ChatBubbleIcon sx={{ fontSize: 64, color: 'rgba(255,255,255,0.5)', mb: 2 }} />
                     <img src="/assets/images/backgrounds/chat-placeholder.svg" alt="Select a conversation" style={{ width: '250px', opacity: 0.7 }} />
                     <Typography variant="h6" color="text.secondary" sx={{ mt: 2, color: '#fff' }}>
                         Select a conversation

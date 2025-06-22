@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useTheme, Grow, Container, Breadcrumbs, Typography, Link, Paper, Grid, Box, Button } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 
 const JobSearchPage = () => {
   const theme = useTheme();
+  const loading = false;
+  const clearFilters = () => {};
 
   // ... existing code ...
 
@@ -12,6 +17,7 @@ const JobSearchPage = () => {
       <Container sx={{ py: 4 }}>
         {/* Step 1: Enter Your Search Criteria */}
         <Typography variant="h6" align="center" sx={{ mb: 2, color: theme.palette.secondary.main, fontWeight: 600 }}>
+          <SearchIcon fontSize="large" sx={{ verticalAlign: 'middle', mr: 1 }} />
           Step 1: Enter Your Search Criteria
         </Typography>
         <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
@@ -25,6 +31,10 @@ const JobSearchPage = () => {
         </Typography>
         
         {/* Search and Filter Section */}
+        <Typography variant="h6" align="center" sx={{ mb: 2, color: theme.palette.secondary.main, fontWeight: 600 }}>
+          <FilterListIcon fontSize="large" sx={{ verticalAlign: 'middle', mr: 1 }} />
+          Step 2: Set Filters & Search
+        </Typography>
         <Paper sx={{ p: 3, mb: 2 }}>
           <Grid container spacing={2}>
             {/* ... existing filter grid items ... */}
@@ -51,6 +61,7 @@ const JobSearchPage = () => {
         </Box>
         {/* Step 3: Browse and Select a Job */}
         <Typography variant="h6" align="center" sx={{ mb: 2, color: theme.palette.secondary.main, fontWeight: 600 }}>
+          <WorkOutlineIcon fontSize="large" sx={{ verticalAlign: 'middle', mr: 1 }} />
           Step 3: Browse & Select a Job
         </Typography>
 

@@ -415,9 +415,12 @@ const JobDetailsPage = () => {
                   sx={{ 
                     color: '#FFD700',
                     mb: 3,
-                    fontWeight: 'medium'
+                    fontWeight: 'medium',
+                    display: 'flex',
+                    alignItems: 'center'
                   }}
                 >
+                  <NoteAlt sx={{ mr: 1, fontSize: 28, color: '#FFD700' }} />
                   Apply Now
                 </Typography>
                 

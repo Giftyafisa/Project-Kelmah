@@ -120,7 +120,10 @@ const MyApplicationsPage = () => {
 
     return (
     <Container sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>My Applications</Typography>
+      <Box display="flex" alignItems="center" sx={{ mb: 3 }}>
+        <WorkOutlineIcon sx={{ mr: 1, fontSize: 32, color: 'primary.main' }} />
+        <Typography variant="h4" gutterBottom>My Applications</Typography>
+      </Box>
       
       <Paper sx={{ width: '100%', mb: 4 }}>
                 <Tabs
