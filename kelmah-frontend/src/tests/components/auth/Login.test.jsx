@@ -6,6 +6,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import Login from '../../../modules/auth/components/login/Login';
 import authReducer, { login } from '../../../modules/auth/services/authSlice';
 import * as apiUtils from '../../../modules/common/utils/apiUtils';
+import { AuthProvider } from '../../../modules/auth/contexts/AuthContext';
 
 // Mock the APIs and slices
 jest.mock('../../../modules/common/utils/apiUtils', () => ({
@@ -34,9 +35,11 @@ const createMockStore = (initialState = {}) => {
 // Mock react-router-dom to stub BrowserRouter and hooks
 jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
+  const React = require('react');
   return {
     ...actual,
     BrowserRouter: ({ children }) => children,
+    Link: ({ children, ...props }) => React.createElement('a', props, children),
     useNavigate: () => jest.fn(),
     useLocation: () => ({ state: { from: '/dashboard' } }),
   };
@@ -45,6 +48,20 @@ jest.mock('react-router-dom', () => {
 // Mock Material-UI components that use portal
 jest.mock('@mui/material/Modal', () => {
   return ({ children, open }) => (open ? <div data-testid="modal">{children}</div> : null);
+});
+
+// Mock AuthContext to avoid useAuth errors
+jest.mock('../../../modules/auth/contexts/AuthContext', () => {
+  return {
+    AuthProvider: ({ children }) => children,
+    useAuth: () => ({
+      login: jest.fn().mockResolvedValue({ user: {}, requireMFA: false }),
+      requireMFA: false,
+      error: null,
+      user: null,
+      isLoading: false,
+    }),
+  };
 });
 
 // Mock react-redux to bypass context and use mockStore
@@ -72,7 +89,9 @@ describe('Login Component', () => {
     return render(
       <Provider store={store}>
         <BrowserRouter>
-          <Login />
+          <AuthProvider>
+            <Login />
+          </AuthProvider>
         </BrowserRouter>
       </Provider>
     );

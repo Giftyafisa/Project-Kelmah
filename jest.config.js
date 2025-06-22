@@ -5,7 +5,7 @@ module.exports = {
       displayName: 'frontend',
       testEnvironment: 'jsdom',
       rootDir: './kelmah-frontend',
-      testMatch: ['<rootDir>/src/**/*.(test|spec).{js,jsx}'],
+      testMatch: ['<rootDir>/src/**/?(*.)+(spec|test).{js,jsx}'],
       transform: {
         '^.+\\.[tj]sx?$': ['babel-jest', { configFile: './babel.config.js' }],
       },
@@ -13,6 +13,9 @@ module.exports = {
         '/node_modules/(?!(react|react-dom|react-router-dom|@mui/material|@mui/icons-material)/)',
       ],
       moduleNameMapper: {
+        '^react$': '<rootDir>/node_modules/react',
+        '^react-dom$': '<rootDir>/node_modules/react-dom',
+        '^react-router-dom$': '<rootDir>/node_modules/react-router-dom',
         '\\.(css|less|scss|sass)$': '<rootDir>/src/tests/mocks/styleMock.js',
         '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/src/tests/mocks/fileMock.js',
         '^@/(.*)$': '<rootDir>/src/$1',
