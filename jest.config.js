@@ -7,7 +7,7 @@ module.exports = {
       rootDir: './kelmah-frontend',
       testMatch: ['<rootDir>/src/**/*.(test|spec).{js,jsx}'],
       transform: {
-        '^.+\\.[tj]sx?$': ['babel-jest'],
+        '^.+\\.[tj]sx?$': ['babel-jest', { configFile: './babel.config.js' }],
       },
       transformIgnorePatterns: [
         '/node_modules/(?!(react|react-dom|react-router-dom|@mui/material|@mui/icons-material)/)',
