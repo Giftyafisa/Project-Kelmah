@@ -415,6 +415,9 @@ function JobApplication() {
       
       <ApplicationPaper elevation={3} sx={{ mt: 3, overflow: 'hidden' }}>
         {/* Stepper */}
+        <Typography variant="h6" align="center" gutterBottom sx={{ fontWeight: 600, color: theme.palette.primary.main }}>
+          Follow these Steps to Apply
+        </Typography>
         <Box sx={{ 
           p: 3, 
           pb: 2, 
@@ -422,7 +425,7 @@ function JobApplication() {
           borderBottom: '1px solid',
           borderColor: theme.palette.divider
         }}>
-          <Stepper activeStep={activeStep} alternativeLabel>
+          <Stepper activeStep={activeStep} alternativeLabel aria-label="Application Steps" sx={{ '& .MuiStepLabel-label': { fontSize: '1rem', fontWeight: 600 } }}>
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
