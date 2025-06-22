@@ -204,6 +204,7 @@ const AvailabilityCalendar = () => {
           <IconButton
             size="small"
             onClick={() => handleDialogOpen(slot)}
+            aria-label="Edit this time slot"
             disabled={slot.status === 'booked'}
           >
             <EditIcon />
@@ -213,6 +214,7 @@ const AvailabilityCalendar = () => {
           <IconButton
             size="small"
             onClick={() => handleDelete(slot.id)}
+            aria-label="Delete this time slot"
             disabled={slot.status === 'booked'}
           >
             <DeleteIcon />
@@ -232,6 +234,7 @@ const AvailabilityCalendar = () => {
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => handleDialogOpen()}
+          aria-label="Add availability time slot"
         >
           Add Time Slot
         </Button>
