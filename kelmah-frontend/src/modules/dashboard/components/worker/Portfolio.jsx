@@ -20,7 +20,8 @@ import {
   Slide,
   Chip,
   LinearProgress,
-  CircularProgress
+  CircularProgress,
+  TextField
 } from '@mui/material';
 import DashboardCard from '../common/DashboardCard';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -29,6 +30,7 @@ import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import CloseIcon from '@mui/icons-material/Close';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import AddIcon from '@mui/icons-material/Add';
 import workersApi from '../../../../api/services/workersApi';
 
 // Transition for dialog
@@ -43,6 +45,9 @@ const Portfolio = () => {
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [newProject, setNewProject] = useState({ title: '', description: '', date: '' });
+  const [newImages, setNewImages] = useState([]);
   
   // Fetch portfolio projects
   useEffect(() => {
@@ -81,6 +86,33 @@ const Portfolio = () => {
   // Handle closing project dialog
   const handleCloseProject = () => {
     setSelectedProject(null);
+  };
+  
+  const handleOpenAdd = () => setOpenAdd(true);
+  const handleCloseAdd = () => {
+    setOpenAdd(false);
+    setNewProject({ title: '', description: '', date: '' });
+    setNewImages([]);
+  };
+  
+  const handleAddProject = async () => {
+    const formData = new FormData();
+    formData.append('title', newProject.title);
+    formData.append('description', newProject.description);
+    formData.append('completionDate', newProject.date);
+    newImages.forEach((file, idx) => formData.append(`file${idx}`, file));
+    try {
+      setLoading(true);
+      await workersApi.addPortfolioItem(formData);
+      // Refresh portfolio
+      const data = await workersApi.getPortfolioProjects();
+      setProjects(data);
+      handleCloseAdd();
+    } catch (err) {
+      console.error('Failed to add project', err);
+    } finally {
+      setLoading(false);
+    }
   };
   
   if (isLoading) {
@@ -155,21 +187,31 @@ const Portfolio = () => {
         </Box>
       }
       action={
-        <Button 
-          onClick={handleExpandToggle}
-          endIcon={expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          size="large"
-          variant="outlined"
-          sx={{ 
-            borderRadius: '20px',
-            px: 2,
-            fontWeight: 'bold',
-            fontSize: '0.9rem',
-            transition: 'all 0.2s ease'
-          }}
-        >
-          {expanded ? 'Show Less' : 'Show More'}
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button 
+            onClick={handleOpenAdd}
+            startIcon={<AddIcon />}
+            size="medium"
+            variant="contained"
+            sx={{ backgroundColor: '#FFD700', color: '#000' }}
+          >
+            Add
+          </Button>
+          <Button 
+            onClick={handleExpandToggle}
+            endIcon={expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            size="large"
+            variant="outlined"
+            sx={{ 
+              borderRadius: '20px',
+              px: 2,
+              fontWeight: 'bold',
+              fontSize: '0.9rem'
+            }}
+          >
+            {expanded ? 'Show Less' : 'Show More'}
+          </Button>
+        </Box>
       }
     >
       <Collapse in={expanded} timeout={300} unmountOnExit>
@@ -314,6 +356,55 @@ const Portfolio = () => {
             </DialogActions>
           </>
         )}
+      </Dialog>
+      
+      {/* Add Project Dialog */}
+      <Dialog open={openAdd} onClose={handleCloseAdd} maxWidth="sm" fullWidth>
+        <DialogTitle>Add Portfolio Project</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Title"
+            fullWidth
+            margin="dense"
+            value={newProject.title}
+            onChange={e => setNewProject({ ...newProject, title: e.target.value })}
+          />
+          <TextField
+            label="Description"
+            fullWidth
+            margin="dense"
+            multiline rows={4}
+            value={newProject.description}
+            onChange={e => setNewProject({ ...newProject, description: e.target.value })}
+          />
+          <TextField
+            label="Completion Date"
+            type="date"
+            fullWidth
+            margin="dense"
+            InputLabelProps={{ shrink: true }}
+            value={newProject.date}
+            onChange={e => setNewProject({ ...newProject, date: e.target.value })}
+          />
+          <Button
+            variant="outlined"
+            component="label"
+            startIcon={<AddIcon />}
+            sx={{ mt: 2 }}
+          >
+            Upload Images
+            <input type="file" multiple hidden onChange={e => setNewImages(Array.from(e.target.files))} />
+          </Button>
+          {newImages.map((file, idx) => (
+            <Typography key={idx} variant="body2" sx={{ mt: 1 }}>
+              {file.name}
+            </Typography>
+          ))}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAdd}>Cancel</Button>
+          <Button onClick={handleAddProject} variant="contained">Add Project</Button>
+        </DialogActions>
       </Dialog>
     </DashboardCard>
   );

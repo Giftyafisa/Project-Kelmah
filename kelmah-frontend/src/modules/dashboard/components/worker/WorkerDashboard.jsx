@@ -14,6 +14,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import SearchIcon from '@mui/icons-material/Search';
 import GavelIcon from '@mui/icons-material/Gavel';
 import MailIcon from '@mui/icons-material/Mail';
@@ -67,6 +68,13 @@ const WorkerDashboard = ({ user = {} }) => {
       icon: <CheckCircleIcon sx={{ fontSize: 32 }} />,
       trend: metrics.completionRateChange ? `${metrics.completionRateChange}%` : null
     },
+    {
+      title: 'Escrow Balance',
+      value: data.metrics?.escrowBalance ? `$${data.metrics.escrowBalance}` : '$0',
+      color: '#FFA500',
+      icon: <AccountBalanceWalletIcon sx={{ fontSize: 32 }} />,
+      linkTo: '/worker/wallet'
+    }
   ];
 
   const quickActions = [
