@@ -3,6 +3,8 @@ import {
   Card, 
   CardContent, 
   CardActionArea, 
+  CardActions, 
+  Button, 
   Typography, 
   Box, 
   Chip, 
@@ -43,22 +45,22 @@ const WorkerCard = ({ worker }) => {
         }
       }}
     >
-      <CardActionArea onClick={handleClick} sx={{ flexGrow: 1 }}>
+      <CardActionArea onClick={handleClick} sx={{ flexGrow: 1, p: 2 }}>
         <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 2 }}>
             <Avatar 
               src={worker.profileImage} 
               alt={worker.name} 
-              sx={{ width: 56, height: 56, mr: 2 }}
+              sx={{ width: 72, height: 72 }}
             />
             <Box>
-              <Typography variant="h6" component="h2" noWrap>
+              <Typography variant="h5" component="h2" noWrap>
                 {worker.name}
               </Typography>
-              <Typography variant="body2" color="text.secondary" noWrap>
+              <Typography variant="body1" color="text.secondary" noWrap sx={{ mb: 1 }}>
                 {worker.title || 'Freelancer'}
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5, gap: 1 }}>
                 <Rating 
                   value={worker.rating || 0} 
                   precision={0.5} 
@@ -66,20 +68,14 @@ const WorkerCard = ({ worker }) => {
                   readOnly 
                   emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
                 />
-                <Typography variant="caption" color="text.secondary" sx={{ ml: 0.5 }}>
+                <Typography variant="body2" color="text.secondary">
                   ({worker.reviewCount || 0})
                 </Typography>
               </Box>
             </Box>
           </Box>
 
-          <Typography variant="body2" color="text.secondary" sx={{ 
-            minHeight: '3em',
-            overflow: 'hidden', 
-            textOverflow: 'ellipsis',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
+          <Typography variant="body1" color="text.secondary" sx={{ 
             mb: 2
           }}>
             {worker.bio || 'No bio provided'}
@@ -135,6 +131,11 @@ const WorkerCard = ({ worker }) => {
           </Grid>
         </CardContent>
       </CardActionArea>
+      <CardActions sx={{ p: 2, pt: 0 }}>
+        <Button fullWidth variant="contained" color="secondary" onClick={handleClick} sx={{ fontSize: '1rem', py: 1.5 }}>
+          View Profile
+        </Button>
+      </CardActions>
     </Card>
   );
 };

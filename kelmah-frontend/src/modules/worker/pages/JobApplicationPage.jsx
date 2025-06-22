@@ -345,21 +345,24 @@ const JobSearchPage = () => {
                             ))}
                           </Box>
                         </CardContent>
-                        <Divider />
-                        <CardActions sx={{ justifyContent: 'flex-end' }}>
+                        <Divider sx={{ my: 1 }} />
+                        <CardActions sx={{ justifyContent: 'flex-end', flexWrap: 'wrap', gap: 1, p: 2 }}>
                           <Button
-                            size="small"
-                            variant="text"
+                            size="medium"
+                            variant="outlined"
                             component={RouterLink}
                             to={`/jobs/${job._id || job.id}`}
+                            sx={{ fontSize: '1rem', flex: { xs: '1 1 100%', sm: 'initial' } }}
                           >
                             View Details
                           </Button>
                           <Button
-                            size="small"
+                            size="medium"
                             variant="contained"
+                            color="primary"
                             component={RouterLink}
                             to={`/jobs/${job._id || job.id}?apply=true`}
+                            sx={{ fontSize: '1rem', flex: { xs: '1 1 100%', sm: 'initial' } }}
                           >
                             Apply Now
                           </Button>
