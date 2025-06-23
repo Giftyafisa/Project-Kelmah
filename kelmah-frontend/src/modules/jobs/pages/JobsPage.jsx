@@ -101,13 +101,22 @@ const JobsPage = () => {
                                 placeholder="Search jobs..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                sx={{
+                                    backgroundColor: '#333',
+                                    borderRadius: 1,
+                                    '& .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+                                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#c4942a' },
+                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+                                    '& .MuiInputBase-input': { color: '#fff' },
+                                    '& .MuiInputBase-input::placeholder': { color: '#bbb' }
+                                }}
                                 InputProps={{
                                     endAdornment: (
                                         <Button
                                             type="submit"
                                             sx={{ minWidth: 'auto' }}
                                         >
-                                            <SearchIcon />
+                                            <SearchIcon sx={{ color: '#fff' }} />
                                         </Button>
                                     )
                                 }}
@@ -120,6 +129,14 @@ const JobsPage = () => {
                                 value={filters.job_type || ''}
                                 label="Job Type"
                                 onChange={(e) => handleFilterChange('job_type', e.target.value)}
+                                sx={{
+                                    backgroundColor: '#333',
+                                    color: '#fff',
+                                    borderRadius: 1,
+                                    '.MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+                                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#c4942a' },
+                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' }
+                                }}
                             >
                                 <MenuItem value="">All Types</MenuItem>
                                 <MenuItem value="full-time">Full Time</MenuItem>
@@ -135,6 +152,14 @@ const JobsPage = () => {
                                 value={filters.experience || ''}
                                 label="Experience Level"
                                 onChange={(e) => handleFilterChange('experience', e.target.value)}
+                                sx={{
+                                    backgroundColor: '#333',
+                                    color: '#fff',
+                                    borderRadius: 1,
+                                    '.MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+                                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#c4942a' },
+                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' }
+                                }}
                             >
                                 <MenuItem value="">All Levels</MenuItem>
                                 <MenuItem value="entry">Entry Level</MenuItem>
@@ -274,10 +299,19 @@ const JobsPage = () => {
                             placeholder="Search jobs..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
+                            sx={{
+                                backgroundColor: '#333',
+                                borderRadius: 1,
+                                '& .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#c4942a' },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+                                '& .MuiInputBase-input': { color: '#fff' },
+                                '& .MuiInputBase-input::placeholder': { color: '#bbb' }
+                            }}
                             InputProps={{
                                 endAdornment: (
                                     <Button type="submit" sx={{ minWidth: 'auto' }}>
-                                        <SearchIcon />
+                                        <SearchIcon sx={{ color: '#fff' }} />
                                     </Button>
                                 )
                             }}
@@ -289,6 +323,14 @@ const JobsPage = () => {
                             value={filters.job_type || ''}
                             label="Job Type"
                             onChange={(e) => handleFilterChange('job_type', e.target.value)}
+                            sx={{
+                                backgroundColor: '#333',
+                                color: '#fff',
+                                borderRadius: 1,
+                                '.MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#c4942a' },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' }
+                            }}
                         >
                             <MenuItem value="">All Types</MenuItem>
                             <MenuItem value="full-time">Full Time</MenuItem>
@@ -303,6 +345,14 @@ const JobsPage = () => {
                             value={filters.experience || ''}
                             label="Experience Level"
                             onChange={(e) => handleFilterChange('experience', e.target.value)}
+                            sx={{
+                                backgroundColor: '#333',
+                                color: '#fff',
+                                borderRadius: 1,
+                                '.MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+                                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#c4942a' },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' }
+                            }}
                         >
                             <MenuItem value="">All Levels</MenuItem>
                             <MenuItem value="entry">Entry Level</MenuItem>

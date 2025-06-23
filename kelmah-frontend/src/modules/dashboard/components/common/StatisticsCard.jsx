@@ -15,11 +15,11 @@ const StatisticsCard = ({ title, value, color, icon, trend, trendLabel, linkTo }
     <Card
       sx={{
         p: 3,
-        background: 'rgba(35, 35, 35, 0.8)',
+        backgroundColor: '#1a1a1a',
         backdropFilter: 'blur(10px)',
         borderRadius: 2,
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-        border: '1px solid rgba(255, 215, 0, 0.3)',
+        boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
+        border: '1px solid #444',
         borderLeft: `4px solid ${color || '#FFD700'}`,
         height: '100%',
         display: 'flex',
@@ -50,7 +50,7 @@ const StatisticsCard = ({ title, value, color, icon, trend, trendLabel, linkTo }
           <Typography 
             variant="subtitle1" 
             sx={{ 
-              color: 'text.secondary',
+              color: '#bbb',
               opacity: 0.9,
               fontWeight: 'bold'
             }}
@@ -91,11 +91,11 @@ const StatisticsCard = ({ title, value, color, icon, trend, trendLabel, linkTo }
               width: 48,
               height: 48,
               borderRadius: '12px',
-              background: `${color}15`,
+              backgroundColor: `${color}20`,
               transition: 'all 0.2s ease-in-out',
               '&:hover': {
                 transform: 'scale(1.1)',
-                background: `${color}25`,
+                backgroundColor: `${color}30`,
               }
             }}
           >

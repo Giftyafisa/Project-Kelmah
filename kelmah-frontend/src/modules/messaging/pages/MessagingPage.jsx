@@ -71,13 +71,21 @@ const MessagingPage = () => {
                 onClose={handleCloseChat}
             />
         ) : (
-            <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(26, 26, 26, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 215, 0, 0.1)' }}>
+            <Paper sx={{
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(26, 26, 26, 0.8)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid #D4AF37'
+            }}>
                 <Box textAlign="center">
                     <img src="/assets/images/backgrounds/chat-placeholder.svg" alt="Select a conversation" style={{ width: '250px', opacity: 0.7 }} />
-                    <Typography variant="h6" color="text.secondary" sx={{ mt: 2, color: '#fff' }}>
+                    <Typography variant="h6" sx={{ mt: 2, color: '#D4AF37', fontWeight: 'bold' }}>
                         Select a conversation
                     </Typography>
-                    <Typography variant="body1" color="text.secondary" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                    <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.7)', fontSize: '1rem' }}>
                         Choose one of your existing conversations to start chatting.
                     </Typography>
                 </Box>
@@ -86,17 +94,22 @@ const MessagingPage = () => {
     );
 
     return (
-        <Box sx={{ height: 'calc(100vh - 64px)', p: { xs: 1, sm: 2, md: 3 }, background: '#111' }}>
+        <Box sx={{
+            height: 'calc(100vh - 64px)',
+            p: { xs: 1, sm: 2, md: 3 },
+            backgroundColor: '#1a1a1a',
+            color: '#fff'
+        }}>
             <Grid container spacing={2} sx={{ height: '100%' }}>
                 {isMobile ? (
                     selectedConversation ? (
                         <Grid item xs={12}>
-                            <AppBar position="static" color="transparent" elevation={0} sx={{ borderBottom: '1px solid rgba(255,215,0,0.2)' }}>
+                            <AppBar position="static" color="transparent" elevation={0} sx={{ borderBottom: '2px solid #D4AF37' }}>
                               <Toolbar>
                                 <IconButton edge="start" color="inherit" onClick={handleCloseChat}>
-                                  <ArrowBackIcon />
+                                  <ArrowBackIcon sx={{ color: '#D4AF37' }} />
                                 </IconButton>
-                                <Typography variant="h6" sx={{ flexGrow: 1, color: '#FFD700' }}>
+                                <Typography variant="h6" sx={{ flexGrow: 1, color: '#D4AF37', fontWeight: 'bold' }}>
                                   {getRecipient()?.name}
                                 </Typography>
                               </Toolbar>
@@ -109,7 +122,7 @@ const MessagingPage = () => {
                                 onSelectConversation={handleConversationSelect}
                                 selectedConversationId={selectedConversation?.id}
                             />
-                </Grid>
+                        </Grid>
                     )
                 ) : (
                     <>

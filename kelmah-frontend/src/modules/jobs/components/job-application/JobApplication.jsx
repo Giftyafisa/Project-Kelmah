@@ -50,30 +50,38 @@ import axiosInstance from '../../../common/services/axios';
 // Styled components
 const ApplicationPaper = styled(Paper)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius * 2,
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+  boxShadow: '0 6px 24px rgba(0, 0, 0, 0.2)',
+  backgroundColor: '#1a1a1a',
+  color: '#fff',
+  border: '1px solid #D4AF37',
   overflow: 'hidden'
 }));
 
 const JobInfoCard = styled(Card)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius * 1.5,
-  boxShadow: '0 2px 12px rgba(0, 0, 0, 0.05)',
+  boxShadow: '0 3px 16px rgba(0, 0, 0, 0.15)',
   marginBottom: theme.spacing(3),
-  border: '1px solid',
-  borderColor: theme.palette.divider
+  backgroundColor: '#1a1a1a',
+  color: '#fff',
+  border: '1px solid #D4AF37'
 }));
 
 const MilestoneCard = styled(Card)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   boxShadow: 'none',
-  border: '1px solid',
-  borderColor: theme.palette.divider,
+  backgroundColor: '#1a1a1a',
+  color: '#fff',
+  border: '1px solid #D4AF37',
   marginBottom: theme.spacing(2)
 }));
 
 const ApplicationButton = styled(Button)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius * 4,
   padding: theme.spacing(1.2, 4),
-  fontWeight: 600
+  fontWeight: 600,
+  backgroundColor: '#D4AF37',
+  color: '#1a1a1a',
+  '&:hover': { backgroundColor: '#c4942a', boxShadow: '0 4px 8px rgba(0,0,0,0.2)' }
 }));
 
 function JobApplication() {
@@ -400,16 +408,21 @@ function JobApplication() {
   }
   
   return (
-    <Box sx={{ py: 3 }}>
+    <Box sx={{
+      py: 3,
+      px: { xs: 2, sm: 3, md: 4 },
+      backgroundColor: '#1a1a1a',
+      color: '#fff'
+    }}>
       <Button
         startIcon={<ArrowBackIcon />}
         onClick={() => navigate(`/jobs/${jobId}`)}
-        sx={{ mb: 3 }}
+        sx={{ mb: 3, color: '#D4AF37', fontWeight: 'bold', '&:hover': { backgroundColor: 'rgba(212,175,55,0.1)' } }}
       >
         Back to Job Details
       </Button>
       
-      <Typography variant="h4" component="h1" gutterBottom fontWeight={700} color="primary">
+      <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 700, color: '#D4AF37', fontSize: '1.75rem' }}>
         Apply for Job
       </Typography>
       
