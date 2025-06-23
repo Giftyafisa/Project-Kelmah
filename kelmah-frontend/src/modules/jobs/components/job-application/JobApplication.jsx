@@ -365,24 +365,25 @@ function JobApplication() {
   if (error && !job) {
     return (
       <Box sx={{ py: 3 }}>
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert severity="error" role="alert" sx={{ mb: 2 }}>
           {error}
         </Alert>
         <Button
           startIcon={<ArrowBackIcon />}
           onClick={() => navigate('/jobs')}
           variant="outlined"
+          aria-label="Back to job listings"
         >
           Back to Jobs
         </Button>
       </Box>
     );
-        }
+  }
   
   if (success) {
     return (
       <Box sx={{ py: 3 }}>
-        <Alert severity="success" sx={{ mb: 2 }}>
+        <Alert severity="success" role="status" sx={{ mb: 2 }}>
           Your application has been submitted successfully!
         </Alert>
         <Typography variant="body1" sx={{ mb: 2 }}>
@@ -392,6 +393,7 @@ function JobApplication() {
           variant="contained"
           color="primary"
           onClick={() => navigate('/dashboard/applications')}
+          aria-label="View my applications"
         >
           View My Applications
         </Button>
@@ -405,6 +407,7 @@ function JobApplication() {
         startIcon={<ArrowBackIcon />}
         onClick={() => navigate(`/jobs/${jobId}`)}
         sx={{ mb: 3 }}
+        aria-label="Back to job details"
       >
         Back to Job Details
       </Button>
@@ -422,7 +425,7 @@ function JobApplication() {
           borderBottom: '1px solid',
           borderColor: theme.palette.divider
         }}>
-          <Stepper activeStep={activeStep} alternativeLabel>
+          <Stepper activeStep={activeStep} alternativeLabel aria-label="Job application progression">
             {steps.map((label) => (
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
@@ -435,7 +438,8 @@ function JobApplication() {
           {/* Step content */}
           {activeStep === 0 && (
         <Box>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+                <BusinessCenter sx={{ mr: 1 }} />
                 Job Overview
               </Typography>
               
@@ -506,7 +510,8 @@ function JobApplication() {
           
           {activeStep === 1 && (
             <Box>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+                <Paid sx={{ mr: 1 }} />
                 Your Proposal
               </Typography>
               
@@ -516,12 +521,18 @@ function JobApplication() {
                     name="coverLetter"
                     label="Cover Letter"
                     fullWidth
-                multiline
+                    multiline
                     rows={6}
+                    autoFocus
                     value={applicationData.coverLetter}
                     onChange={handleInputChange}
                     error={!!formErrors.coverLetter}
                     helperText={formErrors.coverLetter || 'Introduce yourself and explain why you are the right person for this job'}
+                    FormHelperTextProps={{ id: 'coverLetter-helper-text' }}
+                    inputProps={{
+                      'aria-required': true,
+                      'aria-describedby': 'coverLetter-helper-text'
+                    }}
                     variant="outlined"
                 />
             </Grid>
@@ -536,6 +547,11 @@ function JobApplication() {
                     onChange={handleInputChange}
                     error={!!formErrors.proposedBudget}
                     helperText={formErrors.proposedBudget}
+                    FormHelperTextProps={{ id: 'proposedBudget-helper-text' }}
+                    inputProps={{
+                      'aria-required': true,
+                      'aria-describedby': 'proposedBudget-helper-text'
+                    }}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">{applicationData.currency}</InputAdornment>
                     }}
@@ -605,7 +621,8 @@ function JobApplication() {
           
           {activeStep === 2 && (
             <Box>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+                <Schedule sx={{ mr: 1 }} />
                 Proposed Milestones
               </Typography>
               
@@ -754,8 +771,9 @@ function JobApplication() {
           
           {activeStep === 3 && (
         <Box>
-            <Typography variant="h6" gutterBottom>
-                Review Your Application
+            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+                <AttachFileIcon sx={{ mr: 1 }} />
+                Review & Submit
             </Typography>
               
               <Accordion defaultExpanded>

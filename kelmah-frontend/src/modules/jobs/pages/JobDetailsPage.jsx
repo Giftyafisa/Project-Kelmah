@@ -185,6 +185,7 @@ const JobDetailsPage = () => {
           <Button 
             startIcon={<ArrowBack />} 
             onClick={() => navigate('/jobs')}
+            aria-label="Back to job listings"
             sx={{ 
               mb: 3, 
               color: '#FFD700',
@@ -375,8 +376,9 @@ const JobDetailsPage = () => {
                   <Button
                     variant="outlined"
                     startIcon={<Message />}
-                    sx={{ mr: 2, mt: 2 }}
                     onClick={handleMessageHirer}
+                    aria-label="Message the hirer"
+                    sx={{ mr: 2, mt: 2 }}
                   >
                     Message Hirer
                   </Button>
@@ -439,10 +441,12 @@ const JobDetailsPage = () => {
                 <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
                   <IconButton 
                     onClick={handleToggleSave}
+                    aria-label={saved ? 'Unsave job' : 'Save job'}
                     sx={{ 
                       color: saved ? '#FFD700' : 'rgba(255, 255, 255, 0.7)',
                       '&:hover': {
                         background: 'rgba(255, 215, 0, 0.1)',
+                        color: '#FFD700'
                       }
                     }}
                   >
@@ -451,6 +455,7 @@ const JobDetailsPage = () => {
                   
                   <IconButton 
                     onClick={handleShareJob}
+                    aria-label="Share job"
                     sx={{ 
                       color: 'rgba(255, 255, 255, 0.7)',
                       '&:hover': {

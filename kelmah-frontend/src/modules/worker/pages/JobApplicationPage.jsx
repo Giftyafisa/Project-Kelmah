@@ -27,7 +27,8 @@ import {
   MenuItem,
   Stack,
   Skeleton,
-  useTheme
+  useTheme,
+  Alert
 } from '@mui/material';
 import jobsApi from '../../jobs/services/jobsApi';
 import {
@@ -57,6 +58,7 @@ const JobSearchPage = () => {
   const jobsPerPage = 5;
   const [totalPages, setTotalPages] = useState(1);
   const [sortBy, setSortBy] = useState('recent');
+  const [error, setError] = useState(null);
 
   // Fetch jobs from API
   useEffect(() => {
@@ -88,8 +90,9 @@ const JobSearchPage = () => {
         setJobs(data);
         setTotalPages(meta.pagination.totalPages);
         setTotalItems(meta.pagination.totalItems);
-      } catch (error) {
-        console.error('Error fetching jobs:', error);
+      } catch (err) {
+        console.error('Error fetching jobs:', err);
+        setError('Failed to load jobs. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -217,7 +220,11 @@ const JobSearchPage = () => {
         </Box>
 
         {/* Results Section */}
-        {loading ? (
+        {error ? (
+          <Alert severity="error" role="alert" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        ) : loading ? (
           <Grid container spacing={3} sx={{ p: 2 }}>
             {Array.from({ length: jobsPerPage }).map((_, idx) => (
               <Grid item xs={12} sm={6} key={idx}>
@@ -266,10 +273,11 @@ const JobSearchPage = () => {
               </Paper>
             ) : (
               <>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} component="ul" role="list" sx={{ p: 0, m: 0, listStyle: 'none' }}>
                   {jobs.map((job) => (
-                    <Grid item xs={12} sm={6} key={job._id || job.id}>
+                    <Grid item xs={12} sm={6} component="li" role="listitem" key={job._id || job.id}>
                       <Card
+                        aria-label={`Job: ${job.title}`}
                         sx={{
                           mb: 3,
                           borderRadius: 2,
@@ -311,7 +319,7 @@ const JobSearchPage = () => {
                                 </Box>
                               </Stack>
                             </Box>
-                            <IconButton onClick={() => handleSaveJob(job._id || job.id)}>
+                            <IconButton onClick={() => handleSaveJob(job._id || job.id)} aria-label={savedJobs.includes(job._id || job.id) ? 'Unsave job' : 'Save job'}>
                               {savedJobs.includes(job._id || job.id) ? (
                                 <BookmarkIcon color="primary" />
                               ) : (
@@ -352,6 +360,7 @@ const JobSearchPage = () => {
                             variant="text"
                             component={RouterLink}
                             to={`/jobs/${job._id || job.id}`}
+                            aria-label={`View details of ${job.title}`}
                           >
                             View Details
                           </Button>
@@ -360,6 +369,7 @@ const JobSearchPage = () => {
                             variant="contained"
                             component={RouterLink}
                             to={`/jobs/${job._id || job.id}?apply=true`}
+                            aria-label={`Apply for job: ${job.title}`}
                           >
                             Apply Now
                           </Button>
