@@ -43,6 +43,7 @@ import {
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { updateWorkerProfile, fetchWorkerProfile } from '../services/workerSlice';
+import AvailabilityCalendar from '../components/AvailabilityCalendar';
 
 const Input = styled('input')({
   display: 'none',
@@ -520,6 +521,14 @@ const WorkerProfileEditPage = () => {
               />
             </Grid>
           </Grid>
+        </Paper>
+        
+        {/* Availability Section */}
+        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
+          <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main }}>
+            Availability Settings
+          </Typography>
+          <AvailabilityCalendar />
         </Paper>
         
         {/* Skills */}
