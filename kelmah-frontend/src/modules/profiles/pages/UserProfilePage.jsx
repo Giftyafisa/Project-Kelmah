@@ -19,7 +19,10 @@ import {
     Button,
     CircularProgress,
     Alert,
-    Skeleton
+    Skeleton,
+    Tooltip,
+    useMediaQuery,
+    useTheme
 } from '@mui/material';
 import {
     Person,
@@ -28,7 +31,8 @@ import {
     BusinessCenter,
     LocationOn,
     CalendarToday,
-    Message
+    Message,
+    Info
 } from '@mui/icons-material';
 import { format } from 'date-fns';
 import { Helmet } from 'react-helmet';
@@ -43,6 +47,9 @@ function UserProfilePage() {
     const [activeTab, setActiveTab] = useState('overview');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     useEffect(() => {
         fetchUserData();
@@ -136,11 +143,13 @@ function UserProfilePage() {
                             
                             {ratings && (
                                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                    <Rating
-                                        value={ratings.average_rating}
-                                        readOnly
-                                        precision={0.1}
-                                    />
+                                    <Tooltip title="Average rating out of 5 stars" arrow>
+                                        <Rating
+                                            value={ratings.average_rating}
+                                            readOnly
+                                            precision={0.1}
+                                        />
+                                    </Tooltip>
                                     <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
                                         ({ratings.total_ratings} reviews)
                                     </Typography>
@@ -181,9 +190,14 @@ function UserProfilePage() {
 
                             {user.skills && (
                                 <Box sx={{ mt: 2, width: '100%' }}>
-                                    <Typography variant="subtitle2" gutterBottom>
-                                        Skills
-                                    </Typography>
+                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                        <Typography variant="subtitle2" gutterBottom>
+                                            Skills
+                                        </Typography>
+                                        <Tooltip title="Skills this user is verified in" arrow>
+                                            <Info fontSize="small" sx={{ ml: 0.5, color: '#FFD700', cursor: 'pointer' }} />
+                                        </Tooltip>
+                                    </Box>
                                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                                         {user.skills.split(',').map((skill, index) => (
                                             <Chip
@@ -197,14 +211,18 @@ function UserProfilePage() {
                             )}
 
                             <Box sx={{ mt: 3 }}>
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    startIcon={<Message />}
-                                    onClick={() => navigate(`/messages?participantId=${userId}`)}
-                                >
-                                    Message
-                                </Button>
+                                <Tooltip title="Start chat with this user" arrow>
+                                    <Button
+                                        fullWidth={isMobile}
+                                        variant="contained"
+                                        startIcon={<Message />}
+                                        onClick={() => navigate(`/messages?participantId=${userId}`)}
+                                        aria-label="Message user"
+                                        sx={{ fontSize: isMobile ? '1rem' : 'inherit' }}
+                                    >
+                                        Message
+                                    </Button>
+                                </Tooltip>
                             </Box>
                         </Box>
                     </Paper>
