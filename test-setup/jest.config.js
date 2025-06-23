@@ -4,19 +4,19 @@ module.exports = {
     {
       displayName: 'frontend',
       testEnvironment: 'jsdom',
-      testMatch: ['<rootDir>/frontend/**/*.test.{js,jsx,ts,tsx}'],
+      testMatch: ['<rootDir>/kelmah-frontend/src/**/*.test.{js,jsx,ts,tsx}'],
       moduleNameMapper: {
         // Handle module aliases and CSS/asset imports
-        '^@/(.*)$': '<rootDir>/frontend/src/$1',
+        '^@/(.*)$': '<rootDir>/kelmah-frontend/src/$1',
         '\\.(css|less|scss|sass)$': '<rootDir>/test-setup/mocks/styleMock.js',
         '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/test-setup/mocks/fileMock.js'
       },
       setupFilesAfterEnv: ['<rootDir>/test-setup/frontend-setup.js'],
       collectCoverageFrom: [
-        'frontend/src/**/*.{js,jsx,ts,tsx}',
-        '!frontend/src/**/*.d.ts',
-        '!frontend/src/**/index.{js,jsx,ts,tsx}',
-        '!frontend/src/types/**/*'
+        'kelmah-frontend/src/**/*.{js,jsx,ts,tsx}',
+        '!kelmah-frontend/src/**/*.d.ts',
+        '!kelmah-frontend/src/**/index.{js,jsx,ts,tsx}',
+        '!kelmah-frontend/src/types/**/*'
       ],
       coverageThreshold: {
         global: {

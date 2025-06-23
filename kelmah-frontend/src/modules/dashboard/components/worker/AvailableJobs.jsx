@@ -13,6 +13,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import BusinessIcon from '@mui/icons-material/Business';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import DashboardCard from '../common/DashboardCard';
 import jobsApi from '../../../../api/services/jobsApi';
 
@@ -151,6 +152,7 @@ const AvailableJobs = () => {
     return (
       <DashboardCard title="Available Jobs Near You">
         <Box sx={{ p: 3, textAlign: 'center' }}>
+          <InfoOutlinedIcon sx={{ fontSize: 40, mb: 1, opacity: 0.7, color: 'text.secondary' }} aria-hidden="true" />
           <Typography>No jobs available in your area at the moment.</Typography>
         </Box>
       </DashboardCard>

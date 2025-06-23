@@ -13,8 +13,10 @@ import AddTaskIcon from '@mui/icons-material/AddTask';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import workersApi from '../../../../api/services/workersApi';
+import { useNotifications } from '../../../notifications/contexts/NotificationContext';
 
 const Credentials = () => {
+  const { showToast } = useNotifications();
   const [skills, setSkills] = useState([]);
   const [licenses, setLicenses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -77,16 +79,15 @@ const Credentials = () => {
       setIsProcessing(true);
       
       try {
-        // Send verification request to API
+        // Create verification request
         await workersApi.requestSkillVerification(activeSkill.id, {
-          // Include verification data if needed
-          documentUrls: [], // Would be populated in a real implementation
+          documentUrls: [],
           notes: 'Verification requested through worker dashboard'
         });
         
         setIsComplete(true);
         
-        // Add to verified skills (in a real app, this would be pending until approved)
+        // Add to verified skills
         setVerifiedSkillIds(prev => [...prev, activeSkill.id]);
         
         // Update skills list
@@ -95,9 +96,11 @@ const Credentials = () => {
             ? { ...skill, verified: true, verificationStatus: 'pending' } 
             : skill
         ));
+        // Show success feedback
+        showToast(`Verification requested for ${activeSkill.name}`, 'success');
       } catch (err) {
         console.error('Error requesting verification:', err);
-        // Handle error (would show error message in real implementation)
+        showToast('Failed to request verification. Please try again.', 'error');
       } finally {
         setIsProcessing(false);
       }
