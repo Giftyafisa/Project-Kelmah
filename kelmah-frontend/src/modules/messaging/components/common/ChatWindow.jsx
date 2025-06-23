@@ -23,7 +23,8 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Chip
+  Chip,
+  Alert
 } from '@mui/material';
 import { 
   Send, 
@@ -224,6 +225,7 @@ const ChatWindow = ({
 }) => {
   const [messages, setMessages] = useState([]);
   const [msgLoading, setMsgLoading] = useState(true);
+  const [msgError, setMsgError] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -279,10 +281,12 @@ const ChatWindow = ({
         const rawMsgs = await messagingService.getMessages(conversation.id);
         const normalizedMsgs = rawMsgs.map(msg => normalizeMsg(msg));
         setMessages(normalizedMsgs);
+        setMsgError(null);
         // Mark conversation as read after loading messages
         await messagingService.markConversationAsRead(conversation.id);
       } catch (err) {
         console.error('Error loading messages:', err);
+        setMsgError('Failed to load messages. Please try again.');
       } finally {
         setMsgLoading(false);
       }
@@ -478,7 +482,11 @@ const ChatWindow = ({
       
       {/* Messages Area */}
       <MessagesContainer>
-        {msgLoading ? (
+        {msgError ? (
+          <Alert severity="error" sx={{ m: 2 }}>
+            {msgError}
+          </Alert>
+        ) : msgLoading ? (
           Array.from(new Array(5)).map((_, idx) => (
             <MessageSkeleton key={idx} />
           ))
