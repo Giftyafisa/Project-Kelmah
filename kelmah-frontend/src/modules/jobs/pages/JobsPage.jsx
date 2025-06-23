@@ -20,7 +20,7 @@ import {
     useTheme,
     useMediaQuery
 } from '@mui/material';
-import { Search as SearchIcon } from '@mui/icons-material';
+import { Search as SearchIcon, Bookmark as BookmarkIcon, ThumbUp as ThumbUpIcon } from '@mui/icons-material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import useAuth from '../../auth/hooks/useAuth';
 import { useDispatch, useSelector } from 'react-redux';
@@ -148,6 +148,7 @@ const JobsPage = () => {
                                 <Button
                                     fullWidth
                                     variant="contained"
+                                    startIcon={<BookmarkIcon />}
                                     sx={{
                                         backgroundColor: theme.palette.secondary.main,
                                         color: theme.palette.secondary.contrastText,
@@ -161,6 +162,7 @@ const JobsPage = () => {
                                 <Button
                                     fullWidth
                                     variant="contained"
+                                    startIcon={<ThumbUpIcon />}
                                     sx={{
                                         backgroundColor: theme.palette.secondary.main,
                                         color: theme.palette.secondary.contrastText,
@@ -210,7 +212,7 @@ const JobsPage = () => {
                                         <FilterListIcon />
                                     </IconButton>
                                 )}
-                                <Typography variant="subtitle1" sx={{ color: '#fff' }}>
+                                <Typography variant="h6" sx={{ color: '#fff', fontWeight: 'bold', fontSize: '1.25rem' }}>
                                     Showing {jobs.length} job{jobs.length !== 1 ? 's' : ''}
                                 </Typography>
                                 <FormControl size="small" sx={{ minWidth: 160 }}>

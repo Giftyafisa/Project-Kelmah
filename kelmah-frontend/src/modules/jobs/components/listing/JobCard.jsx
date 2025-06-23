@@ -15,7 +15,8 @@ import {
     LocationOn,
     AttachMoney,
     AccessTime,
-    Star
+    Star,
+    Info as InfoIcon
 } from '@mui/icons-material';
 
 const JobCard = ({ job, onViewDetails }) => {
@@ -36,10 +37,22 @@ const JobCard = ({ job, onViewDetails }) => {
     } = job;
 
     return (
-        <Card sx={{ mb: 2, borderRadius: 2, boxShadow: 2 }}>
+        <Card sx={{
+            mb: 2,
+            borderRadius: 2,
+            boxShadow: 4,
+            backgroundColor: '#1a1a1a',
+            color: '#fff',
+            border: '1px solid #D4AF37',
+            transition: 'transform 0.2s, box-shadow 0.2s',
+            '&:hover': {
+                transform: 'scale(1.02)',
+                boxShadow: 6,
+            },
+        }}>
             <CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="h6" component="div">
+                    <Typography variant="h5" component="div" sx={{ color: '#fff', fontWeight: 'bold' }}>
                         {title}
                     </Typography>
                     <Chip 
@@ -50,7 +63,7 @@ const JobCard = ({ job, onViewDetails }) => {
                     />
                 </Box>
                 
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                <Typography variant="body1" color="#ddd" sx={{ mb: 2, fontSize: '1rem' }}>
                     {description?.substring(0, 150)}
                     {description?.length > 150 ? '...' : ''}
                 </Typography>
@@ -109,11 +122,19 @@ const JobCard = ({ job, onViewDetails }) => {
             </CardContent>
             
             <CardActions>
-                <Button 
-                    size="small" 
-                    variant="contained" 
+                <Button
+                    size="medium"
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<InfoIcon />}
                     onClick={() => onViewDetails?.(id)}
                     fullWidth
+                    sx={{
+                        backgroundColor: '#D4AF37',
+                        color: '#1a1a1a',
+                        fontWeight: 'bold',
+                        '&:hover': { backgroundColor: '#c4942a' },
+                    }}
                 >
                     View Details
                 </Button>
