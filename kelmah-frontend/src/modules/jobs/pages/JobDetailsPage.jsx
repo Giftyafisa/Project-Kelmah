@@ -13,7 +13,10 @@ import {
   IconButton,
   CircularProgress,
   Alert,
-  Skeleton
+  Skeleton,
+  Tooltip,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import { 
   LocationOn, 
@@ -28,7 +31,8 @@ import {
   Bookmark,
   Share,
   Message,
-  NoteAlt
+  NoteAlt,
+  InfoIcon
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { styled } from '@mui/material/styles';
@@ -83,6 +87,8 @@ const JobDetailsPage = () => {
   const { search } = useLocation();
   const { id } = useParams();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const dispatch = useDispatch();
   const job = useSelector(selectCurrentJob);
   const loading = useSelector(selectJobsLoading);
@@ -372,14 +378,20 @@ const JobDetailsPage = () => {
                 {/* Additional Info */}
                 <Box>
                   {/* Communication Actions */}
-                  <Button
-                    variant="outlined"
-                    startIcon={<Message />}
-                    sx={{ mr: 2, mt: 2 }}
-                    onClick={handleMessageHirer}
-                  >
-                    Message Hirer
-                  </Button>
+                  <Tooltip title="Send message to hirer">
+                    <span>
+                      <Button
+                        variant="outlined"
+                        startIcon={<Message />}
+                        sx={{ mr: 2, mt: 2 }}
+                        onClick={handleMessageHirer}
+                        fullWidth={isMobile}
+                        aria-label="Message hirer"
+                      >
+                        Message
+                      </Button>
+                    </span>
+                  </Tooltip>
                   <Typography 
                     variant="h5" 
                     sx={{ 
@@ -424,20 +436,25 @@ const JobDetailsPage = () => {
                   Apply Now
                 </Typography>
                 
-                <ActionButton
-                  variant="contained"
-                  fullWidth
-                  size="large"
-                  onClick={handleApplyNow}
-                  startIcon={<NoteAlt />}
-                  sx={{ 
-                    mb: 2,
-                    background: 'linear-gradient(45deg, #FFD700, #FFA500)',
-                    color: '#000',
-                  }}
-                >
-                  Apply for this Job
-                </ActionButton>
+                <Tooltip title="Apply to this job">
+                  <span>
+                    <ActionButton
+                      variant="contained"
+                      size="large"
+                      onClick={handleApplyNow}
+                      startIcon={<NoteAlt />}
+                      fullWidth={isMobile}
+                      aria-label="Apply for this job"
+                      sx={{
+                        mb: 2,
+                        background: 'linear-gradient(45deg, #FFD700, #FFA500)',
+                        color: '#000',
+                      }}
+                    >
+                      Apply Now
+                    </ActionButton>
+                  </span>
+                </Tooltip>
                 
                 <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
                   <IconButton 
