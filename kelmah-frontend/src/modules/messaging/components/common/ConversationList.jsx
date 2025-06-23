@@ -33,7 +33,9 @@ import {
   Autocomplete,
   CircularProgress,
   FormControlLabel,
-  Switch
+  Switch,
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import { 
   Search as SearchIcon,
@@ -210,7 +212,9 @@ const ConversationList = ({
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
   const [enableEncryption, setEnableEncryption] = useState(false);
   const { messagingService } = useMessages();
-  const [localConversations, setLocalConversations] = useState([]);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [loadError, setLoadError] = useState(null);
   const [localLoading, setLocalLoading] = useState(true);
 
   useEffect(() => {
@@ -225,6 +229,7 @@ const ConversationList = ({
         }
       } catch (error) {
         console.error('Error loading conversations:', error);
+        if (active) setLoadError('Failed to load conversations. Please try again.');
       } finally {
         if (!cancelled) setLocalLoading(false);
       }
@@ -447,26 +452,46 @@ const ConversationList = ({
     }
   };
 
+  if (loadError) {
+    return (
+      <ConversationContainer>
+        <Box sx={{ p: 3, textAlign: 'center' }}>
+          <Typography color="error">{loadError}</Typography>
+          <Button onClick={() => window.location.reload()} sx={{ mt: 2 }} variant="outlined">Retry</Button>
+        </Box>
+      </ConversationContainer>
+    );
+  }
+  if (localLoading) {
+    return (
+      <ConversationContainer>
+        <List>
+          {renderLoadingSkeletons()}
+        </List>
+      </ConversationContainer>
+    );
+  }
+
   return (
     <ConversationContainer elevation={3}>
       <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
         <Typography variant="h6" sx={{ color: '#FFD700' }}>
           Messages
         </Typography>
-        <Box>
-          <Tooltip title="Filter conversations">
+        <Box sx={{ display: 'flex', gap: 1, p: 1 }}>
+          <Tooltip title="Filter conversations" arrow>
             <IconButton 
               size="small" 
-              sx={{ color: 'rgba(255, 215, 0, 0.7)' }}
+              sx={{ color: 'rgba(255, 215, 0, 0.7)', p: isMobile ? 1 : 0.5 }}
               onClick={handleFilterMenuOpen}
             >
               <FilterList />
             </IconButton>
           </Tooltip>
-          <Tooltip title="New conversation">
+          <Tooltip title="New conversation" arrow>
             <IconButton 
               size="small" 
-              sx={{ color: 'rgba(255, 215, 0, 0.7)', ml: 1 }}
+              sx={{ color: 'rgba(255, 215, 0, 0.7)', ml: 1, p: isMobile ? 1 : 0.5 }}
               onClick={handleNewConversationClick}
             >
               <Add />
@@ -521,9 +546,7 @@ const ConversationList = ({
       </Tabs>
       
       <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
-        {localLoading ? (
-          renderLoadingSkeletons()
-        ) : filteredConversations.length > 0 ? (
+        {filteredConversations.length > 0 ? (
           <List disablePadding>
             {filteredConversations.map((conversation) => {
               const isSelected = selectedConversationId === conversation.id;

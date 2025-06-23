@@ -7,7 +7,13 @@ import {
   Tabs,
   Tab,
   Grid,
-  alpha
+  alpha,
+  Tooltip,
+  useMediaQuery,
+  useTheme,
+  Skeleton,
+  Alert,
+  Button
 } from '@mui/material';
 import {
   Notifications as NotificationsIcon,
@@ -22,6 +28,8 @@ import { useSettings } from '../hooks/useSettings';
 
 const SettingsPage = () => {
   const { settings, loading, error, updateNotificationPreferences } = useSettings();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [tabValue, setTabValue] = useState(0);
 
   const handleTabChange = (event, newValue) => {
@@ -33,6 +41,24 @@ const SettingsPage = () => {
     { component: <AccountSettings />, label: 'Account', icon: <AccountCircleIcon /> },
     { component: <SecuritySettings />, label: 'Security & Password', icon: <SecurityIcon /> },
   ];
+
+  if (loading) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Typography variant="h4" gutterBottom>Loading Settings...</Typography>
+        <Skeleton variant="rectangular" height={40} sx={{ mb: 2 }} />
+        <Skeleton variant="rectangular" height={300} />
+      </Container>
+    );
+  }
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert severity="error">{error}</Alert>
+        <Button onClick={() => window.location.reload()} sx={{ mt: 2 }} variant="outlined">Retry</Button>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ py: 4, color: 'text.primary' }}>
@@ -54,29 +80,35 @@ const SettingsPage = () => {
                     borderRadius: 2
                 }}
             >
-                <Tabs
-                    orientation="vertical"
-                    variant="scrollable"
-                    value={tabValue}
-                    onChange={handleTabChange}
-                    aria-label="Vertical settings tabs"
-                    sx={{
-                        borderRight: 1,
-                        borderColor: 'divider',
-                        "& .MuiTab-root": {
-                            justifyContent: 'flex-start',
-                            fontWeight: '600',
-                            textTransform: 'none',
-                        },
-                         "& .Mui-selected": {
-                            color: 'primary.main',
-                        }
-                    }}
-                >
-                    {settingsPanels.map((panel, index) => (
-                        <Tab key={panel.label} label={panel.label} icon={panel.icon} iconPosition="start" />
-                    ))}
-                </Tabs>
+                <Tooltip title="Settings categories" arrow>
+                  <Box>
+                    <Tabs
+                      orientation={isMobile ? 'horizontal' : 'vertical'}
+                      variant="scrollable"
+                      value={tabValue}
+                      onChange={handleTabChange}
+                      aria-label="Vertical settings tabs"
+                      sx={{
+                          borderRight: 1,
+                          borderColor: 'divider',
+                          "& .MuiTab-root": {
+                              justifyContent: 'flex-start',
+                              fontWeight: '600',
+                              textTransform: 'none',
+                          },
+                           "& .Mui-selected": {
+                              color: 'primary.main',
+                          }
+                      }}
+                    >
+                      {settingsPanels.map((panel) => (
+                        <Tooltip key={panel.label} title={panel.label} arrow>
+                          <Tab label={panel.label} icon={panel.icon} iconPosition="start" aria-label={panel.label} />
+                        </Tooltip>
+                      ))}
+                    </Tabs>
+                  </Box>
+                </Tooltip>
            </Paper>
         </Grid>
         <Grid item xs={12} md={9}>
