@@ -40,17 +40,21 @@ import { fetchJobById, selectCurrentJob, selectJobsLoading, selectJobsError } fr
 const DetailsPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   borderRadius: theme.spacing(2),
-  background: 'rgba(26, 26, 26, 0.8)',
+  backgroundColor: '#1a1a1a',
+  color: '#fff',
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(255, 215, 0, 0.1)',
+  border: '1px solid #D4AF37',
 }));
 
 const ActionButton = styled(Button)(({ theme }) => ({
   borderRadius: theme.spacing(1),
   padding: theme.spacing(1.5, 3),
   fontWeight: 'bold',
+  backgroundColor: '#D4AF37',
+  color: '#1a1a1a',
   transition: 'all 0.3s ease',
   '&:hover': {
+    backgroundColor: '#c4942a',
     transform: 'translateY(-2px)',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
   }
@@ -58,11 +62,11 @@ const ActionButton = styled(Button)(({ theme }) => ({
 
 const SkillChip = styled(Chip)(({ theme }) => ({
   margin: theme.spacing(0.5),
-  background: 'rgba(255, 215, 0, 0.2)',
-  color: '#FFD700',
-  borderColor: 'rgba(255, 215, 0, 0.5)',
+  backgroundColor: '#D4AF37',
+  color: '#1a1a1a',
+  fontWeight: 500,
   '&:hover': {
-    background: 'rgba(255, 215, 0, 0.3)',
+    backgroundColor: '#c4942a',
   }
 }));
 
@@ -169,11 +173,12 @@ const JobDetailsPage = () => {
   if (!job) return null;
 
   return (
-    <Box sx={{ 
-      minHeight: '100vh', 
-      py: 8, 
-      px: 2,
-      background: '#1a1a1a'
+    <Box sx={{
+      minHeight: '100vh',
+      py: 8,
+      px: { xs: 2, sm: 4, md: 6 },
+      backgroundColor: '#1a1a1a',
+      color: '#fff'
     }}>
       <Container maxWidth="lg">
         {/* Back Button */}
@@ -182,14 +187,15 @@ const JobDetailsPage = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Button 
-            startIcon={<ArrowBack />} 
+          <Button
+            startIcon={<ArrowBack />}
             onClick={() => navigate('/jobs')}
-            sx={{ 
-              mb: 3, 
-              color: '#FFD700',
+            sx={{
+              mb: 3,
+              color: '#D4AF37',
+              fontWeight: 'bold',
               '&:hover': {
-                background: 'rgba(255, 215, 0, 0.1)',
+                backgroundColor: 'rgba(212, 175, 55, 0.1)',
               }
             }}
           >

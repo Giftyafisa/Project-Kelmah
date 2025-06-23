@@ -24,20 +24,25 @@ const WorkerDashboardPage = () => {
   };
   
   return (
-    <>
-      <Box sx={{ mb: 4, borderBottom: '1px solid rgba(255, 215, 0, 0.1)', pb: 2 }}>
-        <Typography variant="h3" fontWeight={800} color={theme.palette.secondary.main} sx={{ mb: 1, letterSpacing: 0.5 }}>
+    <Box sx={{
+      minHeight: '100vh',
+      backgroundColor: '#1a1a1a',
+      px: { xs: 2, sm: 3, md: 4 },
+      py: 4
+    }}>
+      <Box sx={{ mb: 6, borderBottom: '2px solid #D4AF37', pb: 3, color: '#fff' }}>
+        <Typography variant="h2" fontWeight={800} sx={{ mb: 1, letterSpacing: 0.5, fontSize: { xs: '1.75rem', md: '2.5rem' }, color: '#D4AF37' }}>
           Welcome back, {displayUser?.firstName || displayUser?.name || 'Demo'}!
         </Typography>
-        <Typography variant="subtitle1" color={theme.palette.secondary.main} fontWeight={500} sx={{ mb: 2, opacity: 0.8 }}>
+        <Typography variant="h5" fontWeight={500} sx={{ mb: 2, opacity: 0.9, fontSize: '1.25rem', color: '#fff' }}>
           {getProfessionalTitle()}
         </Typography>
-        <Typography variant="h6" color={theme.palette.primary.contrastText} sx={{ opacity: 0.9 }}>
+        <Typography variant="body1" sx={{ opacity: 0.9, fontSize: '1rem', color: '#ddd' }}>
           Ready to find your next job? Let's get to work.
         </Typography>
       </Box>
       <WorkerDashboard user={displayUser} />
-    </>
+    </Box>
   );
 };
 
