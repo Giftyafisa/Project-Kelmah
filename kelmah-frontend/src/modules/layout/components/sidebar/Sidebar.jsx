@@ -60,10 +60,10 @@ const Sidebar = () => {
       { text: 'Bills', icon: <ReceiptIcon />, path: '/payment/bill' },
     ] : navRole === 'hirer' ? [
       { text: 'Dashboard', icon: <HomeIcon />, path: '/hirer/dashboard' },
-      { text: 'Post a Job', icon: <PaymentIcon />, path: '/jobs/post' },
+      { text: 'Post a Job', icon: <PaymentIcon />, path: '/hirer/jobs/post' },
       { text: 'Manage Jobs', icon: <WorkIcon />, path: '/hirer/jobs' },
       { text: 'Applications', icon: <AssignmentTurnedInIcon />, path: '/hirer/applications' },
-      { text: 'Find Talent', icon: <FindInPageIcon />, path: '/find-talents' },
+      { text: 'Find Talent', icon: <FindInPageIcon />, path: '/hirer/find-talent' },
     ] : [];
 
     // Define common navigation items for all roles

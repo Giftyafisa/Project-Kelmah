@@ -513,6 +513,18 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
+              <Route
+                path="/messages/:conversationId"
+                element={
+                  <ProtectedRoute
+                    isAllowed={isAuthenticated}
+                    redirectPath="/login"
+                    loading={loading}
+                  >
+                    <MessagingPage />
+                  </ProtectedRoute>
+                }
+              />
               
               {/* Worker payment routes */}
               <Route 
