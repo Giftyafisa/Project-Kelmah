@@ -42,7 +42,8 @@ import {
   ThumbUp,
   FavoriteBorder,
   EmojiEmotions,
-  Close
+  Close,
+  ArrowBack
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import Picker from 'emoji-picker-react';
@@ -454,9 +455,11 @@ const ChatWindow = ({
         <Typography variant="body2" sx={{ ml: 1, flexGrow: 1 }}>
           {file.name} ({(file.size / 1024).toFixed(1)} KB)
         </Typography>
-        <IconButton size="small">
-          <Download fontSize="small" />
-        </IconButton>
+        <Tooltip title="Download attachment" arrow>
+          <IconButton size="small" aria-label="Download attachment">
+            <Download fontSize="small" />
+          </IconButton>
+        </Tooltip>
       </Box>
     );
   };
@@ -486,6 +489,11 @@ const ChatWindow = ({
             {recipientStatus === 'online' ? 'Online' : 'Last seen today at 11:20 AM'}
           </Typography>
         </Box>
+        <Tooltip title="Back to conversations" arrow>
+          <IconButton edge="start" color="inherit" onClick={onClose} aria-label="Back to conversations">
+            <ArrowBack />
+          </IconButton>
+        </Tooltip>
       </ChatHeader>
       
       {/* Messages Area */}
@@ -649,9 +657,11 @@ const ChatWindow = ({
               {replyTo.text}
             </Typography>
           </Box>
-          <IconButton onClick={() => setReplyTo(null)} sx={{ ml: 1 }}>
-            <Close fontSize="small" />
-          </IconButton>
+          <Tooltip title="Cancel reply" arrow>
+            <IconButton onClick={() => setReplyTo(null)} sx={{ ml: 1 }} aria-label="Cancel reply">
+              <Close fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </Box>
       )}
       
@@ -705,9 +715,11 @@ const ChatWindow = ({
                     {(file.size / 1024).toFixed(1)} KB
                   </Typography>
                 </Box>
-                <IconButton size="small" onClick={() => handleRemoveFile(index)}>
-                  <Close fontSize="small" />
-                </IconButton>
+                <Tooltip title="Remove attachment" arrow>
+                  <IconButton size="small" onClick={() => handleRemoveFile(index)} aria-label="Remove attachment">
+                    <Close fontSize="small" />
+                  </IconButton>
+                </Tooltip>
               </FilePreview>
             ))}
           </Box>
