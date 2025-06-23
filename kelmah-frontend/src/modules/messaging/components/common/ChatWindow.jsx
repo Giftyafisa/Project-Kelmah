@@ -48,6 +48,8 @@ import { styled } from '@mui/material/styles';
 import Picker from 'emoji-picker-react';
 import messagingService from '../../services/messagingService';
 import { format } from 'date-fns';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 // Styled components
 const ChatContainer = styled(Paper)(({ theme }) => ({
@@ -241,6 +243,8 @@ const ChatWindow = ({
   const fileInputRef = useRef(null);
   const emojiPickerRef = useRef(null);
   const typingTimeoutRef = useRef(null);
+  const [sendError, setSendError] = useState(null);
+  const [sendSuccess, setSendSuccess] = useState(false);
 
   // Scroll to bottom of messages
   useEffect(() => {
@@ -330,9 +334,13 @@ const ChatWindow = ({
     setReplyTo(null);
     } catch (err) {
       console.error('Error sending message:', err);
+      setSendError('Failed to send message. Please try again.');
     } finally {
       setIsLoading(false);
       setUploadProgress(null);
+      if (!sendError) {
+        setSendSuccess(true);
+      }
     }
   };
 
@@ -716,16 +724,18 @@ const ChatWindow = ({
           multiple
         />
         
-        <ActionButton onClick={handleOpenFileDialog} disabled={isLoading}>
-          <AttachFile />
-        </ActionButton>
+        <Tooltip title="Attach a file" arrow>
+          <ActionButton onClick={handleOpenFileDialog} disabled={isLoading} aria-label="Attach file">
+            <AttachFile />
+          </ActionButton>
+        </Tooltip>
         
-        <Box>
-          <ActionButton onClick={handleOpenEmojiPicker}>
+        <Tooltip title="Add an emoji" arrow>
+          <ActionButton onClick={handleOpenEmojiPicker} aria-label="Add emoji">
             <InsertEmoticon />
           </ActionButton>
-        </Box>
-        {/* Emoji Picker Dialog */}
+        </Tooltip>
+        
         <Dialog
           open={showEmojiPicker}
           onClose={() => setShowEmojiPicker(false)}
@@ -854,6 +864,18 @@ const ChatWindow = ({
           />
         </DialogContent>
       </Dialog>
+      
+      {/* Message send feedback */}
+      <Snackbar open={!!sendError} autoHideDuration={4000} onClose={() => setSendError(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <MuiAlert onClose={() => setSendError(null)} severity="error" sx={{ width: '100%' }}>
+          {sendError}
+        </MuiAlert>
+      </Snackbar>
+      <Snackbar open={sendSuccess} autoHideDuration={2000} onClose={() => setSendSuccess(false)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <MuiAlert onClose={() => setSendSuccess(false)} severity="success" sx={{ width: '100%' }}>
+          Message sent
+        </MuiAlert>
+      </Snackbar>
     </ChatContainer>
   );
 };
