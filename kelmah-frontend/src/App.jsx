@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Layout from './modules/layout/components/Layout';
+import ErrorBoundary from './components/ErrorBoundary';
 import theme from './theme';
 import Home from './modules/home/pages/HomePage';
 import Dashboard from './modules/dashboard/pages/DashboardPage';
@@ -194,7 +195,8 @@ function App() {
     return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-          <Layout>
+          <ErrorBoundary>
+            <Layout>
                 <Routes>
               {/* Public routes */}
               {publicRoutes}
@@ -583,7 +585,8 @@ function App() {
               {/* Catch all route */}
               <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
-          </Layout>
+            </Layout>
+          </ErrorBoundary>
                                 </ThemeProvider>
     );
 }

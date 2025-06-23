@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Paper, Box, TextField, Button, CircularProgress, Alert, Grid, InputAdornment } from '@mui/material';
+import { Container, Typography, Paper, Box, TextField, Button, CircularProgress, Alert, Grid, InputAdornment, Tooltip } from '@mui/material';
 import paymentsApi from '../../../api/services/paymentsApi';
+import InfoIcon from '@mui/icons-material/Info';
 
 // Currency formatter for Ghana Cedi
 const currencyFormatter = new Intl.NumberFormat('en-GH', { style: 'currency', currency: 'GHS' });
@@ -72,33 +73,52 @@ const PaymentSettingsPage = () => {
           Payment Settings
         </Typography>
         <Grid container spacing={2}>
-          {/* Example setting field: replace with actual settings keys */}
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Default Currency"
-              value={settings.defaultCurrency || ''}
-              onChange={handleChange('defaultCurrency')}
-            />
+            <Tooltip title="Select the currency for transactions" arrow>
+              <TextField
+                fullWidth
+                label="Default Currency"
+                value={settings.defaultCurrency || ''}
+                onChange={handleChange('defaultCurrency')}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <InfoIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Tooltip>
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Minimum Deposit Amount"
-              type="number"
-              value={settings.minDepositAmount || ''}
-              onChange={handleChange('minDepositAmount')}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">{settings.defaultCurrency || ''}</InputAdornment>,
-                inputProps: { min: 0, step: 0.01 }
-              }}
-            />
+            <Tooltip title="Set the minimum amount users can deposit" arrow>
+              <TextField
+                fullWidth
+                label="Minimum Deposit Amount"
+                type="number"
+                value={settings.minDepositAmount || ''}
+                onChange={handleChange('minDepositAmount')}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">{settings.defaultCurrency || ''}</InputAdornment>,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <InfoIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                  inputProps: { min: 0, step: 0.01 }
+                }}
+              />
+            </Tooltip>
           </Grid>
         </Grid>
         <Box sx={{ mt: 3 }}>
-          <Button variant="contained" color="secondary" sx={{ boxShadow: '0 2px 8px rgba(255,215,0,0.4)' }} onClick={handleSave} disabled={saving}>
-            {saving ? 'Saving...' : 'Save Changes'}
-          </Button>
+          <Tooltip title="Save your payment preferences" arrow>
+            <span>
+              <Button variant="contained" color="secondary" sx={{ boxShadow: '0 2px 8px rgba(255,215,0,0.4)' }} onClick={handleSave} disabled={saving} aria-label="Save settings">
+                {saving ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </span>
+          </Tooltip>
         </Box>
         {success && (
           <Box sx={{ mt: 2 }}>

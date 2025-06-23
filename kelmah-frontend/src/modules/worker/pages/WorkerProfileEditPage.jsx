@@ -26,6 +26,7 @@ import {
   useTheme,
   useMediaQuery,
   Autocomplete,
+  Skeleton,
 } from '@mui/material';
 import {
   Save as SaveIcon,
@@ -319,6 +320,29 @@ const WorkerProfileEditPage = () => {
     }));
   };
   
+  if (loading) {
+    return (
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <Typography variant="h4" gutterBottom>Loading Profile...</Typography>
+        <Grid container spacing={3}>
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <Grid item xs={12} sm={6} key={idx}>
+              <Skeleton variant="rectangular" height={56} />
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <Alert severity="error">{error}</Alert>
+      </Container>
+    );
+  }
+  
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ mb: 4 }}>
@@ -340,12 +364,6 @@ const WorkerProfileEditPage = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-      
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {error}
-        </Alert>
-      )}
       
       <form onSubmit={handleSubmit}>
         <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
