@@ -35,10 +35,10 @@ const SettingsPage = () => {
   ];
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4, color: 'text.primary' }}>
+    <Container maxWidth="lg" sx={{ py: 4, backgroundColor: '#1a1a1a', color: '#fff', minHeight: '100vh' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-        <SettingsIcon sx={{ fontSize: 36, mr: 1.5, color: 'primary.main' }} />
-        <Typography variant="h4" fontWeight="bold">
+        <SettingsIcon sx={{ fontSize: 36, mr: 1.5, color: '#D4AF37' }} />
+        <Typography variant="h4" fontWeight="bold" sx={{ color: '#D4AF37', fontSize: '2rem' }}>
           Settings
         </Typography>
       </Box>
@@ -46,11 +46,13 @@ const SettingsPage = () => {
       <Grid container spacing={4}>
         <Grid item xs={12} md={3}>
            <Paper 
-                elevation={2}
+                elevation={3}
                 sx={{ 
-                    p: 1,
-                    backgroundColor: (theme) => alpha(theme.palette.background.paper, 0.7),
+                    p: 2,
+                    backgroundColor: '#1a1a1a',
+                    color: '#fff',
                     backdropFilter: 'blur(10px)',
+                    border: '1px solid #D4AF37',
                     borderRadius: 2
                 }}
             >
@@ -61,20 +63,23 @@ const SettingsPage = () => {
                     onChange={handleTabChange}
                     aria-label="Vertical settings tabs"
                     sx={{
-                        borderRight: 1,
-                        borderColor: 'divider',
+                        borderRight: '2px solid #D4AF37',
+                        color: '#fff',
                         "& .MuiTab-root": {
                             justifyContent: 'flex-start',
-                            fontWeight: '600',
+                            fontWeight: 600,
                             textTransform: 'none',
+                            color: '#fff',
+                            fontSize: '1rem'
                         },
                          "& .Mui-selected": {
-                            color: 'primary.main',
-                        }
+                            color: '#D4AF37',
+                        },
+                        '& .MuiTabs-indicator': { backgroundColor: '#D4AF37' }
                     }}
                 >
                     {settingsPanels.map((panel, index) => (
-                        <Tab key={panel.label} label={panel.label} icon={panel.icon} iconPosition="start" />
+                        <Tab key={panel.label} label={panel.label} icon={panel.icon} iconPosition="start" sx={{ textTransform: 'none' }} />
                     ))}
                 </Tabs>
            </Paper>

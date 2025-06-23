@@ -68,7 +68,13 @@ const JobSearchForm = ({ onSubmit, initialValues = {} }) => {
   };
 
   return (
-    <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
+    <Paper elevation={3} sx={{
+      p: 3,
+      mb: 4,
+      backgroundColor: '#1a1a1a',
+      color: '#fff',
+      border: '1px solid #D4AF37'
+    }}>
       <Box component="form" onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
@@ -79,6 +85,14 @@ const JobSearchForm = ({ onSubmit, initialValues = {} }) => {
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder="Job title, skills, or company"
+              sx={{
+                backgroundColor: '#333',
+                '& .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#c4942a' },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+                '& .MuiInputBase-input': { color: '#fff' },
+                '& .MuiInputLabel-root': { color: '#fff' }
+              }}
             />
           </Grid>
           
@@ -90,16 +104,25 @@ const JobSearchForm = ({ onSubmit, initialValues = {} }) => {
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="City, state, or remote"
+              sx={{
+                backgroundColor: '#333',
+                '& .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#c4942a' },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+                '& .MuiInputBase-input': { color: '#fff' },
+                '& .MuiInputLabel-root': { color: '#fff' }
+              }}
             />
           </Grid>
           
           <Grid item xs={12} md={4}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel>Job Type</InputLabel>
+            <FormControl fullWidth variant="outlined" sx={{ backgroundColor: '#333', '& .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' }, '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#c4942a' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' } }}>
+              <InputLabel sx={{ color: '#fff' }}>Job Type</InputLabel>
               <Select
                 value={jobType}
                 onChange={(e) => setJobType(e.target.value)}
                 label="Job Type"
+                sx={{ color: '#fff' }}
               >
                 <MenuItem value="">Any</MenuItem>
                 {jobTypes.map(type => (
