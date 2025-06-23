@@ -73,7 +73,7 @@ const BillPage = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 4 }} role="main" aria-labelledby="bills-header">
       <Paper sx={{
         p: 4,
         borderRadius: 2,
@@ -82,7 +82,7 @@ const BillPage = () => {
         border: '2px solid',
         borderColor: 'secondary.main'
       }}>
-        <Typography variant="h4" fontWeight="bold" sx={{ mb: 3, color: 'secondary.main' }}>
+        <Typography variant="h4" fontWeight="bold" sx={{ mb: 3, color: 'secondary.main' }} id="bills-header">
           Your Bills
         </Typography>
         {/* Filters */}
@@ -91,6 +91,7 @@ const BillPage = () => {
             <TextField
               label="From"
               type="date"
+              aria-label="Filter from date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
               InputLabelProps={{ shrink: true }}
@@ -100,6 +101,7 @@ const BillPage = () => {
             <TextField
               label="To"
               type="date"
+              aria-label="Filter to date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
               InputLabelProps={{ shrink: true }}
@@ -111,6 +113,7 @@ const BillPage = () => {
               <Select
                 value={statusFilter}
                 label="Status"
+                aria-label="Filter by status"
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
                 <MenuItem value="all">All</MenuItem>
@@ -121,20 +124,24 @@ const BillPage = () => {
             </FormControl>
           </Tooltip>
           <Tooltip title="Apply selected filters">
-            <Button variant="outlined" color="secondary" sx={{ borderWidth: 2 }} onClick={applyFilters}>Filter</Button>
+            <Button variant="outlined" color="secondary" sx={{ borderWidth: 2 }} onClick={applyFilters} aria-label="Apply filters">Filter</Button>
           </Tooltip>
         </Box>
         {/* Show error if fetch failed */}
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+        {error && <Alert severity="error" role="alert" sx={{ mb: 2 }}>{error}</Alert>}
         {loading ? (
-          <Typography>Loading bills...</Typography>
+          <Box role="status" aria-live="polite">
+            <Typography>Loading bills...</Typography>
+          </Box>
         ) : filteredBills.length === 0 ? (
-          <Typography color="text.secondary">No bills match your filter criteria.</Typography>
+          <Box role="alert" aria-atomic="true">
+            <Typography color="text.secondary">No bills match your filter criteria.</Typography>
+          </Box>
         ) : (
-          <List>
+          <List role="list" aria-label="Bill items">
             {pagedBills.map((bill, index) => (
               <React.Fragment key={bill.id}>
-                <ListItem>
+                <ListItem role="listitem">
                   <ListItemText 
                     primary={<Typography variant="subtitle1" fontWeight="medium">{bill.title}</Typography>}
                     secondary={`Due: ${new Date(bill.dueDate).toLocaleDateString('en-GH', { day: 'numeric', month: 'long', year: 'numeric' })}`}
@@ -177,10 +184,11 @@ const BillPage = () => {
         <Dialog
           open={confirmDialogOpen}
           onClose={handleCloseConfirm}
+          aria-labelledby="confirm-bill-dialog-title"
           BackdropProps={{ sx: { backgroundColor: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(4px)' } }}
           PaperProps={{ sx: { bgcolor: 'grey.900', color: 'text.primary', borderRadius: 2, border: '2px solid', borderColor: 'secondary.main', boxShadow: '0 0 16px rgba(255,215,0,0.5)' } }}
         >
-          <DialogTitle>Confirm Payment</DialogTitle>
+          <DialogTitle id="confirm-bill-dialog-title">Confirm Payment</DialogTitle>
           <DialogContent dividers>
             {selectedBill && (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>

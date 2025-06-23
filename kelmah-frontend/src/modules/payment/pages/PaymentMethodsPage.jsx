@@ -251,22 +251,22 @@ const PaymentMethodsPage = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 4 }} role="main" aria-labelledby="methods-header">
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h4" sx={{ color: 'secondary.main' }}>Methods</Typography>
+        <Typography variant="h4" sx={{ color: 'secondary.main' }} id="methods-header">Methods</Typography>
         <Box>
           <Tooltip title="Add credit card">
-            <IconButton color="secondary" sx={{ boxShadow: '0 2px 8px rgba(255,215,0,0.4)' }} onClick={() => setOpenAddCard(true)}>
+            <IconButton color="secondary" sx={{ boxShadow: '0 2px 8px rgba(255,215,0,0.4)' }} onClick={() => setOpenAddCard(true)} aria-label="Add credit card">
               <AddIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Add mobile money">
-            <IconButton color="secondary" sx={{ boxShadow: '0 2px 8px rgba(255,215,0,0.4)' }} onClick={() => setOpenAddMobile(true)}>
+            <IconButton color="secondary" sx={{ boxShadow: '0 2px 8px rgba(255,215,0,0.4)' }} onClick={() => setOpenAddMobile(true)} aria-label="Add mobile money">
               <MobileIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Add bank account">
-            <IconButton color="secondary" sx={{ boxShadow: '0 2px 8px rgba(255,215,0,0.4)' }} onClick={() => setOpenAddBank(true)}>
+            <IconButton color="secondary" sx={{ boxShadow: '0 2px 8px rgba(255,215,0,0.4)' }} onClick={() => setOpenAddBank(true)} aria-label="Add bank account">
               <BankIcon />
             </IconButton>
           </Tooltip>
@@ -299,18 +299,18 @@ const PaymentMethodsPage = () => {
       </Card>
       
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+        <Alert severity="error" role="alert" sx={{ mb: 3 }} onClose={() => setError(null)}>
           {error}
         </Alert>
       )}
       
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', my: 8 }}>
-          <CircularProgress />
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 8 }} role="status" aria-live="polite">
+          <CircularProgress aria-label="Loading payment methods" />
         </Box>
       ) : paymentMethods.length === 0 ? (
-        <Paper sx={theme => ({ p: 4, textAlign: 'center', border: '2px solid', borderColor: 'secondary.main', borderRadius: 2, background: `linear-gradient(to right, #28313b, #485461, ${theme.palette.secondary.main})`, color: 'white' })}>
-          <CreditCardIcon sx={{ fontSize: 60, color: 'secondary.main', mb: 2 }} />
+        <Paper sx={theme => ({ p: 4, textAlign: 'center', border: '2px solid', borderColor: 'secondary.main', borderRadius: 2, background: `linear-gradient(to right, #28313b, #485461, ${theme.palette.secondary.main})`, color: 'white' })} role="alert" aria-atomic="true">
+          <CreditCardIcon sx={{ fontSize: 60, color: 'secondary.main', mb: 2 }} aria-hidden="true" />
           <Typography variant="h6" color="secondary.main" gutterBottom>
             No Payment Methods Added
           </Typography>
@@ -323,6 +323,7 @@ const PaymentMethodsPage = () => {
             sx={{ boxShadow: '0 2px 8px rgba(255,215,0,0.4)' }}
             startIcon={<AddIcon />}
             onClick={() => setOpenAddCard(true)}
+            aria-label="Add payment method"
           >
             Add Payment Method
           </Button>
@@ -338,6 +339,7 @@ const PaymentMethodsPage = () => {
                   borderRadius: 2,
                   borderLeft: method.isDefault ? `4px solid ${theme.palette.secondary.main}` : 'none',
                 }}
+                role="region" aria-label={`Payment method: ${method.name}`}
               >
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>

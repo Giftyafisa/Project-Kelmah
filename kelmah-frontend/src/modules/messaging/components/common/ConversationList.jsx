@@ -448,7 +448,7 @@ const ConversationList = ({
   };
 
   return (
-    <ConversationContainer elevation={3}>
+    <ConversationContainer elevation={3} role="region" aria-label="Conversations">
       <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
         <Typography variant="h6" sx={{ color: '#FFD700' }}>
           Messages
@@ -456,6 +456,7 @@ const ConversationList = ({
         <Box>
           <Tooltip title="Filter conversations">
             <IconButton 
+              aria-label="Open filter menu"
               size="small" 
               sx={{ color: 'rgba(255, 215, 0, 0.7)' }}
               onClick={handleFilterMenuOpen}
@@ -465,6 +466,7 @@ const ConversationList = ({
           </Tooltip>
           <Tooltip title="New conversation">
             <IconButton 
+              aria-label="Start new conversation"
               size="small" 
               sx={{ color: 'rgba(255, 215, 0, 0.7)', ml: 1 }}
               onClick={handleNewConversationClick}
@@ -476,6 +478,7 @@ const ConversationList = ({
       </Box>
       
       <SearchField
+        aria-label="Search conversations"
         placeholder="Search conversations..."
         value={searchQuery}
         onChange={handleSearch}
@@ -506,6 +509,7 @@ const ConversationList = ({
       <Tabs 
         value={tabValue}
         onChange={handleTabChange}
+        aria-label="Conversation type tabs"
         variant="fullWidth"
         sx={{ 
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
@@ -522,9 +526,11 @@ const ConversationList = ({
       
       <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
         {localLoading ? (
-          renderLoadingSkeletons()
+          <Box role="status" aria-live="polite">
+            {renderLoadingSkeletons()}
+          </Box>
         ) : filteredConversations.length > 0 ? (
-          <List disablePadding>
+          <List disablePadding aria-label="Conversation items">
             {filteredConversations.map((conversation) => {
               const isSelected = selectedConversationId === conversation.id;
               const hasUnread = conversation.unread > 0;
@@ -611,7 +617,7 @@ const ConversationList = ({
             })}
           </List>
         ) : (
-          <Box sx={{ p: 4, textAlign: 'center' }}>
+          <Box sx={{ p: 4, textAlign: 'center' }} role="alert" aria-atomic="true">
             <Typography 
               variant="body1" 
               sx={{ color: 'rgba(255, 255, 255, 0.5)', mb: 2 }}
@@ -619,6 +625,7 @@ const ConversationList = ({
               No conversations found
             </Typography>
             <ActionButton 
+              aria-label="Start a new conversation"
               variant="outlined" 
               startIcon={<PersonAdd />}
               size="small"
@@ -696,6 +703,7 @@ const ConversationList = ({
       <Dialog 
         open={showNewConversationDialog} 
         onClose={() => setShowNewConversationDialog(false)}
+        aria-labelledby="new-conversation-dialog-title"
         maxWidth="sm"
         fullWidth
         PaperProps={{
@@ -705,7 +713,7 @@ const ConversationList = ({
           }
         }}
       >
-        <DialogTitle sx={{ color: '#FFD700' }}>
+        <DialogTitle sx={{ color: '#FFD700' }} id="new-conversation-dialog-title">
           New Conversation
         </DialogTitle>
         <DialogContent>

@@ -114,11 +114,11 @@ const NotificationsPage = () => {
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return (
-        <Container maxWidth="md" sx={{ py: 4 }}>
+        <Container maxWidth="md" sx={{ py: 4 }} role="main" aria-labelledby="notifications-header">
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <NotificationsIcon sx={{ fontSize: 36, mr: 1.5, color: 'primary.main' }} />
-                    <Typography variant="h4" fontWeight="bold">
+                    <Typography variant="h4" fontWeight="bold" id="notifications-header">
                     Notifications
                 </Typography>
                 </Box>
@@ -127,7 +127,8 @@ const NotificationsPage = () => {
                         variant="outlined"
                         onClick={markAllAsRead}
                         disabled={unreadCount === 0}
-                        sx={{mr: 1}}
+                        sx={{ mr: 1 }}
+                        aria-label="Mark all notifications as read"
                     >
                         Mark All as Read
                     </Button>
@@ -136,6 +137,7 @@ const NotificationsPage = () => {
                         color="error"
                         variant="outlined"
                         disabled={notifications.length === 0}
+                        aria-label="Clear all notifications"
                     >
                         Clear All
                     </Button>
@@ -148,30 +150,36 @@ const NotificationsPage = () => {
                     onChange={handleFilterChange}
                     indicatorColor="primary"
                     textColor="primary"
+                    aria-label="Filter notifications by type"
                     sx={{ mb: 3 }}
                 >
-                    <Tab label="All" value="all" />
-                    <Tab label="Messages" value="message" />
-                    <Tab label="Jobs" value="job" />
-                    <Tab label="Contracts" value="contract" />
+                    <Tab label="All" value="all" id="notifications-tab-all" aria-controls="notifications-panel-all" />
+                    <Tab label="Messages" value="message" id="notifications-tab-message" aria-controls="notifications-panel-message" />
+                    <Tab label="Jobs" value="job" id="notifications-tab-job" aria-controls="notifications-panel-job" />
+                    <Tab label="Contracts" value="contract" id="notifications-tab-contract" aria-controls="notifications-panel-contract" />
                 </Tabs>
 
                 {loading ? (
-                    <Box sx={{ p: 2 }}>
+                    <Box sx={{ p: 2 }} role="status" aria-live="polite">
                         {Array.from(new Array(4)).map((_, idx) => (
                             <Skeleton key={idx} variant="rectangular" height={72} sx={{ mb: 2, borderRadius: 2 }} />
                         ))}
                     </Box>
                 ) : filteredNotifications.length > 0 ? (
-                    <List sx={{p:0}}>
+                    <List sx={{ p: 0 }} role="list">
                         {filteredNotifications.map((notification) => (
-                            <NotificationItem key={notification.id} notification={notification} />
+                            <ListItem role="listitem" disableGutters key={notification.id}>
+                                <NotificationItem notification={notification} />
+                            </ListItem>
                         ))}
                     </List>
                 ) : (
-                    <Box sx={{ textAlign: 'center', p: 5, bgcolor: 'background.paper', borderRadius: 2 }}>
-                        <Typography variant="h6" color="text.secondary">
+                    <Box sx={{ textAlign: 'center', p: 5, bgcolor: 'background.paper', borderRadius: 2 }} role="alert" aria-atomic="true">
+                        <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
                             You're all caught up!
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            No new notifications
                         </Typography>
                     </Box>
                 )}

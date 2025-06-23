@@ -434,9 +434,12 @@ const PaymentCenterPage = () => {
   if (error) return <Container sx={{ py: 4 }}><Alert severity="error">{error}</Alert></Container>;
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
+    <Container maxWidth="xl" sx={{ py: 4 }} role="main" aria-labelledby="payments-header">
       <Typography variant="h4" fontWeight="bold" sx={{ mb: 1, color: 'secondary.main' }}>Payments</Typography>
       <Typography color="text.secondary" sx={{ mb: 4 }}>Manage your wallet, transactions, and payment methods.</Typography>
+      <Typography variant="h4" component="h1" id="payments-header" sx={{ display: 'none' }}>
+        Payments Section
+      </Typography>
 
       <Grid container spacing={4}>
         <Grid item xs={12} lg={4}>
@@ -445,7 +448,7 @@ const PaymentCenterPage = () => {
         
         <Grid item xs={12} lg={8}>
           {/* Summary row for illiterate-friendly icon counts */}
-          <Grid container spacing={2} sx={{ mb: 3 }}>
+          <Grid container spacing={2} sx={{ mb: 3 }} role="region" aria-label="Summary cards">
             <Grid item xs={3}>
               <SummaryCard icon={ReceiptIcon} count={transactions.length} label="Transactions" />
             </Grid>
@@ -464,20 +467,20 @@ const PaymentCenterPage = () => {
             <Tabs
               value={tabIndex}
               onChange={handleTabChange}
-              aria-label="payment center tabs"
+              aria-label="Payment center tabs"
               indicatorColor="secondary"
               textColor="inherit"
               sx={{ '& .MuiTab-root': { color: 'text.secondary' }, '& .Mui-selected': { color: 'secondary.main' } }}
             >
-              <Tab icon={<ReceiptIcon />} iconPosition="start" label="Transactions" />
-              <Tab icon={<CreditCardIcon />} iconPosition="start" label="Payment Methods" />
-              <Tab icon={<GavelIcon />} iconPosition="start" label="Active Escrows" />
-              <Tab icon={<ReceiptLongIcon />} iconPosition="start" label="Bills" />
+              <Tab icon={<ReceiptIcon />} iconPosition="start" label="Transactions" id="payment-tab-0" aria-controls="payment-panel-0" />
+              <Tab icon={<CreditCardIcon />} iconPosition="start" label="Payment Methods" id="payment-tab-1" aria-controls="payment-panel-1" />
+              <Tab icon={<GavelIcon />} iconPosition="start" label="Active Escrows" id="payment-tab-2" aria-controls="payment-panel-2" />
+              <Tab icon={<ReceiptLongIcon />} iconPosition="start" label="Bills" id="payment-tab-3" aria-controls="payment-panel-3" />
             </Tabs>
           </Box>
           
           {tabIndex === 0 && (
-            <>
+            <Box role="tabpanel" id="payment-panel-0" aria-labelledby="payment-tab-0">
               {/* Filters bar */}
               <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center' }}>
                 <Tooltip title="Transactions from this date">
@@ -522,97 +525,22 @@ const PaymentCenterPage = () => {
                   <Pagination count={pageCount} page={page} onChange={(e, val) => setPage(val)} color="primary" />
                 </Box>
               )}
-            </>
+            </Box>
           )}
-          {tabIndex === 1 && <PaymentMethodsView methods={paymentMethods} />}
+          {tabIndex === 1 && (
+            <Box role="tabpanel" id="payment-panel-1" aria-labelledby="payment-tab-1">
+              <PaymentMethodsView methods={paymentMethods} />
+            </Box>
+          )}
           {tabIndex === 2 && (
-            <>
-              {/* Escrows filters */}
-              <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center' }}>
-                <Tooltip title="Filter by status">
-                  <FormControl sx={{ minWidth: 140 }}>
-                    <InputLabel>Status</InputLabel>
-                    <Select
-                      value={escrowStatusFilter}
-                      label="Status"
-                      onChange={(e) => setEscrowStatusFilter(e.target.value)}
-                    >
-                      <MenuItem value="all">All</MenuItem>
-                      <MenuItem value="Funded">Funded</MenuItem>
-                      <MenuItem value="Pending Release">Pending Release</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Tooltip>
-                <Tooltip title="Filter">
-                  <Button variant="outlined" onClick={applyEscrowFilters}>Filter</Button>
-                </Tooltip>
-              </Box>
+            <Box role="tabpanel" id="payment-panel-2" aria-labelledby="payment-tab-2">
               <ActiveEscrows escrows={pagedEscrows} />
-              {escrowPageCount > 1 && (
-                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-                  <Pagination count={escrowPageCount} page={escrowPage} onChange={(e, val) => setEscrowPage(val)} color="primary" />
-                </Box>
-              )}
-            </>
+            </Box>
           )}
           {tabIndex === 3 && (
-            <>
-              {/* Bills filters */}
-              <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center' }}>
-                <Tooltip title="Bills from this date">
-                  <TextField
-                    label="From"
-                    type="date"
-                    value={billStartDate}
-                    onChange={(e) => setBillStartDate(e.target.value)}
-                    InputLabelProps={{ shrink: true }}
-                  />
-                </Tooltip>
-                <Tooltip title="Bills up to this date">
-                  <TextField
-                    label="To"
-                    type="date"
-                    value={billEndDate}
-                    onChange={(e) => setBillEndDate(e.target.value)}
-                    InputLabelProps={{ shrink: true }}
-                  />
-                </Tooltip>
-                <Tooltip title="Filter by status">
-                  <FormControl sx={{ minWidth: 140 }}>
-                    <InputLabel>Status</InputLabel>
-                    <Select
-                      value={billStatusFilter}
-                      label="Status"
-                      onChange={(e) => setBillStatusFilter(e.target.value)}
-                    >
-                      <MenuItem value="all">All</MenuItem>
-                      <MenuItem value="paid">Paid</MenuItem>
-                      <MenuItem value="unpaid">Unpaid</MenuItem>
-                      <MenuItem value="overdue">Overdue</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Tooltip>
-                <Tooltip title="Filter">
-                  <Button variant="outlined" onClick={applyBillFilters}>Filter</Button>
-                </Tooltip>
-                <Tooltip title="Clear filters">
-                  <Button variant="outlined" color="secondary" onClick={clearBillFilters}>Clear</Button>
-                </Tooltip>
-              </Box>
-              {filteredBills.length > 0 && (
-                <Box sx={{ mb: 2 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Showing {(billPage - 1) * billPerPage + 1} - {Math.min(filteredBills.length, billPage * billPerPage)} of {filteredBills.length} bills
-                  </Typography>
-                </Box>
-              )}
+            <Box role="tabpanel" id="payment-panel-3" aria-labelledby="payment-tab-3">
               <BillsView bills={pagedBills} actionLoading={actionLoading} onPayBill={payBill} />
-              {billPageCount > 1 && (
-                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-                  <Pagination count={billPageCount} page={billPage} onChange={(e, val) => setBillPage(val)} color="primary" />
-                </Box>
-              )}
-            </>
+            </Box>
           )}
         </Grid>
       </Grid>
