@@ -220,9 +220,14 @@ const JobsPage = () => {
                                         <FilterListIcon />
                                     </IconButton>
                                 )}
-                                <Typography variant="subtitle1" sx={{ color: '#fff' }}>
-                                    Showing {jobs.length} job{jobs.length !== 1 ? 's' : ''}
-                                </Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                  <Tooltip title="Number of jobs matching your criteria" arrow>
+                                    <Typography variant="subtitle1" sx={{ color: '#fff', display: 'flex', alignItems: 'center' }}>
+                                      <InfoIcon fontSize="small" sx={{ mr: 0.5, color: '#fff' }} />
+                                      Showing {jobs.length} job{jobs.length !== 1 ? 's' : ''}
+                                    </Typography>
+                                  </Tooltip>
+                                </Box>
                                 <FormControl size="small" sx={{ minWidth: 160 }}>
                                     <InputLabel sx={{ color: theme.palette.secondary.main }}>Sort by</InputLabel>
                                     <Select
