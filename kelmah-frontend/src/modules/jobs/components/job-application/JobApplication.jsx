@@ -27,7 +27,9 @@ import {
   List,
   ListItem,
   ListItemText,
-  FormHelperText
+  FormHelperText,
+  Tooltip,
+  Snackbar
 } from '@mui/material';
 import {
   Send as SendIcon,
@@ -40,12 +42,14 @@ import {
   BusinessCenter,
   Schedule,
   Paid,
-  LocationOn
+  LocationOn,
+  Info as InfoIcon
 } from '@mui/icons-material';
 import jobsApi from '../../services/jobsApi';
 import { useAuth } from '../../../auth/contexts/AuthContext';
 import { format } from 'date-fns';
 import axiosInstance from '../../../common/services/axios';
+import MuiAlert from '@mui/material/Alert';
 
 // Styled components
 const ApplicationPaper = styled(Paper)(({ theme }) => ({
@@ -92,6 +96,7 @@ function JobApplication() {
   const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   
   // Form state
   const [applicationData, setApplicationData] = useState({
@@ -131,7 +136,7 @@ function JobApplication() {
         
         setError(null);
         } catch (err) {
-        setError(err.message || 'Failed to fetch job details');
+        setError('Failed to load jobs. Please try again later.');
       } finally {
             setLoading(false);
         }
@@ -415,24 +420,23 @@ function JobApplication() {
       
       <ApplicationPaper elevation={3} sx={{ mt: 3, overflow: 'hidden' }}>
         {/* Stepper */}
-        <Typography variant="h6" align="center" gutterBottom sx={{ fontWeight: 600, color: theme.palette.primary.main }}>
-          Follow these Steps to Apply
-        </Typography>
-        <Box sx={{ 
-          p: 3, 
-          pb: 2, 
-          bgcolor: theme.palette.background.default,
-          borderBottom: '1px solid',
-          borderColor: theme.palette.divider
-        }}>
-          <Stepper activeStep={activeStep} alternativeLabel aria-label="Application Steps" sx={{ '& .MuiStepLabel-label': { fontSize: '1rem', fontWeight: 600 } }}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
+        <Tooltip title="Follow steps to apply" arrow>
+          <Stepper activeStep={activeStep} orientation="vertical" sx={{ mb: 2 }}>
+            {steps.map((step, index) => (
+              <Step key={step.label}>
+                <StepLabel Icon={index === 0 ? WorkIcon : index === 1 ? DescriptionIcon : SendIcon}>
+                  {step.label}
+                  <Tooltip title={step.label} arrow>
+                    <InfoIcon fontSize="small" sx={{ ml: 1 }} />
+                  </Tooltip>
+                </StepLabel>
+                <StepContent>
+                  {step.content}
+                </StepContent>
               </Step>
             ))}
           </Stepper>
-        </Box>
+        </Tooltip>
         
         <Box sx={{ p: 3 }}>
           {/* Step content */}
@@ -897,7 +901,14 @@ function JobApplication() {
         </Box>
       </ApplicationPaper>
         </Box>
-    );
+      {/* Feedback on application */}
+      <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}>
+        <MuiAlert onClose={() => setSnackbar(prev => ({ ...prev, open: false }))} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </MuiAlert>
+      </Snackbar>
+    </Box>
+  );
 }
 
 export default JobApplication; 

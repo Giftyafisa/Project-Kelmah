@@ -10,7 +10,8 @@ import {
     Avatar,
     Divider,
     Stack,
-    IconButton
+    IconButton,
+    Tooltip
 } from '@mui/material';
 import {
     LocationOn,
@@ -20,6 +21,7 @@ import {
     BookmarkBorder,
     Bookmark
 } from '@mui/icons-material';
+import InfoIcon from '@mui/icons-material/Info';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveJobToServer, unsaveJobFromServer, selectSavedJobs } from '../../services/jobSlice';
 
@@ -68,12 +70,14 @@ const JobCard = ({ job, onViewDetails }) => {
                     <Typography variant="h6" component="div">
                         {title}
                     </Typography>
-                    <Chip 
-                        size="small" 
-                        label={category} 
-                        color="primary" 
-                        variant="outlined" 
-                    />
+                    <Tooltip title="Category" arrow>
+                        <Chip 
+                            size="small" 
+                            label={category} 
+                            color="primary" 
+                            variant="outlined" 
+                        />
+                    </Tooltip>
                 </Box>
                 
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
@@ -83,21 +87,27 @@ const JobCard = ({ job, onViewDetails }) => {
                 
                 <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <AttachMoney fontSize="small" color="action" sx={{ mr: 0.5 }} />
+                        <Tooltip title="Budget" arrow>
+                            <AttachMoney fontSize="small" color="action" sx={{ mr: 0.5 }} aria-label="Budget" />
+                        </Tooltip>
                         <Typography variant="body2">
                             {formatBudget()}
                         </Typography>
                     </Box>
                     
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <LocationOn fontSize="small" color="action" sx={{ mr: 0.5 }} />
+                        <Tooltip title="Location" arrow>
+                            <LocationOn fontSize="small" color="action" sx={{ mr: 0.5 }} aria-label="Location" />
+                        </Tooltip>
                         <Typography variant="body2">
                             {location}
                         </Typography>
                     </Box>
                     
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <AccessTime fontSize="small" color="action" sx={{ mr: 0.5 }} />
+                        <Tooltip title="Posted date" arrow>
+                            <AccessTime fontSize="small" color="action" sx={{ mr: 0.5 }} aria-label="Posted date" />
+                        </Tooltip>
                         <Typography variant="body2">
                             {new Date(postedDate).toLocaleDateString()}
                         </Typography>
@@ -106,20 +116,22 @@ const JobCard = ({ job, onViewDetails }) => {
                 
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
                     {skills.map((skill, index) => (
-                        <Chip 
-                            key={index} 
-                            label={skill} 
-                            size="small" 
-                            variant="outlined" 
-                            sx={{ mr: 0.5, mb: 0.5 }}
-                        />
+                        <Tooltip key={index} title={skill} arrow>
+                            <Chip 
+                                label={skill} 
+                                size="small" 
+                                variant="outlined" 
+                                sx={{ mr: 0.5, mb: 0.5 }}
+                                aria-label={skill}
+                            />
+                        </Tooltip>
                     ))}
                 </Box>
                 
                 <Divider sx={{ my: 1.5 }} />
                 
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Avatar sx={{ width: 32, height: 32, mr: 1 }}>
+                    <Avatar sx={{ width: 32, height: 32, mr: 1 }} aria-label="Hirer avatar">
                         {hirerName ? hirerName[0].toUpperCase() : 'H'}
                     </Avatar>
                     <Typography variant="body2">
@@ -127,25 +139,26 @@ const JobCard = ({ job, onViewDetails }) => {
                     </Typography>
                     {hirerRating && (
                         <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
-                            <Star sx={{ color: 'gold', fontSize: 18, mr: 0.5 }} />
+                            <Tooltip title="Hirer rating" arrow>
+                                <Star sx={{ color: 'gold', fontSize: 18, mr: 0.5 }} aria-label="Hirer rating" />
+                            </Tooltip>
                             <Typography variant="body2">{hirerRating}</Typography>
                         </Box>
                     )}
                 </Box>
             </CardContent>
             
-            <CardActions>
-                <IconButton onClick={handleToggleSave}> 
-                    {isSaved ? <Bookmark color="primary" /> : <BookmarkBorder />} 
-                </IconButton>
-                <Button 
-                    size="small" 
-                    variant="contained" 
-                    onClick={() => onViewDetails?.(id)}
-                    fullWidth
-                >
-                    View Details
-                </Button>
+            <CardActions sx={{ display: 'flex', gap: 1, flexDirection: 'column'}}>
+                <Tooltip title={isSaved ? 'Unsave job' : 'Save job'} arrow>
+                    <IconButton onClick={handleToggleSave} aria-label={isSaved ? 'Unsave job' : 'Save job'}>
+                        {isSaved ? <Bookmark color="primary" /> : <BookmarkBorder />} 
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="View job details" arrow>
+                    <Button size="small" variant="contained" onClick={() => onViewDetails?.(id)} fullWidth aria-label="View details">
+                        View Details
+                    </Button>
+                </Tooltip>
             </CardActions>
         </Card>
     );

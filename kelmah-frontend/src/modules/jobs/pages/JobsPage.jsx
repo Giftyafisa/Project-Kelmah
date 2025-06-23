@@ -108,7 +108,7 @@ const JobsPage = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 InputProps={{
                                     endAdornment: (
-                                        <Tooltip title="Execute search">
+                                        <Tooltip title="Execute search" arrow>
                                             <Button
                                                 type="submit"
                                                 sx={{ minWidth: 'auto' }}
@@ -153,20 +153,23 @@ const JobsPage = () => {
 
                         {user && (
                             <Box sx={{ mt: 3 }}>
-                                <Button
-                                    fullWidth={isMobile}
-                                    variant="contained"
-                                    sx={{
-                                        backgroundColor: theme.palette.secondary.main,
-                                        color: theme.palette.secondary.contrastText,
-                                        mb: 1,
-                                        '&:hover': { backgroundColor: theme.palette.secondary.dark }
-                                    }}
-                                    onClick={handleLoadSavedJobs}
-                                    aria-label="Load saved jobs"
-                                >
-                                    Saved Jobs
-                                </Button>
+                                <Tooltip title="Clear all filters" arrow>
+                                    <Button
+                                        fullWidth={isMobile}
+                                        variant="contained"
+                                        sx={{
+                                            backgroundColor: theme.palette.secondary.main,
+                                            color: theme.palette.secondary.contrastText,
+                                            mb: 1,
+                                            '&:hover': { backgroundColor: theme.palette.secondary.dark }
+                                        }}
+                                        onClick={handleLoadSavedJobs}
+                                        aria-label="Clear filters"
+                                    >
+                                        <InfoIcon fontSize="small" sx={{ mr: 0.5 }} />
+                                        Clear Filters
+                                    </Button>
+                                </Tooltip>
                                 <Button
                                     fullWidth={isMobile}
                                     variant="contained"
@@ -216,9 +219,11 @@ const JobsPage = () => {
                         <>
                             <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 {isMobile && (
-                                    <IconButton onClick={() => setFilterDrawerOpen(true)} sx={{ color: theme.palette.secondary.main, mr: 1 }}>
-                                        <FilterListIcon />
-                                    </IconButton>
+                                    <Tooltip title="Open filters" arrow>
+                                        <IconButton onClick={() => setFilterDrawerOpen(true)} sx={{ color: theme.palette.secondary.main, mr: 1 }} aria-label="Open filters">
+                                            <FilterListIcon />
+                                        </IconButton>
+                                    </Tooltip>
                                 )}
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                   <Tooltip title="Number of jobs matching your criteria" arrow>
@@ -325,7 +330,12 @@ const JobsPage = () => {
                     </FormControl>
                     {user && (
                         <Box sx={{ mt: 3 }}>
-                            <Button fullWidth variant="contained" sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText, mb: 1, '&:hover': { backgroundColor: theme.palette.secondary.dark } }} onClick={handleLoadSavedJobs}>Saved Jobs</Button>
+                            <Tooltip title="Clear all filters" arrow>
+                                <Button fullWidth variant="contained" sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText, mb: 1, '&:hover': { backgroundColor: theme.palette.secondary.dark } }} onClick={handleLoadSavedJobs}>
+                                    <InfoIcon fontSize="small" sx={{ mr: 0.5 }} />
+                                    Clear Filters
+                                </Button>
+                            </Tooltip>
                             <Button fullWidth variant="contained" sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText, '&:hover': { backgroundColor: theme.palette.secondary.dark } }} onClick={handleLoadRecommendedJobs}>Recommended Jobs</Button>
                         </Box>
                     )}
