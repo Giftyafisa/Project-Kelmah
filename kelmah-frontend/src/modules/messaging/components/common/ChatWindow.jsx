@@ -43,7 +43,9 @@ import {
   FavoriteBorder,
   EmojiEmotions,
   Close,
-  ArrowBack
+  ArrowBack,
+  Done,
+  DoneAll as DoneAllIcon
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import Picker from 'emoji-picker-react';
@@ -569,19 +571,23 @@ const ChatWindow = ({
                 
                 <Box sx={{ 
                   display: 'flex', 
-                  justifyContent: 'space-between', 
                   alignItems: 'center',
+                  justifyContent: message.isOwn ? 'flex-end' : 'flex-start',
                   mt: 0.5
                 }}>
                   <Typography 
                     variant="caption" 
                     sx={{ 
                       color: message.isOwn ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.5)',
-                      ml: 'auto' 
                     }}
                   >
                     {message.timestamp}
                   </Typography>
+                  {message.isOwn && (
+                    <Tooltip title="Delivered" arrow>
+                      <DoneAllIcon fontSize="small" sx={{ ml: 0.5, color: '#FFD700' }} aria-label="Delivered" />
+                    </Tooltip>
+                  )}
                 </Box>
               </MessageBubble>
               
