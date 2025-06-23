@@ -40,24 +40,28 @@ const DesktopNav = () => {
           key={to}
           to={to}
           style={({ isActive: active }) => ({
-            margin: '0 8px',
-            color: active ? theme.palette.secondary.dark : theme.palette.primary.main,
-            fontWeight: 500,
-            borderBottom: active ? `2px solid ${theme.palette.secondary.dark}` : 'none',
+            margin: '0 12px',
+            color: active ? '#D4AF37' : '#fff',
+            fontWeight: 600,
+            fontSize: '1rem',
+            padding: '6px 10px',
+            borderRadius: '4px',
+            backgroundColor: active ? 'rgba(212,175,55,0.1)' : 'transparent',
             textDecoration: 'none'
           })}
+          aria-label={label}
         >
           {label}
         </NavLink>
       ))}
       {!showAuthButtons ? (
         <>
-          <IconButton component={RouterLink} to="/notifications" sx={{ mx: 1, color: theme.palette.primary.main }}>
+          <IconButton component={RouterLink} to="/notifications" sx={{ mx: 1.5, color: '#fff' }} aria-label="Notifications">
             <Badge badgeContent={unreadCount} color="error">
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton onClick={handleMenuOpen} sx={{ mx: 1, color: theme.palette.primary.main }}>
+          <IconButton onClick={handleMenuOpen} sx={{ mx: 1.5, color: '#fff' }} aria-label="Account menu">
             {user?.profileImage ? (
               <Avatar src={user.profileImage} alt={user.firstName} sx={{ width: 32, height: 32 }} />
             ) : (
@@ -71,23 +75,23 @@ const DesktopNav = () => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <MenuItem onClick={() => { handleMenuClose(); navigate('/dashboard'); }}>
+            <MenuItem onClick={() => { handleMenuClose(); navigate('/dashboard'); }} sx={{ fontSize: '1rem' }}>
               Dashboard
             </MenuItem>
-            <MenuItem onClick={() => { handleMenuClose(); navigate(hasRole('worker') ? '/worker/profile' : '/profile'); }}>
+            <MenuItem onClick={() => { handleMenuClose(); navigate(hasRole('worker') ? '/worker/profile' : '/profile'); }} sx={{ fontSize: '1rem' }}>
               Profile
             </MenuItem>
-            <MenuItem onClick={() => { handleMenuClose(); navigate('/settings'); }}>
+            <MenuItem onClick={() => { handleMenuClose(); navigate('/settings'); }} sx={{ fontSize: '1rem' }}>
               Settings
             </MenuItem>
-            <MenuItem onClick={handleLogout}>
+            <MenuItem onClick={handleLogout} sx={{ fontSize: '1rem' }}>
               Logout
             </MenuItem>
           </Menu>
         </>
       ) : (
         <>
-          <Button component={RouterLink} to="/login" sx={{ mx: 1, color: theme.palette.secondary.contrastText, fontWeight: 500 }}>
+          <Button component={RouterLink} to="/login" sx={{ mx: 2, color: '#fff', fontWeight: 600, fontSize: '1rem' }}>
             Login
           </Button>
           <Button
@@ -95,11 +99,15 @@ const DesktopNav = () => {
             component={RouterLink}
             to="/register"
             sx={{
-              mx: 1,
-              background: theme.palette.primary.main,
-              color: theme.palette.secondary.main,
-              '&:hover': { background: theme.palette.primary.light }
+              mx: 2,
+              backgroundColor: '#D4AF37',
+              color: '#1a1a1a',
+              fontWeight: 600,
+              fontSize: '1rem',
+              borderRadius: '4px',
+              '&:hover': { backgroundColor: '#c4942a' }
             }}
+            aria-label="Register"
           >
             Register
           </Button>

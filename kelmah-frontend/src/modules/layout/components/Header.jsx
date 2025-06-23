@@ -11,9 +11,11 @@ const Header = () => {
   return (
     <AppBar 
       position="static" 
-      elevation={0}
+      elevation={1}
       sx={{ 
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: '#1a1a1a',
+        color: '#fff',
+        borderBottom: '2px solid #D4AF37',
         ...(import.meta.env.DEV && {
           '&::after': {
             content: '"DEV MODE"',
@@ -35,22 +37,23 @@ const Header = () => {
           component={RouterLink} 
           to="/" 
           sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+            display: 'flex',
+            alignItems: 'center',
             textDecoration: 'none',
-            color: 'black',
-            mr: 2 
+            color: '#D4AF37',
+            mr: 3
           }}
         >
           <Typography 
-            variant="h6" 
+            variant="h5" 
             sx={{ 
               fontWeight: 'bold',
               fontFamily: 'Montserrat, sans-serif',
-              fontSize: '1.5rem',
-              color: 'black',
-              letterSpacing: '0.05em'
+              fontSize: '1.75rem',
+              color: '#D4AF37',
+              letterSpacing: '0.1em'
             }}
+            aria-label="Kelmah home"
           >
             Kelmah
           </Typography>
@@ -58,7 +61,7 @@ const Header = () => {
         
         <Box sx={{ flexGrow: 1 }} />
         
-        {!isMobile ? <DesktopNav /> : <MobileNav />}
+        {!isMobile ? <DesktopNav sx={{ color: '#fff' }} /> : <MobileNav />}
       </Toolbar>
     </AppBar>
   );
