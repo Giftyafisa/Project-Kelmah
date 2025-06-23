@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Box, Grid, Paper, Typography, Hidden, AppBar, Toolbar, IconButton } from '@mui/material';
+import { Box, Grid, Paper, Typography, Hidden, AppBar, Toolbar, IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import useAuth from '../hooks/useAuth';
 import { useMessages } from '../contexts/MessageContext';
 import ConversationList from '../components/common/ConversationList';
 import ChatWindow from '../components/common/ChatWindow';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import InfoIcon from '@mui/icons-material/Info';
 
 const MessagingPage = () => {
     const { user } = useAuth();
     const { search } = useLocation();
     const [selectedConversation, setSelectedConversation] = useState(null);
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const isMobileLayout = useMediaQuery(theme.breakpoints.down('md'));
     const { messagingService } = useMessages();
 
     useEffect(() => {
@@ -74,7 +73,9 @@ const MessagingPage = () => {
         ) : (
             <Paper sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(26, 26, 26, 0.7)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255, 215, 0, 0.1)' }}>
                 <Box textAlign="center">
-                    <ChatBubbleIcon sx={{ fontSize: 64, color: 'rgba(255,255,255,0.5)', mb: 2 }} />
+                    <Tooltip title="No conversation selected" arrow>
+                        <ChatBubbleIcon sx={{ fontSize: 64, color: 'rgba(255,255,255,0.5)', mb: 2 }} />
+                    </Tooltip>
                     <img src="/assets/images/backgrounds/chat-placeholder.svg" alt="Select a conversation" style={{ width: '250px', opacity: 0.7 }} />
                     <Typography variant="h6" color="text.secondary" sx={{ mt: 2, color: '#fff' }}>
                         Select a conversation
@@ -88,9 +89,15 @@ const MessagingPage = () => {
     );
 
     return (
-        <Box sx={{ height: 'calc(100vh - 64px)', p: { xs: 1, sm: 2, md: 3 }, background: '#111' }}>
+        <Box sx={{ height: 'calc(100vh - 64px)', p: isMobileLayout ? 1 : 3, background: '#111' }}>
             <Grid container spacing={2} sx={{ height: '100%' }}>
-                {isMobile ? (
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="h6" sx={{ color: '#FFD700' }}>Messages</Typography>
+                    <Tooltip title="Your message conversations" arrow>
+                        <InfoIcon fontSize="small" sx={{ ml: 1, color: '#FFD700', cursor: 'pointer' }} />
+                    </Tooltip>
+                </Box>
+                {isMobileLayout ? (
                     selectedConversation ? (
                         <Grid item xs={12}>
                             <AppBar position="static" color="transparent" elevation={0} sx={{ borderBottom: '1px solid rgba(255,215,0,0.2)' }}>
