@@ -16,6 +16,7 @@ import {
     Chip,
     Avatar,
     alpha,
+    Tooltip,
 } from '@mui/material';
 import {
     Notifications as NotificationsIcon,
@@ -123,22 +124,32 @@ const NotificationsPage = () => {
                 </Typography>
                 </Box>
                 <Box>
-                    <Button
-                        variant="outlined"
-                        onClick={markAllAsRead}
-                        disabled={unreadCount === 0}
-                        sx={{mr: 1}}
-                    >
-                        Mark All as Read
-                    </Button>
-                    <Button
-                        onClick={clearAllNotifications}
-                        color="error"
-                        variant="outlined"
-                        disabled={notifications.length === 0}
-                    >
-                        Clear All
-                    </Button>
+                    <Tooltip title="Mark all notifications as read">
+                      <span>
+                        <Button
+                          variant="outlined"
+                          onClick={markAllAsRead}
+                          disabled={unreadCount === 0}
+                          sx={{ mr: 1 }}
+                          aria-label="Mark all as read"
+                        >
+                          Mark All as Read
+                        </Button>
+                      </span>
+                    </Tooltip>
+                    <Tooltip title="Delete all notifications">
+                      <span>
+                        <Button
+                          onClick={clearAllNotifications}
+                          color="error"
+                          variant="outlined"
+                          disabled={notifications.length === 0}
+                          aria-label="Clear all notifications"
+                        >
+                          Clear All
+                        </Button>
+                      </span>
+                    </Tooltip>
                 </Box>
             </Box>
 

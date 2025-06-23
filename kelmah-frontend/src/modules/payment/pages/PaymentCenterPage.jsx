@@ -33,6 +33,7 @@ import {
   Select,
   MenuItem,
   Pagination,
+  useMediaQuery,
 } from '@mui/material';
 import {
   AccountBalanceWallet as AccountBalanceWalletIcon,
@@ -60,16 +61,38 @@ import { format } from 'date-fns';
 // Add currency formatter for Ghana Cedi
 const currencyFormatter = new Intl.NumberFormat('en-GH', { style: 'currency', currency: 'GHS' });
 
-const WalletSummary = ({ balance, onDepositClick, onWithdrawClick }) => (
+const WalletSummary = ({ balance, onDepositClick, onWithdrawClick, isMobile }) => (
   <Paper elevation={4} sx={{ p: 3, borderRadius: 2, background: 'linear-gradient(to right, #28313b, #485461, #ffd700)', color: 'white', border: '2px solid', borderColor: 'secondary.main' }}>
     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
       <AccountBalanceWalletIcon sx={{ mr: 1.5, fontSize: 32, opacity: 0.9, color: 'secondary.main' }} />
       <Typography variant="h6" sx={{ opacity: 0.9, color: 'secondary.main' }}>Wallet Balance</Typography>
     </Box>
     <Typography variant="h3" fontWeight="bold" sx={{ my: 1 }}>{currencyFormatter.format(balance)}</Typography>
-    <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
-      <Button variant="contained" color="success" startIcon={<ArrowUpwardIcon />} onClick={onDepositClick}>Deposit</Button>
-      <Button variant="contained" color="warning" startIcon={<ArrowDownwardIcon />} onClick={onWithdrawClick}>Withdraw</Button>
+    <Box sx={{ mt: 3, display: 'flex', gap: 2, flexDirection: isMobile ? 'column' : 'row' }}>
+      <Tooltip title="Add funds to your wallet">
+        <Button
+          variant="contained"
+          color="success"
+          startIcon={<ArrowUpwardIcon />}
+          onClick={onDepositClick}
+          fullWidth={isMobile}
+          aria-label="Deposit funds"
+        >
+          Deposit
+        </Button>
+      </Tooltip>
+      <Tooltip title="Withdraw funds from your wallet">
+        <Button
+          variant="contained"
+          color="warning"
+          startIcon={<ArrowDownwardIcon />}
+          onClick={onWithdrawClick}
+          fullWidth={isMobile}
+          aria-label="Withdraw funds"
+        >
+          Withdraw
+        </Button>
+      </Tooltip>
     </Box>
   </Paper>
 );
@@ -348,6 +371,7 @@ const BillsView = ({ bills, actionLoading, onPayBill }) => {
 const PaymentCenterPage = () => {
   const { loading, error, walletBalance, transactions, paymentMethods, escrows, bills, actionLoading, payBill, addFunds, withdrawFunds, fetchTransactions } = usePayments();
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [tabIndex, setTabIndex] = useState(0);
   const [depositOpen, setDepositOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
@@ -440,7 +464,12 @@ const PaymentCenterPage = () => {
 
       <Grid container spacing={4}>
         <Grid item xs={12} lg={4}>
-          <WalletSummary balance={walletBalance} onDepositClick={openDepositDialog} onWithdrawClick={openWithdrawDialog} />
+          <WalletSummary
+            balance={walletBalance}
+            onDepositClick={openDepositDialog}
+            onWithdrawClick={openWithdrawDialog}
+            isMobile={isMobile}
+          />
         </Grid>
         
         <Grid item xs={12} lg={8}>

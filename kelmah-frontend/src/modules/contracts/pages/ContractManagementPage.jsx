@@ -12,8 +12,9 @@ import {
   Alert,
   Skeleton,
   alpha,
+  Tooltip,
 } from '@mui/material';
-import { Add as AddIcon, ReceiptLong as ReceiptIcon } from '@mui/icons-material';
+import { Add as AddIcon, ReceiptLong as ReceiptIcon, Info as InfoIcon } from '@mui/icons-material';
 import { useContracts } from '../contexts/ContractContext';
 import { Link } from 'react-router-dom';
 import ContractCard from '../components/common/ContractCard';
@@ -43,15 +44,19 @@ const ContractManagementPage = () => {
           Contract Management
         </Typography>
         </Box>
-          <Button 
-          component={Link}
-          to="/contracts/create"
-          startIcon={<AddIcon />}
-            variant="contained" 
-          sx={{ fontWeight: 'bold' }}
-          >
-            New Contract
-          </Button>
+          <Tooltip title="Create a new contract">
+            <Button 
+              component={Link}
+              to="/contracts/create"
+              startIcon={<AddIcon />}
+              variant="contained" 
+              sx={{ fontWeight: 'bold' }}
+              aria-label="New Contract"
+              fullWidth
+            >
+              New Contract
+            </Button>
+          </Tooltip>
       </Box>
 
       <Paper 
@@ -62,6 +67,12 @@ const ContractManagementPage = () => {
           backdropFilter: 'blur(10px)',
         }}
       >
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>Filter by status</Typography>
+          <Tooltip title="View contracts by status">
+            <InfoIcon color="action" sx={{ ml: 1, cursor: 'pointer' }} />
+          </Tooltip>
+        </Box>
         <Tabs
           value={tabValue}
           onChange={handleTabChange}
