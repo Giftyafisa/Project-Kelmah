@@ -777,9 +777,13 @@ const ChatWindow = ({
           size="small"
         />
         
-        <IconButton onClick={handleSendMessage} aria-label="Send message" disabled={isLoading || (newMessage.trim() === '' && files.length === 0)}>
-          <Send />
-        </IconButton>
+        <Tooltip title="Send message" arrow>
+          <span>
+            <IconButton onClick={handleSendMessage} aria-label="Send message" disabled={isLoading || (newMessage.trim() === '' && files.length === 0)}>
+              {isLoading ? <CircularProgress size={20} sx={{ color: '#FFD700' }} /> : <Send />}
+            </IconButton>
+          </span>
+        </Tooltip>
       </InputContainer>
       
       {/* Context Popover */}
