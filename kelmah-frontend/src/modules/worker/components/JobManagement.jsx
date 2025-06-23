@@ -161,7 +161,7 @@ const JobManagement = () => {
   };
 
   const renderJobCard = (job) => (
-    <Card key={job.id} sx={{ mb: 2 }}>
+    <Card key={job.id} sx={{ mb: 2 }} aria-label={`Job card for ${job.title}`}>
       <CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
           <Box>
@@ -210,6 +210,7 @@ const JobManagement = () => {
           size="small"
           startIcon={<MessageIcon />}
           onClick={() => handleDialogOpen('message')}
+          aria-label={`Send message regarding ${job.title}`}
         >
           Message
         </Button>
@@ -218,13 +219,15 @@ const JobManagement = () => {
             size="small"
             startIcon={<AssessmentIcon />}
             onClick={() => handleDialogOpen('milestone')}
+            aria-label={`Submit milestone for ${job.title}`}
           >
-            Submit Milestone
+            Milestone
           </Button>
         )}
         <IconButton
           size="small"
           onClick={(e) => handleMenuOpen(e, job)}
+          aria-label="Open job options"
         >
           <MoreVertIcon />
         </IconButton>
@@ -265,24 +268,32 @@ const JobManagement = () => {
       </Paper>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert severity="error" role="alert" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
 
       {loading ? (
-        <Box display="flex" justifyContent="center" p={3}>
-          <CircularProgress />
+        <Box display="flex" justifyContent="center" p={3} role="status" aria-live="polite">
+          <CircularProgress aria-label="Loading jobs" />
         </Box>
       ) : jobs.length === 0 ? (
-        <Paper sx={{ p: 3, textAlign: 'center' }}>
+        <Paper sx={{ p: 3, textAlign: 'center' }} role="alert">
+          <WorkIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 1 }} aria-hidden="true" />
+          <Typography color="text.secondary" variant="h6">
+            No jobs available
+          </Typography>
           <Typography color="text.secondary">
-            No jobs found
+            Please check back later or adjust your filters.
           </Typography>
         </Paper>
       ) : (
-        <Box>
-          {jobs.map(renderJobCard)}
+        <Box component="ul" role="list" sx={{ p: 0, m: 0, listStyle: 'none' }}>
+          {jobs.map((job) => (
+            <Box component="li" role="listitem" key={job.id} sx={{ mb: 2 }}>
+              {renderJobCard(job)}
+            </Box>
+          ))}
         </Box>
       )}
 
