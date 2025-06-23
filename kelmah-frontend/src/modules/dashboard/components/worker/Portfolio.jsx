@@ -21,7 +21,12 @@ import {
   Chip,
   LinearProgress,
   CircularProgress,
-  TextField
+  TextField,
+  Tooltip,
+  useMediaQuery,
+  useTheme,
+  Snackbar,
+  Alert as MuiAlert
 } from '@mui/material';
 import DashboardCard from '../common/DashboardCard';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -31,6 +36,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AddIcon from '@mui/icons-material/Add';
+import InfoIcon from '@mui/icons-material/Info';
 import workersApi from '../../../../api/services/workersApi';
 
 // Transition for dialog
@@ -39,6 +45,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const Portfolio = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [expanded, setExpanded] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -48,6 +56,7 @@ const Portfolio = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [newProject, setNewProject] = useState({ title: '', description: '', date: '' });
   const [newImages, setNewImages] = useState([]);
+  const [addError, setAddError] = useState(null);
   
   // Fetch portfolio projects
   useEffect(() => {
@@ -108,8 +117,10 @@ const Portfolio = () => {
       const data = await workersApi.getPortfolioProjects();
       setProjects(data);
       handleCloseAdd();
+      setAddError(null);
     } catch (err) {
       console.error('Failed to add project', err);
+      setAddError('Failed to add project. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -184,36 +195,53 @@ const Portfolio = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <PhotoLibraryIcon sx={{ mr: 1 }} />
           <Typography variant="h6">My Portfolio</Typography>
+          <Tooltip title="Showcase your past work to potential hirers">
+            <InfoIcon fontSize="small" sx={{ ml: 1, color: theme.palette.secondary.main, cursor: 'pointer' }} />
+          </Tooltip>
         </Box>
       }
       action={
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          <Button 
-            onClick={handleOpenAdd}
-            startIcon={<AddIcon />}
-            size="medium"
-            variant="contained"
-            sx={{ backgroundColor: '#FFD700', color: '#000' }}
-          >
-            Add
-          </Button>
-          <Button 
-            onClick={handleExpandToggle}
-            endIcon={expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            size="large"
-            variant="outlined"
-            sx={{ 
-              borderRadius: '20px',
-              px: 2,
-              fontWeight: 'bold',
-              fontSize: '0.9rem'
-            }}
-          >
-            {expanded ? 'Show Less' : 'Show More'}
-          </Button>
+        <Box sx={{ display: 'flex', gap: 1, flexDirection: isMobile ? 'column' : 'row' }}>
+          <Tooltip title="Add a new project to your portfolio">
+            <Button 
+              onClick={handleOpenAdd}
+              startIcon={<AddIcon />}
+              size="medium"
+              variant="contained"
+              fullWidth={isMobile}
+              disabled={loading}
+              aria-label="Add project"
+              sx={{ backgroundColor: '#FFD700', color: '#000' }}
+            >
+              {loading ? 'Adding...' : 'Add'}
+            </Button>
+          </Tooltip>
+          <Tooltip title={expanded ? 'Show fewer projects' : 'Show more projects'}>
+            <Button 
+              onClick={handleExpandToggle}
+              endIcon={expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              size="large"
+              variant="outlined"
+              fullWidth={isMobile}
+              aria-label={expanded ? 'Show less' : 'Show more'}
+              sx={{ 
+                borderRadius: '20px',
+                px: 2,
+                fontWeight: 'bold',
+                fontSize: '0.9rem'
+              }}
+            >
+              {expanded ? 'Less' : 'More'}
+            </Button>
+          </Tooltip>
         </Box>
       }
     >
+      <Snackbar open={!!addError} autoHideDuration={6000} onClose={() => setAddError(null)}>
+        <MuiAlert onClose={() => setAddError(null)} severity="error" sx={{ width: '100%' }}>
+          {addError}
+        </MuiAlert>
+      </Snackbar>
       <Collapse in={expanded} timeout={300} unmountOnExit>
         {/* Featured Project */}
         <Card elevation={0} sx={{ mb: 2 }}>
