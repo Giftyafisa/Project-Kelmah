@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Box, Grid, Paper, Typography, Hidden, AppBar, Toolbar, IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Grid, Paper, Typography, Hidden, AppBar, Toolbar, IconButton, Tooltip, useMediaQuery, useTheme, Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 import useAuth from '../hooks/useAuth';
 import { useMessages } from '../contexts/MessageContext';
 import ConversationList from '../components/common/ConversationList';
@@ -16,6 +17,7 @@ const MessagingPage = () => {
     const theme = useTheme();
     const isMobileLayout = useMediaQuery(theme.breakpoints.down('md'));
     const { messagingService } = useMessages();
+    const [convError, setConvError] = useState(null);
 
     useEffect(() => {
         if (user) {
@@ -34,10 +36,11 @@ const MessagingPage = () => {
         const participantId = params.get('participantId');
         if (participantId && user) {
             messagingService.createDirectConversation(participantId)
-                .then(convo => {
-                    setSelectedConversation(convo);
-                })
-                .catch(err => console.error('Error creating conversation:', err));
+                .then(convo => setSelectedConversation(convo))
+                .catch(err => {
+                    console.error('Error creating conversation:', err);
+                    setConvError('Failed to start conversation.');
+                });
         }
     }, [search, user]);
 
@@ -134,6 +137,12 @@ const MessagingPage = () => {
                     </>
                 )}
             </Grid>
+            {/* Error notification for conversation creation */}
+            <Snackbar open={!!convError} autoHideDuration={4000} onClose={() => setConvError(null)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+              <MuiAlert onClose={() => setConvError(null)} severity="error" sx={{ width: '100%' }}>
+                {convError}
+              </MuiAlert>
+            </Snackbar>
         </Box>
     );
 };
