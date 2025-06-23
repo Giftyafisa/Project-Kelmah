@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
-import { Box, Button, IconButton, Badge, Menu, MenuItem, Avatar, useTheme } from '@mui/material';
+import { Box, Button, IconButton, Badge, Menu, MenuItem, Avatar, useTheme, Tooltip } from '@mui/material';
 import { Link as RouterLink, NavLink, useNavigate } from 'react-router-dom';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import HomeIcon from '@mui/icons-material/Home';
+import SearchIcon from '@mui/icons-material/Search';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import PersonIcon from '@mui/icons-material/Person';
+import MessageIcon from '@mui/icons-material/Message';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import useNavLinks from '../../../hooks/useNavLinks';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentUser, selectIsAuthenticated, logoutUser } from '../../auth/services/authSlice';
@@ -33,30 +39,39 @@ const DesktopNav = () => {
     contextLogout();
   };
 
+  // Map link labels to icons
+  const iconMap = {
+    Dashboard: <HomeIcon />, 
+    'Find Work': <SearchIcon />, 
+    'My Applications': <AssignmentIcon />, 
+    Profile: <PersonIcon />, 
+    Messages: <MessageIcon />, 
+    Jobs: <WorkOutlineIcon />
+  };
+
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       {navLinks.map(({ label, to }) => (
-        <NavLink
-          key={to}
-          to={to}
-          style={({ isActive: active }) => ({
-            margin: '0 8px',
-            color: active ? theme.palette.secondary.dark : theme.palette.primary.main,
-            fontWeight: 500,
-            borderBottom: active ? `2px solid ${theme.palette.secondary.dark}` : 'none',
-            textDecoration: 'none'
-          })}
-        >
-          {label}
-        </NavLink>
+        <Tooltip key={to} title={label} arrow>
+          <IconButton
+            component={RouterLink}
+            to={to}
+            sx={{ mx: 1, color: theme.palette.primary.main }}
+            aria-label={label}
+          >
+            {iconMap[label] || <AccountCircleIcon />}
+          </IconButton>
+        </Tooltip>
       ))}
       {!showAuthButtons ? (
         <>
-          <IconButton component={RouterLink} to="/notifications" sx={{ mx: 1, color: theme.palette.primary.main }}>
-            <Badge badgeContent={unreadCount} color="error">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+          <Tooltip title="Notifications" arrow>
+            <IconButton component={RouterLink} to="/notifications" sx={{ mx: 1, color: theme.palette.primary.main }} aria-label="Notifications">
+              <Badge badgeContent={unreadCount} color="error">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+          </Tooltip>
           <IconButton onClick={handleMenuOpen} sx={{ mx: 1, color: theme.palette.primary.main }}>
             {user?.profileImage ? (
               <Avatar src={user.profileImage} alt={user.firstName} sx={{ width: 32, height: 32 }} />
