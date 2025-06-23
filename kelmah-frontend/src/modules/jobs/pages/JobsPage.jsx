@@ -18,10 +18,12 @@ import {
     Drawer,
     IconButton,
     useTheme,
-    useMediaQuery
+    useMediaQuery,
+    Tooltip
 } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import InfoIcon from '@mui/icons-material/Info';
 import useAuth from '../../auth/hooks/useAuth';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchJobs, setFilters, selectJobs, selectJobsLoading, selectJobsError, selectJobFilters, selectJobsPagination } from '../services/jobSlice';
@@ -90,8 +92,11 @@ const JobsPage = () => {
                 {!isMobile && (
                 <Grid item xs={12} md={3}>
                     <Paper sx={{ p: 2, backgroundColor: '#1a1a1a', color: '#fff' }}>
-                        <Typography variant="h6" gutterBottom sx={{ color: theme.palette.secondary.main }}>
+                        <Typography variant="h6" gutterBottom sx={{ color: theme.palette.secondary.main, display: 'flex', alignItems: 'center' }}>
                             Filters
+                            <Tooltip title="Refine your search using filters">
+                                <InfoIcon fontSize="small" sx={{ ml: 1, color: theme.palette.secondary.main, cursor: 'pointer' }} />
+                            </Tooltip>
                         </Typography>
 
                         <Box component="form" onSubmit={handleSearch} sx={{ mb: 3 }}>
@@ -103,12 +108,15 @@ const JobsPage = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 InputProps={{
                                     endAdornment: (
-                                        <Button
-                                            type="submit"
-                                            sx={{ minWidth: 'auto' }}
-                                        >
-                                            <SearchIcon />
-                                        </Button>
+                                        <Tooltip title="Execute search">
+                                            <Button
+                                                type="submit"
+                                                sx={{ minWidth: 'auto' }}
+                                                aria-label="Search jobs"
+                                            >
+                                                <SearchIcon />
+                                            </Button>
+                                        </Tooltip>
                                     )
                                 }}
                             />
@@ -146,7 +154,7 @@ const JobsPage = () => {
                         {user && (
                             <Box sx={{ mt: 3 }}>
                                 <Button
-                                    fullWidth
+                                    fullWidth={isMobile}
                                     variant="contained"
                                     sx={{
                                         backgroundColor: theme.palette.secondary.main,
@@ -155,11 +163,12 @@ const JobsPage = () => {
                                         '&:hover': { backgroundColor: theme.palette.secondary.dark }
                                     }}
                                     onClick={handleLoadSavedJobs}
+                                    aria-label="Load saved jobs"
                                 >
                                     Saved Jobs
                                 </Button>
                                 <Button
-                                    fullWidth
+                                    fullWidth={isMobile}
                                     variant="contained"
                                     sx={{
                                         backgroundColor: theme.palette.secondary.main,
@@ -167,6 +176,7 @@ const JobsPage = () => {
                                         '&:hover': { backgroundColor: theme.palette.secondary.dark }
                                     }}
                                     onClick={handleLoadRecommendedJobs}
+                                    aria-label="Load recommended jobs"
                                 >
                                     Recommended Jobs
                                 </Button>
