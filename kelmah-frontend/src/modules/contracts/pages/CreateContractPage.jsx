@@ -23,6 +23,7 @@ import {
   IconButton,
   InputAdornment,
   Autocomplete,
+  Skeleton,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -616,38 +617,35 @@ const CreateContractPage = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
-      {/* Error alert */}
-      {error.createContract && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          Error creating contract: {error.createContract}
-        </Alert>
-      )}
-
-      {/* Back button and header */}
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-        <Button startIcon={<BackIcon />} onClick={() => navigate('/contracts')} sx={{ mr: 2 }}>
-          Back to Contracts
-        </Button>
-        <Typography variant="h4">Create New Contract</Typography>
+    <Container maxWidth="lg" sx={{ py: 4 }} role="main" aria-labelledby="create-contract-header">
+      {/* Page Header */}
+      <Box sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
+        <Typography variant="h4" component="h1" sx={{ mr: 2 }} id="create-contract-header">Create Contract</Typography>
       </Box>
 
       {/* Stepper */}
-      <Paper sx={{ p: 3, mb: 4 }}>
-        <Stepper activeStep={activeStep} alternativeLabel>
+      <Box sx={{ mb: 4 }} role="region" aria-label="Contract creation steps">
+        <Stepper activeStep={activeStep} aria-label="Contract creation progression">
           {steps.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
           ))}
         </Stepper>
-      </Paper>
+      </Box>
+
+      {/* Error alert */}
+      {error.createContract && (
+        <Alert severity="error" role="alert" sx={{ mb: 3 }}>
+          Error creating contract: {error.createContract}
+        </Alert>
+      )}
 
       {/* Step content */}
       <Paper sx={{ p: 3, mb: 4 }}>
         {loading.createContract ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}>
-            <CircularProgress />
+          <Box role="status" aria-live="polite">
+            <Skeleton variant="rectangular" height={400} aria-label="Loading contract form" />
           </Box>
         ) : (
           <>

@@ -179,13 +179,14 @@ const WorkerSearchPage = () => {
 
   return (
     <Grow in timeout={500}>
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Container maxWidth="xl" sx={{ py: 4 }} role="main" aria-labelledby="worker-search-header">
         <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link component={RouterLink} to="/hirer/dashboard" underline="hover" color="inherit">
             Dashboard
           </Link>
           <Typography color="text.primary">Find Talent</Typography>
         </Breadcrumbs>
+        <Typography variant="h4" component="h1" id="worker-search-header" sx={{ display: 'none' }}>Find Talent</Typography>
         <Paper sx={{ p: 3, mb: 4, position: 'sticky', top: theme => theme.spacing(10), zIndex: 2, borderRadius: 2 }}>
           <Typography variant="h4" gutterBottom>Find a Worker</Typography>
           <Grid container spacing={2} alignItems="center">
@@ -193,6 +194,7 @@ const WorkerSearchPage = () => {
               <TextField
                 fullWidth
                 label="Search by name or keyword"
+                aria-label="Search by name or keyword"
                 value={searchParams.searchTerm}
                 onChange={e => setSearchParams(prev => ({ ...prev, searchTerm: e.target.value }))}
               />
@@ -201,6 +203,7 @@ const WorkerSearchPage = () => {
               <TextField
                 fullWidth
                 label="Location"
+                aria-label="Filter by location"
                 value={searchParams.location}
                 onChange={e => setSearchParams(prev => ({ ...prev, location: e.target.value }))}
               />
@@ -257,7 +260,7 @@ const WorkerSearchPage = () => {
         </Paper>
 
         {loading ? (
-          <Grid container spacing={3}>
+          <Grid container spacing={3} role="status" aria-live="polite">
             {Array.from(new Array(8)).map((_, idx) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
                 <Card>
@@ -275,7 +278,7 @@ const WorkerSearchPage = () => {
             ))}
           </Grid>
         ) : results.workers.length === 0 ? (
-          <Paper sx={{ p: 6, textAlign: 'center' }}>
+          <Paper sx={{ p: 6, textAlign: 'center' }} role="alert" aria-atomic="true">
             <SearchOffIcon sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }} />
             <Typography variant="h6" color="text.secondary" gutterBottom>
               No workers found matching your criteria
@@ -283,10 +286,10 @@ const WorkerSearchPage = () => {
             <Typography>Please adjust your filters or try again.</Typography>
           </Paper>
         ) : (
-          <Grid container spacing={3}>
+          <Grid container spacing={3} component="ul" role="list" sx={{ p:0, m:0, listStyle:'none' }}>
             {results.workers.map((worker, idx) => (
               <Grow in timeout={300 + idx * 100} key={worker.id || worker._id}>
-                <Grid item xs={12} sm={6} md={4} lg={3}>
+                <Grid item xs={12} sm={6} md={4} lg={3} component="li" role="listitem">
                   <WorkerCard
                     worker={worker}
                     isSaved={savedWorkers.includes(worker.id || worker._id)}

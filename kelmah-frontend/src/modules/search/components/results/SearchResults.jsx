@@ -118,11 +118,11 @@ const SearchResults = ({
   };
 
   return (
-    <Box>
+    <Box role="region" aria-labelledby="search-results-header">
       {/* Results Header */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-          <Typography variant="h6">
+          <Typography variant="h6" id="search-results-header">
             {loading ? 'Searching...' : `${pagination.totalItems || 0} Results`}
           </Typography>
           
@@ -135,6 +135,7 @@ const SearchResults = ({
                 label="Sort By"
                 onChange={handleSortChange}
                 disabled={loading}
+                aria-label="Sort results by"
               >
                 <MenuItem value="relevance">Relevance</MenuItem>
                 <MenuItem value="date">Newest</MenuItem>
@@ -148,6 +149,7 @@ const SearchResults = ({
               startIcon={<MapIcon />}
               onClick={onToggleView}
               size={isMobile ? "small" : "medium"}
+              aria-label={showMap ? 'Switch to list view' : 'Switch to map view'}
             >
               {showMap ? "List View" : "Map View"}
             </Button>
@@ -160,10 +162,10 @@ const SearchResults = ({
 
       {/* Loading State */}
       {loading && (
-        <Grid container spacing={3} sx={{ my: 2 }}>
+        <Grid container spacing={3} sx={{ my: 2 }} role="status" aria-live="polite">
           {Array.from(new Array(6)).map((_, idx) => (
             <Grid item xs={12} key={idx}>
-              <Skeleton variant="rectangular" height={150} sx={{ borderRadius: 2 }} />
+              <Skeleton variant="rectangular" height={150} sx={{ borderRadius: 2 }} aria-label="Loading result placeholder" />
             </Grid>
           ))}
         </Grid>
@@ -171,19 +173,20 @@ const SearchResults = ({
 
       {/* Error State */}
       {!loading && jobs.length === 0 && (
-        <Alert severity="info" sx={{ mb: 3 }}>
+        <Alert severity="info" role="alert" aria-atomic="true" sx={{ mb: 3 }}>
           No jobs found matching your search criteria. Try adjusting your filters.
         </Alert>
       )}
 
       {/* Results Grid */}
       {!loading && jobs.length > 0 && (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} component="ul" role="list" sx={{ p: 0, m: 0, listStyle: 'none' }}>
           {jobs.map(job => (
-            <Grid item xs={12} key={job.id}>
+            <Grid item xs={12} component="li" role="listitem" key={job.id}>
               <JobCard 
                 job={job} 
                 onViewDetails={() => window.location.href = `/jobs/${job.id}`} 
+                aria-label={`View details of job: ${job.title}`}
               />
             </Grid>
           ))}
@@ -199,6 +202,7 @@ const SearchResults = ({
             onChange={handlePageChange}
             color="primary"
             disabled={loading}
+            aria-label="Search results pages"
           />
         </Box>
       )}
