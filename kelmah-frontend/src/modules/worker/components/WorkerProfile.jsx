@@ -94,6 +94,9 @@ const SkillBar = ({ name, level }) => {
 const PortfolioItem = ({ image, title, description, onClick }) => {
     return (
         <Card 
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); }}
             sx={{ 
                 height: 220, 
                 cursor: 'pointer',
@@ -113,6 +116,7 @@ const PortfolioItem = ({ image, title, description, onClick }) => {
                 overflow: 'hidden'
             }}
             onClick={onClick}
+            aria-label={`View portfolio item: ${title}`}
         >
             <Box 
                 sx={{ 
@@ -322,6 +326,7 @@ function WorkerProfile() {
                                             border: `2px solid ${theme.palette.background.paper}`,
                                             '&:hover': { bgcolor: 'primary.dark' }
                                     }}
+                                    aria-label="Upload profile image"
                                 >
                                         <CameraIcon fontSize="small" />
                                 </IconButton>
@@ -386,10 +391,40 @@ function WorkerProfile() {
                         </Stack>
                         
                          <Stack direction="row" spacing={1} justifyContent="center">
-                            {profile.contact?.email && <IconButton component="a" href={`mailto:${profile.contact.email}`} color="primary"><EmailIcon /></IconButton>}
-                            {profile.contact?.website && <IconButton component="a" href={profile.contact.website} target="_blank" color="primary"><WebsiteIcon /></IconButton>}
-                            {profile.contact?.linkedin && <IconButton component="a" href={profile.contact.linkedin} target="_blank" color="primary"><LinkedInIcon /></IconButton>}
-                            {profile.contact?.phone && <IconButton component="a" href={`tel:${profile.contact.phone}`} color="primary"><PhoneIcon /></IconButton>}
+                            {profile.contact?.email && (
+                                <IconButton
+                                    component="a"
+                                    href={`mailto:${profile.contact.email}`}
+                                    color="primary"
+                                    aria-label={`Email ${profile.user.name}`}
+                                ><EmailIcon /></IconButton>
+                            )}
+                            {profile.contact?.website && (
+                                <IconButton
+                                    component="a"
+                                    href={profile.contact.website}
+                                    target="_blank"
+                                    color="primary"
+                                    aria-label={`Visit ${profile.user.name}'s website`}
+                                ><WebsiteIcon /></IconButton>
+                            )}
+                            {profile.contact?.linkedin && (
+                                <IconButton
+                                    component="a"
+                                    href={profile.contact.linkedin}
+                                    target="_blank"
+                                    color="primary"
+                                    aria-label="Visit LinkedIn profile"
+                                ><LinkedInIcon /></IconButton>
+                            )}
+                            {profile.contact?.phone && (
+                                <IconButton
+                                    component="a"
+                                    href={`tel:${profile.contact.phone}`}
+                                    color="primary"
+                                    aria-label={`Call ${profile.user.name}`}
+                                ><PhoneIcon /></IconButton>
+                            )}
                         </Stack>
                     </Box>
                 </Box>
@@ -402,19 +437,25 @@ function WorkerProfile() {
                     onChange={handleTabChange}
                     variant="scrollable"
                     scrollButtons="auto"
+                    aria-label="Worker profile sections"
                     sx={{ '& .MuiTab-root': { minWidth: 0, px: 3 } }}
                 >
-                    <Tab label="Skills" />
-                    <Tab label="Portfolio" />
-                    <Tab label="Reviews" />
-                    <Tab label="Certificates" />
-                    <Tab label="Work History" />
+                    <Tab label="Skills" id="worker-profile-tab-0" aria-controls="worker-profile-tabpanel-0" />
+                    <Tab label="Portfolio" id="worker-profile-tab-1" aria-controls="worker-profile-tabpanel-1" />
+                    <Tab label="Reviews" id="worker-profile-tab-2" aria-controls="worker-profile-tabpanel-2" />
+                    <Tab label="Certificates" id="worker-profile-tab-3" aria-controls="worker-profile-tabpanel-3" />
+                    <Tab label="Work History" id="worker-profile-tab-4" aria-controls="worker-profile-tabpanel-4" />
                 </Tabs>
             </Box>
 
             {/* Tab panels */}
                 {tabValue === 0 && (
-              <Box sx={{ p: 2 }}>
+              <Box
+                  role="tabpanel"
+                  id="worker-profile-tabpanel-0"
+                  aria-labelledby="worker-profile-tab-0"
+                  sx={{ p: 2 }}
+              >
                 {skills.length === 0 ? (
                   <Alert severity="info">No skills found.</Alert>
                 ) : (
@@ -425,7 +466,12 @@ function WorkerProfile() {
               </Box>
             )}
                 {tabValue === 1 && (
-              <Box sx={{ p: 2 }}>
+              <Box
+                  role="tabpanel"
+                  id="worker-profile-tabpanel-1"
+                  aria-labelledby="worker-profile-tab-1"
+                  sx={{ p: 2 }}
+              >
                 {portfolio.length === 0 ? (
                   <Alert severity="info">No portfolio items found.</Alert>
                 ) : (
@@ -445,7 +491,12 @@ function WorkerProfile() {
               </Box>
             )}
                 {tabValue === 2 && (
-              <Box sx={{ p: 2 }}>
+              <Box
+                  role="tabpanel"
+                  id="worker-profile-tabpanel-2"
+                  aria-labelledby="worker-profile-tab-2"
+                  sx={{ p: 2 }}
+              >
                 {reviews.length === 0 ? (
                   <Alert severity="info">No reviews yet.</Alert>
                 ) : (
@@ -485,7 +536,12 @@ function WorkerProfile() {
               </Box>
             )}
                 {tabValue === 3 && (
-              <Box sx={{ p: 2 }}>
+              <Box
+                  role="tabpanel"
+                  id="worker-profile-tabpanel-3"
+                  aria-labelledby="worker-profile-tab-3"
+                  sx={{ p: 2 }}
+              >
                 {certificates.length === 0 ? (
                   <Alert severity="info">No certificates found.</Alert>
                 ) : (
@@ -514,7 +570,12 @@ function WorkerProfile() {
               </Box>
             )}
                 {tabValue === 4 && (
-              <Box sx={{ p: 2 }}>
+              <Box
+                  role="tabpanel"
+                  id="worker-profile-tabpanel-4"
+                  aria-labelledby="worker-profile-tab-4"
+                  sx={{ p: 2 }}
+              >
                 {workHistory.length === 0 ? (
                   <Alert severity="info">No work history available.</Alert>
                 ) : (
