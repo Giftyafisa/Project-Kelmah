@@ -24,6 +24,7 @@ import {
     useTheme,
     useMediaQuery,
     Skeleton,
+    Tooltip,
 } from '@mui/material';
 import {
     Person,
@@ -34,6 +35,7 @@ import {
     Message,
     Star,
 } from '@mui/icons-material';
+import InfoIcon from '@mui/icons-material/Info';
 import { format, formatDistanceToNow } from 'date-fns';
 import { Helmet } from 'react-helmet';
 import { hirerService } from '../services/hirerService';
@@ -160,15 +162,22 @@ function ApplicationManagementPage() {
             <Helmet>
                 <title>Application Management | Kelmah</title>
             </Helmet>
-            <Typography variant="h4" gutterBottom>Job Applications</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h4" gutterBottom>Job Applications</Typography>
+                <Tooltip title="Manage incoming job applications" arrow>
+                    <InfoIcon sx={{ ml: 1, color: theme.palette.primary.main }} />
+                </Tooltip>
+            </Box>
             <Paper sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', height: isMobile ? 'auto' : 'calc(100vh - 200px)', overflow: 'hidden' }}>
                 <Grid container>
                     <Grid item xs={12} md={4} sx={{ borderRight: isMobile ? 'none' : `1px solid ${theme.palette.divider}`, borderBottom: isMobile ? `1px solid ${theme.palette.divider}` : 'none', display: 'flex', flexDirection: 'column', flex: '0 0 auto' }}>
-                        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ borderBottom: `1px solid ${theme.palette.divider}` }} centered>
-                            <Tab label="Pending" value="pending" />
-                            <Tab label="Accepted" value="accepted" />
-                            <Tab label="Rejected" value="rejected" />
-                        </Tabs>
+                        <Tooltip title="Filter applications by status" arrow>
+                            <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ borderBottom: `1px solid ${theme.palette.divider}` }} centered>
+                                <Tab label="Pending" value="pending" aria-label="Pending applications" />
+                                <Tab label="Accepted" value="accepted" aria-label="Accepted applications" />
+                                <Tab label="Rejected" value="rejected" aria-label="Rejected applications" />
+                            </Tabs>
+                        </Tooltip>
                         <Box sx={{ flex: '1 1 auto', overflowY: 'auto', p: 2 }}>
                             {loading && Array.from(new Array(4)).map((_, idx) => (
                                 <Skeleton key={idx} variant="rectangular" height={80} sx={{ mb: 2, borderRadius: 2 }} />
@@ -204,9 +213,43 @@ function ApplicationManagementPage() {
                                 <Typography variant="body1" paragraph>{selectedApplication.coverLetter}</Typography>
                                 <Divider sx={{ my: 2 }} />
                                 <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-                                    <Button startIcon={<Message />} onClick={handleMessage}>Message</Button>
-                                    <Button color="success" variant="contained" startIcon={<CheckCircle />} onClick={() => handleOpenReviewDialog('accepted')}>Accept</Button>
-                                    <Button color="error" variant="outlined" startIcon={<Cancel />} onClick={() => handleOpenReviewDialog('rejected')}>Reject</Button>
+                                    <Tooltip title="Message applicant" arrow>
+                                        <Button
+                                            startIcon={<Message />}
+                                            onClick={handleMessage}
+                                            fullWidth={isMobile}
+                                            aria-label="Message applicant"
+                                            sx={{ mx: isMobile ? 0 : 1, my: isMobile ? 1 : 0 }}
+                                        >
+                                            Message
+                                        </Button>
+                                    </Tooltip>
+                                    <Tooltip title="Accept this application" arrow>
+                                        <Button
+                                            color="success"
+                                            variant="contained"
+                                            startIcon={<CheckCircle />}
+                                            onClick={() => handleOpenReviewDialog('accepted')}
+                                            fullWidth={isMobile}
+                                            aria-label="Accept application"
+                                            sx={{ mx: isMobile ? 0 : 1, my: isMobile ? 1 : 0 }}
+                                        >
+                                            Accept
+                                        </Button>
+                                    </Tooltip>
+                                    <Tooltip title="Reject this application" arrow>
+                                        <Button
+                                            color="error"
+                                            variant="outlined"
+                                            startIcon={<Cancel />}
+                                            onClick={() => handleOpenReviewDialog('rejected')}
+                                            fullWidth={isMobile}
+                                            aria-label="Reject application"
+                                            sx={{ mx: isMobile ? 0 : 1, my: isMobile ? 1 : 0 }}
+                                        >
+                                            Reject
+                                        </Button>
+                                    </Tooltip>
                                 </Box>
                             </>
                         ) : (
