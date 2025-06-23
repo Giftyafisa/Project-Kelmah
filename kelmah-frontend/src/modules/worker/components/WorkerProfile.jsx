@@ -245,7 +245,10 @@ function WorkerProfile() {
                     borderRadius: 4,
                     position: 'relative',
                     overflow: 'visible',
-                    boxShadow: '0 8px 32px 0 rgba(0,0,0,0.1)'
+                    boxShadow: '0 8px 32px 0 rgba(0,0,0,0.1)',
+                    backgroundColor: '#1a1a1a',
+                    color: '#fff',
+                    border: '1px solid #D4AF37'
                 }}
             >
                 {/* Cover Image */}
@@ -253,7 +256,7 @@ function WorkerProfile() {
                     sx={{ 
                         height: 220, 
                         width: '100%', 
-                        background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                        background: 'linear-gradient(45deg, #1a1a1a 30%, #D4AF37 90%)',
                         borderTopLeftRadius: theme.shape.borderRadius * 2,
                         borderTopRightRadius: theme.shape.borderRadius * 2,
                         position: 'relative'
@@ -265,9 +268,9 @@ function WorkerProfile() {
                                 variant="contained"
                                 startIcon={<EditIcon />}
                                 sx={{
-                                    bgcolor: 'rgba(255,255,255,0.9)',
-                                    color: 'black',
-                                    '&:hover': { bgcolor: 'white' }
+                                    backgroundColor: '#D4AF37',
+                                    color: '#1a1a1a',
+                                    '&:hover': { backgroundColor: '#c4942a' }
                                 }}
                                 onClick={() => navigate(`/worker/profile/edit`)}
                             >
@@ -339,7 +342,7 @@ function WorkerProfile() {
 
                     <Box sx={{ textAlign: 'center', p: 3 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 0.5 }}>
-                            <Typography variant="h4" fontWeight={700}>
+                            <Typography variant="h3" sx={{ color: '#fff', fontWeight: 700, fontSize: '2rem' }}>
                                 {profile.user.name}
                             </Typography>
                             {profile.is_verified && (
@@ -349,7 +352,7 @@ function WorkerProfile() {
                             )}
                         </Box>
                         
-                        <Typography variant="h6" color="primary" gutterBottom fontWeight={500}>
+                        <Typography variant="h5" gutterBottom sx={{ color: '#D4AF37', fontWeight: 500, fontSize: '1.25rem' }}>
                             {profile.profession}
                         </Typography>
                         
@@ -360,15 +363,14 @@ function WorkerProfile() {
                                 readOnly 
                                 emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
                             />
-                            <Typography variant="body1" color="text.secondary">
+                            <Typography variant="body1" sx={{ color: '#ddd' }}>
                                 ({reviews.length} reviews)
                             </Typography>
                         </Stack>
                         
                         <Typography 
                             variant="body1" 
-                            color="text.secondary" 
-                            sx={{ maxWidth: 600, mx: 'auto', mb: 3, lineHeight: 1.6 }}
+                            sx={{ maxWidth: 600, mx: 'auto', mb: 3, lineHeight: 1.6, color: '#ddd', fontSize: '1rem' }}
                         >
                             {profile.bio}
                         </Typography>
@@ -380,9 +382,12 @@ function WorkerProfile() {
                             sx={{ mb: 3 }}
                             divider={<Divider orientation="vertical" flexItem />}
                         >
-                            <Chip icon={<WorkIcon />} label={`${profile.experience_years || 0} years experience`} variant="outlined" />
-                            <Chip icon={<MoneyIcon />} label={`$${profile.hourly_rate || 0}/hour`} variant="outlined" />
-                            <Chip icon={<LocationIcon />} label={profile.location || 'Not specified'} variant="outlined" />
+                            <Chip icon={<WorkIcon />} label={`${profile.experience_years || 0} years experience`} variant="outlined"
+                                sx={{ borderColor: '#D4AF37', color: '#fff' }} />
+                            <Chip icon={<MoneyIcon />} label={`$${profile.hourly_rate || 0}/hour`} variant="outlined"
+                                sx={{ borderColor: '#D4AF37', color: '#fff' }} />
+                            <Chip icon={<LocationIcon />} label={profile.location || 'Not specified'} variant="outlined"
+                                sx={{ borderColor: '#D4AF37', color: '#fff' }} />
                         </Stack>
                         
                          <Stack direction="row" spacing={1} justifyContent="center">
