@@ -254,8 +254,21 @@ const ActiveEscrows = ({ escrows }) => {
 };
 
 // NEW: big icon-plus-number cards for quick at-a-glance metrics
-const SummaryCard = ({ icon: Icon, count, label }) => (
-  <Paper elevation={2} sx={{ p: 2, borderRadius: 2, textAlign: 'center', transition: 'transform 0.2s', border: '2px solid', borderColor: 'secondary.main', '&:hover': { transform: 'scale(1.03)', boxShadow: '0 4px 20px rgba(255,215,0,0.3)' } }}>
+const SummaryCard = ({ icon: Icon, count, label, onClick }) => (
+  <Paper
+    elevation={2}
+    onClick={onClick}
+    sx={{
+      p: 2,
+      borderRadius: 2,
+      textAlign: 'center',
+      transition: 'transform 0.2s',
+      border: '2px solid',
+      borderColor: 'secondary.main',
+      cursor: onClick ? 'pointer' : 'default',
+      '&:hover': onClick ? { transform: 'scale(1.03)', boxShadow: '0 4px 20px rgba(255,215,0,0.3)' } : {}
+    }}
+  >
     <Icon sx={{ fontSize: 28, mb: 0.5, color: 'secondary.main' }} />
     <Typography variant="h5" fontWeight="bold" sx={{ color: 'secondary.main' }}>{count}</Typography>
     <Typography variant="caption" sx={{ color: 'text.secondary' }}>{label}</Typography>
@@ -447,16 +460,16 @@ const PaymentCenterPage = () => {
           {/* Summary row for illiterate-friendly icon counts */}
           <Grid container spacing={2} sx={{ mb: 3 }}>
             <Grid item xs={3}>
-              <SummaryCard icon={ReceiptIcon} count={transactions.length} label="Transactions" />
+              <SummaryCard icon={ReceiptIcon} count={transactions.length} label="Transactions" onClick={() => setTabIndex(0)} />
             </Grid>
             <Grid item xs={3}>
-              <SummaryCard icon={CreditCardIcon} count={paymentMethods.length} label="Methods" />
+              <SummaryCard icon={CreditCardIcon} count={paymentMethods.length} label="Methods" onClick={() => setTabIndex(1)} />
             </Grid>
             <Grid item xs={3}>
-              <SummaryCard icon={GavelIcon} count={escrows.length} label="Escrows" />
+              <SummaryCard icon={GavelIcon} count={escrows.length} label="Escrows" onClick={() => setTabIndex(2)} />
             </Grid>
             <Grid item xs={3}>
-              <SummaryCard icon={ReceiptLongIcon} count={bills.length} label="Bills" />
+              <SummaryCard icon={ReceiptLongIcon} count={bills.length} label="Bills" onClick={() => setTabIndex(3)} />
             </Grid>
           </Grid>
 
