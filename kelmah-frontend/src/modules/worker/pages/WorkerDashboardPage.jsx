@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Grid, Typography, CircularProgress, useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
 import WorkerDashboard from '../../dashboard/components/worker/WorkerDashboard';
+import WorkflowStepper from '../components/WorkflowStepper';
 import workerImage from '../../../assets/cartoon-worker.jpeg';
 
 const WorkerDashboardPage = () => {
@@ -25,6 +26,7 @@ const WorkerDashboardPage = () => {
   
   return (
     <>
+      <WorkflowStepper />
       <Box sx={{ mb: 4, borderBottom: '1px solid rgba(255, 215, 0, 0.1)', pb: 2 }}>
         <Typography variant="h3" fontWeight={800} color={theme.palette.secondary.main} sx={{ mb: 1, letterSpacing: 0.5 }}>
           Welcome back, {displayUser?.firstName || displayUser?.name || 'Demo'}!
