@@ -42,6 +42,7 @@ import {
   Delete as DeleteIcon,
   ArrowBack as BackIcon
 } from '@mui/icons-material';
+import { useVoiceAssistant } from '../../common/contexts/VoiceAssistantContext';
 
 // Import contract slice actions and selectors
 import {
@@ -73,6 +74,7 @@ const ContractDetailsPage = () => {
   const { contractId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { speak, enabled } = useVoiceAssistant();
   
   const contract = useSelector(selectCurrentContract);
   const milestones = useSelector((state) => selectContractMilestones(state, contractId));
@@ -89,7 +91,11 @@ const ContractDetailsPage = () => {
 
   // Load contract and milestones on mount
   useEffect(() => {
-    dispatch(fetchContractById(contractId));
+    dispatch(fetchContractById(contractId))
+      .unwrap()
+      .then((ctr) => {
+        if (enabled) speak(`Viewing contract details for ${ctr.title}`);
+      });
     dispatch(fetchContractMilestones(contractId));
   }, [dispatch, contractId]);
 
@@ -116,7 +122,9 @@ const ContractDetailsPage = () => {
       .then(() => {
         setCancelDialogOpen(false);
         setCancelReason('');
-      });
+        if (enabled) speak('Contract cancelled successfully');
+      })
+      .catch(() => { if (enabled) speak('Failed to cancel contract'); });
   };
 
   // Handle contract signature
@@ -126,7 +134,9 @@ const ContractDetailsPage = () => {
       .then(() => {
         setSignDialogOpen(false);
         setSignature('');
-      });
+        if (enabled) speak('Contract signed successfully');
+      })
+      .catch(() => { if (enabled) speak('Failed to sign contract'); });
   };
 
   // Handle send for signature
@@ -136,7 +146,12 @@ const ContractDetailsPage = () => {
 
   // Handle milestone completion
   const handleCompleteMilestone = (milestoneId) => {
-    dispatch(completeMilestone({ contractId, milestoneId }));
+    dispatch(completeMilestone({ contractId, milestoneId }))
+      .unwrap()
+      .then(() => {
+        if (enabled) speak('Milestone completed');
+      })
+      .catch(() => { if (enabled) speak('Failed to complete milestone'); });
   };
 
   // Handle dispute creation
@@ -146,7 +161,9 @@ const ContractDetailsPage = () => {
       .then(() => {
         setDisputeDialogOpen(false);
         setDisputeData({ reason: '', description: '' });
-      });
+        if (enabled) speak('Dispute raised successfully');
+      })
+      .catch(() => { if (enabled) speak('Failed to raise dispute'); });
   };
 
   // Handle download contract
