@@ -18,6 +18,8 @@ import { Gavel as GavelIcon, HourglassEmpty as HourglassEmptyIcon, CheckCircle a
 import { useContracts } from '../contexts/ContractContext';
 import { Link } from 'react-router-dom';
 import ContractCard from '../components/common/ContractCard';
+import SearchIcon from '@mui/icons-material/Search';
+import { Link as RouterLink } from 'react-router-dom';
 
 const ContractManagementPage = () => {
   const { contracts, loading, error } = useContracts();
@@ -105,12 +107,21 @@ const ContractManagementPage = () => {
             ))
           ) : (
           <Grid item xs={12}>
-              <Box sx={{ textAlign: 'center', p: 5, mt: 4, bgcolor: 'background.paper', borderRadius: 2 }}>
-                  <Typography variant="h6" color="text.secondary">
-                  No contracts found in this category.
-                  </Typography>
-                </Box>
-            </Grid>
+            <Box sx={{ textAlign: 'center', p: 5, mt: 4, bgcolor: 'background.paper', borderRadius: 2 }}>
+              <Typography variant="h6" color="text.secondary">
+                No contracts found.
+              </Typography>
+              <Button
+                component={RouterLink}
+                to="/worker/find-work"
+                variant="contained"
+                startIcon={<SearchIcon />}
+                sx={{ mt: 2 }}
+              >
+                Find Work
+              </Button>
+            </Box>
+          </Grid>
           )}
         </Grid>
       )}
