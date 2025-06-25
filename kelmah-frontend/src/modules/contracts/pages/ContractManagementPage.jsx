@@ -14,6 +14,7 @@ import {
   alpha,
 } from '@mui/material';
 import { Add as AddIcon, ReceiptLong as ReceiptIcon } from '@mui/icons-material';
+import { Gavel as GavelIcon, HourglassEmpty as HourglassEmptyIcon, CheckCircle as CheckCircleIcon, ReportProblem as ReportProblemIcon } from '@mui/icons-material';
 import { useContracts } from '../contexts/ContractContext';
 import { Link } from 'react-router-dom';
 import ContractCard from '../components/common/ContractCard';
@@ -76,11 +77,11 @@ const ContractManagementPage = () => {
             }
           }}
         >
-          <Tab label={`All (${contracts.length})`} />
-          <Tab label={`Active (${contracts.filter(c => c.status === 'active').length})`} />
-          <Tab label={`Pending (${contracts.filter(c => c.status === 'pending').length})`} />
-          <Tab label={`Completed (${contracts.filter(c => c.status === 'completed').length})`} />
-          <Tab label={`Disputes (${contracts.filter(c => c.status === 'dispute').length})`} />
+          <Tab icon={<ReceiptIcon />} iconPosition="start" label={`All (${contracts.length})`} />
+          <Tab icon={<GavelIcon />} iconPosition="start" label={`Active (${contracts.filter(c => c.status === 'active').length})`} />
+          <Tab icon={<HourglassEmptyIcon />} iconPosition="start" label={`Pending (${contracts.filter(c => c.status === 'pending').length})`} />
+          <Tab icon={<CheckCircleIcon />} iconPosition="start" label={`Completed (${contracts.filter(c => c.status === 'completed').length})`} />
+          <Tab icon={<ReportProblemIcon />} iconPosition="start" label={`Disputes (${contracts.filter(c => c.status === 'dispute').length})`} />
         </Tabs>
       </Paper>
 

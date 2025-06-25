@@ -131,11 +131,11 @@ const MyApplicationsPage = () => {
           indicatorColor="primary"
           textColor="primary"
         >
-          <Tab label="All Applications" />
-          <Tab label="Pending" />
-          <Tab label="Interviews" />
-          <Tab label="Offers" />
-          <Tab label="Rejected" />
+          <Tab icon={<WorkOutlineIcon />} iconPosition="start" label="All" />
+          <Tab icon={<AccessTimeIcon />} iconPosition="start" label="Pending" />
+          <Tab icon={<PersonIcon />} iconPosition="start" label="Interview" />
+          <Tab icon={<CheckCircleIcon />} iconPosition="start" label="Offer" />
+          <Tab icon={<CancelIcon />} iconPosition="start" label="Rejected" />
                 </Tabs>
 
         {loading ? (
