@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IconButton, Badge, Menu, MenuItem, useTheme } from '@mui/material';
+import { IconButton, Badge, Menu, MenuItem, useTheme, Box } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -48,9 +48,12 @@ const MobileNav = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {navLinks.map(({ label, to }) => (
+        {navLinks.map(({ label, to, icon }) => (
           <MenuItem key={to} onClick={() => handleNavigate(to)}>
-            {label}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {icon}
+              {label}
+            </Box>
           </MenuItem>
         ))}
         {showAuthButtons ? (
@@ -61,10 +64,12 @@ const MobileNav = () => {
         ) : (
           <>
             <MenuItem onClick={() => handleNavigate('/notifications')}>
-              <Badge badgeContent={unreadCount} color="error" sx={{ mr: 1 }}>
-                <NotificationsIcon />
-              </Badge>
-              Notifications
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Badge badgeContent={unreadCount} color="error">
+                  <NotificationsIcon />
+                </Badge>
+                Notifications
+              </Box>
             </MenuItem>
             <MenuItem onClick={() => handleNavigate('/dashboard')}>Dashboard</MenuItem>
             <MenuItem onClick={() => handleNavigate(hasRole('worker') ? '/worker/profile' : '/profile')}>Profile</MenuItem>

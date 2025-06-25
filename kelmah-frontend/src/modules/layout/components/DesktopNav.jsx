@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, IconButton, Badge, Menu, MenuItem, Avatar, useTheme } from '@mui/material';
+import { Box, Button, IconButton, Badge, Menu, MenuItem, Avatar, useTheme, Typography } from '@mui/material';
 import { Link as RouterLink, NavLink, useNavigate } from 'react-router-dom';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -35,7 +35,7 @@ const DesktopNav = () => {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      {navLinks.map(({ label, to }) => (
+      {navLinks.map(({ label, to, icon }) => (
         <NavLink
           key={to}
           to={to}
@@ -47,7 +47,10 @@ const DesktopNav = () => {
             textDecoration: 'none'
           })}
         >
-          {label}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            {icon}
+            <Typography variant="button" sx={{ fontSize: '0.875rem' }}>{label}</Typography>
+          </Box>
         </NavLink>
       ))}
       {!showAuthButtons ? (
