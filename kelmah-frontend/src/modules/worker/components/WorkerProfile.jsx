@@ -48,6 +48,7 @@ import {
     MoreVert as MoreIcon,
     Star as StarIcon
 } from '@mui/icons-material';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { styled, useTheme } from '@mui/material/styles';
 
 const Input = styled('input')({
@@ -409,6 +410,7 @@ function WorkerProfile() {
                     <Tab label="Reviews" />
                     <Tab label="Certificates" />
                     <Tab label="Work History" />
+                    <Tab icon={<CalendarTodayIcon />} iconPosition="start" label="Availability" />
                 </Tabs>
             </Box>
 
@@ -546,6 +548,11 @@ function WorkerProfile() {
                             </List>
                 )}
             </Box>
+            )}
+            {tabValue === 5 && (
+              <Box sx={{ p: 2 }}>
+                <AvailabilityCalendar />
+              </Box>
             )}
 
         </Box>
