@@ -18,7 +18,8 @@ import {
     Drawer,
     IconButton,
     useTheme,
-    useMediaQuery
+    useMediaQuery,
+    Chip
 } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -27,9 +28,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchJobs, setFilters, selectJobs, selectJobsLoading, selectJobsError, selectJobFilters, selectJobsPagination } from '../services/jobSlice';
 import JobCard from '../components/common/JobCard';
 import { useNavigate } from 'react-router-dom';
+import { useVoiceAssistant } from '../../common/contexts/VoiceAssistantContext';
+import OpacityIcon from '@mui/icons-material/Opacity';
+import ConstructionIcon from '@mui/icons-material/Construction';
+import FlashOnIcon from '@mui/icons-material/FlashOn';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import HomeWorkIcon from '@mui/icons-material/HomeWork';
 
 const JobsPage = () => {
     const { user } = useAuth();
+    const { speak, enabled } = useVoiceAssistant();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const filters = useSelector(selectJobFilters);
@@ -45,9 +53,21 @@ const JobsPage = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
 
+    // Category icons for filtering
+    const categories = [
+        { label: 'Plumbing', icon: <OpacityIcon /> },
+        { label: 'Carpentry', icon: <ConstructionIcon /> },
+        { label: 'Electrical', icon: <FlashOnIcon /> },
+        { label: 'HVAC', icon: <AcUnitIcon /> },
+        { label: 'Construction', icon: <HomeWorkIcon /> }
+    ];
+
     // Fetch jobs on mount for all users
     useEffect(() => {
-        dispatch(fetchJobs(filters));
+        dispatch(fetchJobs(filters)).unwrap().then((res) => {
+            const count = Array.isArray(res.jobs) ? res.jobs.length : res.jobs?.length || 0;
+            if(enabled) speak(`${count} jobs loaded`);
+        }).catch(() => { if(enabled) speak('Failed to load jobs'); });
     }, [dispatch, filters]);
 
     // Handle pagination change
@@ -61,13 +81,13 @@ const JobsPage = () => {
         e.preventDefault();
         const newFilters = { ...filters, search: searchQuery.trim() };
         dispatch(setFilters(newFilters));
-        dispatch(fetchJobs(newFilters));
+        dispatch(fetchJobs(newFilters)).then(() => { if(enabled) speak('Search complete'); });
     };
 
     const handleFilterChange = (field, value) => {
         const newFilters = { ...filters, [field]: value };
         dispatch(setFilters(newFilters));
-        dispatch(fetchJobs(newFilters));
+        dispatch(fetchJobs(newFilters)).then(() => { if(enabled) speak(`${field} filter applied`); });
     };
 
     const handleLoadSavedJobs = () => {
@@ -142,6 +162,24 @@ const JobsPage = () => {
                                 <MenuItem value="senior">Senior Level</MenuItem>
                             </Select>
                         </FormControl>
+
+                        {/* Category icon filters */}
+                        <Typography variant="subtitle2" gutterBottom sx={{ color: theme.palette.secondary.main }}>Categories</Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                          {categories.map(cat => (
+                            <Chip
+                              key={cat.label}
+                              icon={cat.icon}
+                              label={cat.label.substring(0,3)}
+                              size="small"
+                              color={filters.profession === cat.label ? 'secondary' : 'default'}
+                              onClick={() => {
+                                const val = filters.profession === cat.label ? '' : cat.label;
+                                handleFilterChange('profession', val);
+                              }}
+                            />
+                          ))}
+                        </Box>
 
                         {user && (
                             <Box sx={{ mt: 3 }}>
@@ -308,6 +346,23 @@ const JobsPage = () => {
                             <MenuItem value="senior">Senior Level</MenuItem>
                         </Select>
                     </FormControl>
+                    {/* Category icon filters */}
+                    <Typography variant="subtitle2" gutterBottom sx={{ color: theme.palette.secondary.main }}>Categories</Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                      {categories.map(cat => (
+                        <Chip
+                          key={cat.label}
+                          icon={cat.icon}
+                          label={cat.label.substring(0,3)}
+                          size="small"
+                          color={filters.profession === cat.label ? 'secondary' : 'default'}
+                          onClick={() => {
+                            const val = filters.profession === cat.label ? '' : cat.label;
+                            handleFilterChange('profession', val);
+                          }}
+                        />
+                      ))}
+                    </Box>
                     {user && (
                         <Box sx={{ mt: 3 }}>
                             <Button fullWidth variant="contained" sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText, mb: 1, '&:hover': { backgroundColor: theme.palette.secondary.dark } }} onClick={handleLoadSavedJobs}>Saved Jobs</Button>

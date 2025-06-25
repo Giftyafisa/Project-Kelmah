@@ -13,17 +13,33 @@ import {
     IconButton
 } from '@mui/material';
 import {
-    LocationOn,
-    AttachMoney,
-    AccessTime,
-    Star,
-    BookmarkBorder,
-    Bookmark
+    LocationOn as LocationIcon,
+    WorkOutline as WorkIcon,
+    TrendingUp as TrendingUpIcon,
+    Opacity as PlumbingIcon,
+    FlashOn as ElectricalIcon,
+    AcUnit as HVACIcon,
+    HomeWork as ConstructionIcon,
+    Category as DefaultCategoryIcon,
+    AttachMoney as AttachMoneyIcon,
+    Star as StarIcon,
+    AccessTime as AccessTimeIcon
 } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveJobToServer, unsaveJobFromServer, selectSavedJobs } from '../../services/jobSlice';
+import { useVoiceAssistant } from '../../common/contexts/VoiceAssistantContext';
+
+const categoryIcons = {
+    Plumbing: <PlumbingIcon fontSize="small" />,
+    Carpentry: <ConstructionIcon fontSize="small" />,
+    Electrical: <ElectricalIcon fontSize="small" />,
+    HVAC: <HVACIcon fontSize="small" />,
+    Construction: <ConstructionIcon fontSize="small" />,
+    Marketing: <TrendingUpIcon fontSize="small" />
+};
 
 const JobCard = ({ job, onViewDetails }) => {
+    const { speak, enabled } = useVoiceAssistant();
     if (!job) return null;
     
     const {
@@ -68,11 +84,11 @@ const JobCard = ({ job, onViewDetails }) => {
                     <Typography variant="h6" component="div">
                         {title}
                     </Typography>
-                    <Chip 
-                        size="small" 
-                        label={category} 
-                        color="primary" 
-                        variant="outlined" 
+                    <Chip
+                        icon={categoryIcons[category] || <DefaultCategoryIcon fontSize="small" />}
+                        label={category}
+                        size="small"
+                        variant="outlined"
                     />
                 </Box>
                 
@@ -83,21 +99,21 @@ const JobCard = ({ job, onViewDetails }) => {
                 
                 <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <AttachMoney fontSize="small" color="action" sx={{ mr: 0.5 }} />
+                        <AttachMoneyIcon fontSize="small" color="action" sx={{ mr: 0.5 }} />
                         <Typography variant="body2">
                             {formatBudget()}
                         </Typography>
                     </Box>
                     
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <LocationOn fontSize="small" color="action" sx={{ mr: 0.5 }} />
+                        <LocationIcon fontSize="small" color="action" sx={{ mr: 0.5 }} />
                         <Typography variant="body2">
                             {location}
                         </Typography>
                     </Box>
                     
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <AccessTime fontSize="small" color="action" sx={{ mr: 0.5 }} />
+                        <AccessTimeIcon fontSize="small" color="action" sx={{ mr: 0.5 }} />
                         <Typography variant="body2">
                             {new Date(postedDate).toLocaleDateString()}
                         </Typography>
@@ -127,7 +143,7 @@ const JobCard = ({ job, onViewDetails }) => {
                     </Typography>
                     {hirerRating && (
                         <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
-                            <Star sx={{ color: 'gold', fontSize: 18, mr: 0.5 }} />
+                            <StarIcon sx={{ color: 'gold', fontSize: 18, mr: 0.5 }} />
                             <Typography variant="body2">{hirerRating}</Typography>
                         </Box>
                     )}
@@ -138,10 +154,10 @@ const JobCard = ({ job, onViewDetails }) => {
                 <IconButton onClick={handleToggleSave}> 
                     {isSaved ? <Bookmark color="primary" /> : <BookmarkBorder />} 
                 </IconButton>
-                <Button 
-                    size="small" 
-                    variant="contained" 
-                    onClick={() => onViewDetails?.(id)}
+                <Button
+                    size="small"
+                    variant="contained"
+                    onClick={() => { if(enabled) speak(`Viewing details for ${title}`); onViewDetails?.(id); }}
                     fullWidth
                 >
                     View Details
