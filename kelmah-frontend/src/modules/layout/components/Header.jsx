@@ -1,12 +1,16 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Box, useMediaQuery, useTheme } from '@mui/material';
+import { AppBar, Toolbar, Typography, Box, useMediaQuery, useTheme, IconButton } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import DesktopNav from './DesktopNav';
 import MobileNav from './MobileNav';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import { useVoiceAssistant } from '../../common/contexts/VoiceAssistantContext';
 
 const Header = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { enabled, toggle } = useVoiceAssistant();
   
   return (
     <AppBar 
@@ -58,6 +62,10 @@ const Header = () => {
         
         <Box sx={{ flexGrow: 1 }} />
         
+        {/* Voice assist toggle for accessibility */}
+        <IconButton onClick={toggle} sx={{ color: theme.palette.primary.contrastText, mr: 1 }}>
+          {enabled ? <VolumeUpIcon /> : <VolumeOffIcon />}
+        </IconButton>
         {!isMobile ? <DesktopNav /> : <MobileNav />}
       </Toolbar>
     </AppBar>

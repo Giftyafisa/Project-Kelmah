@@ -6,6 +6,7 @@ import { SnackbarProvider } from 'notistack';
 import store from './store';
 import { AuthProvider } from './modules/auth/contexts/AuthContext';
 import { NotificationProvider } from './modules/notifications/contexts/NotificationContext';
+import { VoiceAssistantProvider } from './modules/common/contexts/VoiceAssistantContext';
 import { PaymentProvider } from './modules/payment/contexts/PaymentContext';
 import { MessageProvider } from './modules/messaging/contexts/MessageContext';
 import { ContractProvider } from './modules/contracts/contexts/ContractContext';
@@ -40,15 +41,17 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <SnackbarProvider maxSnack={3}>
                         <AuthProvider>
                             <NotificationProvider>
-                                <MessageProvider>
-                                    <PaymentProvider>
-                                        <ContractProvider>
-                                            <ErrorBoundary FallbackComponent={ErrorFallback}>
-                                                <App />
-                                            </ErrorBoundary>
-                                        </ContractProvider>
-                                    </PaymentProvider>
-                                </MessageProvider>
+                                <VoiceAssistantProvider>
+                                    <MessageProvider>
+                                        <PaymentProvider>
+                                            <ContractProvider>
+                                                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                                    <App />
+                                                </ErrorBoundary>
+                                            </ContractProvider>
+                                        </PaymentProvider>
+                                    </MessageProvider>
+                                </VoiceAssistantProvider>
                             </NotificationProvider>
                         </AuthProvider>
                     </SnackbarProvider>
