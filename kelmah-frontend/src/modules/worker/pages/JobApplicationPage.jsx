@@ -1,6 +1,7 @@
 // Initial JobApplicationPage file
 
 import React, { useState, useEffect } from 'react';
+import { useVoiceAssistant } from '../../common/contexts/VoiceAssistantContext';
 import Grow from '@mui/material/Grow';
 import {
   Container,
@@ -44,6 +45,7 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 
 const JobSearchPage = () => {
+  const { speak, enabled } = useVoiceAssistant();
   const theme = useTheme();
   const [jobs, setJobs] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -88,14 +90,16 @@ const JobSearchPage = () => {
         setJobs(data);
         setTotalPages(meta.pagination.totalPages);
         setTotalItems(meta.pagination.totalItems);
+        if (enabled) speak(`${meta.pagination.totalItems} jobs found`);
       } catch (error) {
         console.error('Error fetching jobs:', error);
+        if (enabled) speak('Failed to load jobs');
       } finally {
         setLoading(false);
       }
     };
     fetchJobs();
-  }, [searchTerm, location, category, jobType, page, sortBy]);
+  }, [searchTerm, location, category, jobType, page, sortBy, enabled]);
 
   const currentJobs = jobs;
 
@@ -352,6 +356,7 @@ const JobSearchPage = () => {
                             variant="text"
                             component={RouterLink}
                             to={`/jobs/${job._id || job.id}`}
+                            onClick={() => { if (enabled) speak('Viewing job details'); }}
                           >
                             View Details
                           </Button>
@@ -360,6 +365,7 @@ const JobSearchPage = () => {
                             variant="contained"
                             component={RouterLink}
                             to={`/jobs/${job._id || job.id}?apply=true`}
+                            onClick={() => { if (enabled) speak('Applying for job'); }}
                           >
                             Apply Now
                           </Button>

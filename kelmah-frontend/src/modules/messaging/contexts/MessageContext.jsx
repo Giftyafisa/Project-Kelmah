@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import { useVoiceAssistant } from '../../common/contexts/VoiceAssistantContext';
 import messagingService from '../services/messagingService';
 import { useAuth } from '../../auth/contexts/AuthContext';
 
@@ -14,6 +15,7 @@ export const useMessages = () => {
 
 export const MessageProvider = ({ children }) => {
     const { user } = useAuth();
+    const { speak, enabled } = useVoiceAssistant();
     const [conversations, setConversations] = useState([]);
     const [messages, setMessages] = useState([]);
     const [selectedConversation, setSelectedConversation] = useState(null);
@@ -42,6 +44,7 @@ export const MessageProvider = ({ children }) => {
         }
         // Optionally, update conversation list with new last message
         loadConversations(); 
+        if (enabled) speak('New message received');
     };
 
     const loadConversations = useCallback(async () => {
@@ -86,13 +89,14 @@ export const MessageProvider = ({ children }) => {
                 c.id === selectedConversation.id ? { ...c, lastMessage: newMessage } : c
             );
             setConversations(updatedConversations);
+            if (enabled) speak('Message sent');
         } catch (error) {
             console.error('Error sending message:', error);
             // Optionally revert optimistic update
         } finally {
             setSendingMessage(false);
         }
-    }, [selectedConversation, conversations]);
+    }, [selectedConversation, conversations, enabled]);
 
     const createConversation = useCallback(async (participantId) => {
         try {

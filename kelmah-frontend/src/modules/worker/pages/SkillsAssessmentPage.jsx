@@ -39,6 +39,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import SkillsAssessment from '../components/SkillsAssessment';
 import { useAuth } from '../../auth/contexts/AuthContext';
 import axios from '../../common/services/axios';
+import { useVoiceAssistant } from '../../common/contexts/VoiceAssistantContext';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -64,6 +65,7 @@ function TabPanel(props) {
 const SkillsAssessmentPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { speak, enabled } = useVoiceAssistant();
   const { testId } = useParams();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -86,8 +88,10 @@ const SkillsAssessmentPage = () => {
   useEffect(() => {
     if (!testId) {
       fetchSkillsData();
+      if (enabled) speak('Loading available skills assessments');
     } else {
       fetchTestDetails(testId);
+      if (enabled) speak('Loading assessment details');
     }
   }, [testId]);
   
@@ -160,6 +164,7 @@ const SkillsAssessmentPage = () => {
   // Start a skills test
   const startTest = async (testId) => {
     navigate(`/worker/skills/test/${testId}`);
+    if (enabled) speak('Starting skills assessment');
   };
   
   // Handle question answer
@@ -174,6 +179,7 @@ const SkillsAssessmentPage = () => {
   const nextQuestion = () => {
     if (currentQuestion < currentTest.questions.length - 1) {
       setCurrentQuestion(prev => prev + 1);
+      if (enabled) speak(currentTest.questions[currentQuestion + 1]?.text || 'Next question');
     }
   };
   
@@ -181,6 +187,7 @@ const SkillsAssessmentPage = () => {
   const prevQuestion = () => {
     if (currentQuestion > 0) {
       setCurrentQuestion(prev => prev - 1);
+      if (enabled) speak(currentTest.questions[currentQuestion - 1]?.text || 'Previous question');
     }
   };
   
@@ -188,6 +195,7 @@ const SkillsAssessmentPage = () => {
   const beginTest = () => {
     setCurrentStep(1);
     setTimerActive(true);
+    if (enabled) speak('Test begun. Good luck!');
   };
   
   // Submit test answers
