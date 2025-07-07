@@ -648,23 +648,78 @@ const SkillsAssessmentPage = () => {
     );
   };
 
+  // --- Start of Theming Adjustments ---
+
+  const themedPaperSx = {
+    p: { xs: 2, md: 3 },
+    backgroundColor: '#1F1F1F', // Dark paper background
+    color: '#FFFFFF', // White text
+    borderRadius: 2,
+    boxShadow: '0 4px 12px rgba(212,175,55,0.1)'
+  };
+
+  const themedCardSx = {
+    backgroundColor: '#2C2C2C', // Darker card background
+    color: '#FFFFFF',
+    borderColor: 'rgba(212,175,55,0.3)', // Gold tint border
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column'
+  };
+
+  const themedButtonContainedSx = {
+    backgroundColor: '#D4AF37',
+    color: '#000000',
+    '&:hover': { backgroundColor: '#BF953F' },
+  };
+
+  const themedButtonOutlinedSx = {
+    color: '#D4AF37',
+    borderColor: 'rgba(212,175,55,0.5)',
+    '&:hover': { borderColor: '#D4AF37', backgroundColor: 'rgba(212,175,55,0.1)' },
+  };
+
+  const themedAlertSx = (severity) => ({
+    backgroundColor: severity === 'error' ? 'rgba(229,115,115,0.1)' : 'rgba(212,175,55,0.1)',
+    color: severity === 'error' ? '#E57373' : '#D4AF37',
+    '& .MuiAlert-icon': { color: severity === 'error' ? '#E57373' : '#D4AF37' }
+  });
+
+  const themedChipSx = (color = 'default') => {
+    let styles = {
+        color: '#000000',
+        fontWeight: 'medium',
+    };
+    if (color === 'primary' || color === 'default') styles.backgroundColor = '#D4AF37'; // Gold
+    if (color === 'success') styles.backgroundColor = '#81C784'; // Light Green
+    if (color === 'error') styles.backgroundColor = '#E57373'; // Light Red
+    if (color === 'info') { // For "not passed" or neutral info
+        styles.backgroundColor = 'rgba(255,255,255,0.2)';
+        styles.color = '#E0E0E0';
+    }
+    return styles;
+  };
+
+  // --- End of Theming Adjustments ---
+
   if (loading && !currentTest) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-        <CircularProgress />
+      <Box sx={{ display: 'flex', justifyContent: 'center', my: 4, background: '#121212', minHeight: 'calc(100vh - 64px)', pt: 5 }}>
+        <CircularProgress sx={{color: '#D4AF37'}} />
       </Box>
     );
   }
   
   if (error) {
     return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Alert severity="error" sx={{ mb: 4 }}>
+      <Container maxWidth="lg" sx={{ py: 4, background: '#121212', color: '#FFFFFF', minHeight: 'calc(100vh - 64px)' }}>
+        <Alert severity="error" sx={{ ...themedAlertSx('error'), mb: 4 }}>
           {error}
         </Alert>
         <Button 
           variant="contained"
           onClick={() => navigate('/worker/dashboard')}
+          sx={themedButtonContainedSx}
         >
           Return to Dashboard
         </Button>
@@ -672,32 +727,161 @@ const SkillsAssessmentPage = () => {
     );
   }
   
-  if (assessmentInProgress) {
-    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        {renderTestInterface()}
-      </Container>
-    );
+  // Apply dark theme to test interface elements when assessment is in progress
+  if (assessmentInProgress && currentTest) {
+    const testInterfacePaperSx = {
+      ...themedPaperSx,
+      p: { xs: 2, sm: 3, md: 4 }, // More padding for test interface
+    };
+    const questionOptionSx = (questionId, optionId) => ({
+        p: 2,
+        mb: 2,
+        border: '1px solid',
+        borderColor: answers[questionId] === optionId ? '#D4AF37' : 'rgba(212,175,55,0.3)',
+        borderRadius: 1,
+        bgcolor: answers[questionId] === optionId ? 'rgba(212,175,55,0.2)' : '#2C2C2C', // Darker option bg
+        cursor: 'pointer',
+        color: '#FFFFFF',
+        '&:hover': {
+            bgcolor: answers[questionId] === optionId ? 'rgba(212,175,55,0.3)' : 'rgba(212,175,55,0.1)'
+        }
+    });
+
+    // Test Introduction (Step 0)
+    if (currentStep === 0) {
+      return (
+        <Container maxWidth="lg" sx={{ py: 4, background: '#121212', color: '#FFFFFF', minHeight: 'calc(100vh - 64px)' }}>
+          <Box sx={{ maxWidth: 800, mx: 'auto' }}>
+            <Paper sx={testInterfacePaperSx}>
+              <Typography variant="h4" gutterBottom sx={{color: '#D4AF37', fontWeight:'bold'}}>{currentTest.title}</Typography>
+              <Typography variant="subtitle1" sx={{color: '#B0B0B0'}} gutterBottom>{currentTest.skillCategory}</Typography>
+              <Divider sx={{ my: 2, borderColor: 'rgba(212,175,55,0.2)' }} />
+              <Typography variant="body1" paragraph sx={{color: '#E0E0E0'}}>{currentTest.description}</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', my: 2, p: 2, bgcolor: 'rgba(212,175,55,0.1)', borderRadius: 1 }}>
+                <TimerIcon sx={{color: '#D4AF37', mr:1}} />
+                <Typography sx={{color: '#E0E0E0'}}>Time Limit: <strong style={{color: '#FFFFFF'}}>{currentTest.timeLimit} minutes</strong></Typography>
+              </Box>
+              <Typography variant="body2" paragraph sx={{color: '#E0E0E0'}}>
+                This assessment contains {currentTest.questions.length} questions.
+                You must answer at least {currentTest.passingScore}% correctly to earn this skill certification.
+              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+                <Button variant="outlined" onClick={returnToDashboard} startIcon={<ArrowBackIcon />} sx={themedButtonOutlinedSx}>Return to Dashboard</Button>
+                <Button variant="contained" onClick={beginTest} endIcon={<ArrowForwardIcon />} sx={themedButtonContainedSx}>Begin Test</Button>
+              </Box>
+            </Paper>
+          </Box>
+        </Container>
+      );
+    }
+    // Test Questions (Step 1)
+    else if (currentStep === 1) {
+      const question = currentTest.questions[currentQuestion];
+      return (
+        <Container maxWidth="lg" sx={{ py: 4, background: '#121212', color: '#FFFFFF', minHeight: 'calc(100vh - 64px)' }}>
+          <Box sx={{ maxWidth: 800, mx: 'auto' }}>
+            <Paper sx={testInterfacePaperSx}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h6" sx={{color: '#E0E0E0'}}>Question {currentQuestion + 1} of {currentTest.questions.length}</Typography>
+                <Chip
+                  icon={<TimerIcon sx={{color: timeRemaining < 60 ? '#000000' : '#D4AF37'}}/>}
+                  label={`Time Remaining: ${formatTime(timeRemaining)}`}
+                  sx={timeRemaining < 60 ? themedChipSx('error') : {...themedChipSx('default'), borderColor: '#D4AF37', color: '#D4AF37', backgroundColor: 'transparent'}}
+                  variant="outlined"
+                />
+              </Box>
+              <LinearProgress
+                variant="determinate"
+                value={(currentQuestion + 1) / currentTest.questions.length * 100}
+                sx={{ mb: 3, height: 8, borderRadius: 4, backgroundColor: 'rgba(212,175,55,0.2)', '& .MuiLinearProgress-bar': { backgroundColor: '#D4AF37'} }}
+              />
+              <Typography variant="h6" gutterBottom sx={{color: '#FFFFFF'}}>{question.text}</Typography>
+              {question.image && (<Box sx={{ my: 2, textAlign: 'center' }}><img src={question.image} alt={`Question ${currentQuestion + 1}`} style={{ maxWidth: '100%', maxHeight: 300, borderRadius:1 }} /></Box>)}
+              <Box sx={{ mt: 3 }}>
+                {question.options.map((option) => (
+                  <Box key={option.id} sx={questionOptionSx(question.id, option.id)} onClick={() => handleAnswer(question.id, option.id)}>
+                    <Typography>{option.text}</Typography>
+                  </Box>
+                ))}
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+                <Button variant="outlined" onClick={prevQuestion} startIcon={<ArrowBackIcon />} disabled={currentQuestion === 0} sx={themedButtonOutlinedSx}>Previous</Button>
+                {currentQuestion < currentTest.questions.length - 1 ? (
+                  <Button variant="contained" onClick={nextQuestion} endIcon={<ArrowForwardIcon />} disabled={!answers[question.id]} sx={themedButtonContainedSx}>Next</Button>
+                ) : (
+                  <Button variant="contained" onClick={() => submitTest()} endIcon={<CheckIcon />} disabled={!answers[question.id]} sx={themedButtonContainedSx}>Submit Test</Button>
+                )}
+              </Box>
+            </Paper>
+          </Box>
+        </Container>
+      );
+    }
+    // Test Results (Step 2)
+    else if (currentStep === 2) {
+      const { result } = currentTest;
+      const passed = result.score >= currentTest.passingScore;
+      return (
+        <Container maxWidth="lg" sx={{ py: 4, background: '#121212', color: '#FFFFFF', minHeight: 'calc(100vh - 64px)' }}>
+          <Box sx={{ maxWidth: 800, mx: 'auto' }}>
+            <Paper sx={testInterfacePaperSx}>
+              <Box sx={{ textAlign: 'center', mb: 4 }}>
+                <Typography variant="h4" gutterBottom sx={{color: passed ? '#81C784' : '#E0E0E0', fontWeight:'bold'}}>{passed ? 'Congratulations!' : 'Assessment Completed'}</Typography>
+                <Typography variant="h5" sx={{color: passed ? '#81C784' : '#B0B0B0'}}>{passed ? 'You Passed!' : 'Not Passed This Time'}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+                <Box sx={{ position: 'relative', display: 'inline-flex', width: 160, height: 160}}>
+                  <CircularProgress variant="determinate" value={100} size={160} thickness={4} sx={{color: 'rgba(212,175,55,0.2)'}} />
+                  <CircularProgress variant="determinate" value={result.score} size={160} thickness={4} sx={{color: passed ? '#81C784' : '#E57373', position:'absolute', left:0}}/>
+                  <Box sx={{top: 0, left: 0, bottom: 0, right: 0, position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    <Typography variant="h4" sx={{color: '#FFFFFF'}}>{result.score}%</Typography>
+                  </Box>
+                </Box>
+              </Box>
+              <Box sx={{ textAlign: 'center', mb: 3 }}>
+                <Typography variant="body1" sx={{color: '#E0E0E0'}}>You answered {result.correctAnswers} out of {currentTest.questions.length} questions correctly.</Typography>
+                <Typography variant="body2" sx={{color: '#B0B0B0', mt:1}}>Passing score: {currentTest.passingScore}%</Typography>
+              </Box>
+              {passed && (<Alert severity="success" sx={{ ...themedAlertSx('success'), mb: 3, backgroundColor: 'rgba(129, 199, 132, 0.1)', color: '#81C784', '& .MuiAlert-icon': {color: '#81C784'} }}><Typography variant="body1">You've earned the {currentTest.skillCategory} certification!</Typography><Typography variant="body2" sx={{ mt: 1 }}>This skill will now appear on your profile.</Typography></Alert>)}
+              {!passed && (<Alert severity="info" sx={{ ...themedAlertSx('info'), mb: 3, backgroundColor: 'rgba(212,175,55,0.1)', color: '#D4AF37', '& .MuiAlert-icon': {color: '#D4AF37'} }}><Typography variant="body1">You can retake this assessment in 14 days.</Typography><Typography variant="body2" sx={{ mt: 1 }}>Review the skill materials and try again later.</Typography></Alert>)}
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                <Button variant="contained" onClick={returnToDashboard} endIcon={<ArrowForwardIcon />} sx={themedButtonContainedSx}>Return to Skills Dashboard</Button>
+              </Box>
+            </Paper>
+          </Box>
+        </Container>
+      );
+    }
   }
 
+
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 4, background: '#121212', color: '#FFFFFF', minHeight: 'calc(100vh - 64px)' }}>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+        <Typography variant="h4" component="h1" gutterBottom sx={{color: '#D4AF37', fontWeight: 'bold'}}>
           Skills Assessment Center
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body1" sx={{color: '#B0B0B0'}}>
           Take assessments to verify your skills and stand out to hirers.
         </Typography>
       </Box>
       
-      <Paper sx={{ mb: 4 }}>
+      <Paper sx={{ ...themedPaperSx, mb: 4 }}>
         <Tabs
           value={tabValue}
           onChange={handleTabChange}
           variant={isMobile ? "scrollable" : "fullWidth"}
           scrollButtons="auto"
           aria-label="skills assessment tabs"
+          sx={{
+            '& .MuiTabs-indicator': { backgroundColor: '#D4AF37' },
+            '& .MuiTab-root': {
+              color: '#B0B0B0',
+              '&.Mui-selected': { color: '#D4AF37', fontWeight: 'bold' },
+              '& .MuiSvgIcon-root': { color: 'inherit', mr: 1} // Ensure icons inherit color
+            },
+            '& .MuiTabs-scrollButtons': { color: '#D4AF37' }
+          }}
         >
           <Tab icon={<AssignmentIcon />} label="Available Tests" />
           <Tab icon={<SchoolIcon />} label="My Skills" />
@@ -705,18 +889,22 @@ const SkillsAssessmentPage = () => {
         </Tabs>
       </Paper>
       
-      <TabPanel value={tabValue} index={0}>
-        {renderAvailableTests()}
-      </TabPanel>
+      {/* Tab Panels now wrapped with themed Paper for consistency */}
+      <Paper sx={themedPaperSx}>
+        <TabPanel value={tabValue} index={0}>
+          {renderAvailableTests()}
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={1}>
+          {renderMySkills()}
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={2}>
+          {renderCompletedTests()}
+        </TabPanel>
+      </Paper>
       
-      <TabPanel value={tabValue} index={1}>
-        {renderMySkills()}
-      </TabPanel>
-      
-      <TabPanel value={tabValue} index={2}>
-        {renderCompletedTests()}
-      </TabPanel>
-      
+      {/* This SkillsAssessment component seems to be a placeholder or different context, might need separate theming */}
       <Box sx={{ mt: 4 }}>
         <SkillsAssessment />
       </Box>

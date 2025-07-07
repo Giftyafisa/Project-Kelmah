@@ -503,15 +503,14 @@ exports.changePassword = async (req, res, next) => {
     
     // Update password
     user.password = newPassword;
-    user.tokenVersion += 1; // Invalidate all existing tokens except current session
+    user.tokenVersion += 1; // Increment token version to invalidate JWTs tied to the old version
     
     await user.save();
     
-    // Invalidate all refresh tokens except current one
+    // Invalidate ALL refresh tokens for this user to force re-login on all devices
     await RefreshToken.destroy({
       where: {
         userId: user.id,
-        token: { [Op.ne]: req.body.refreshToken }
       }
     });
     

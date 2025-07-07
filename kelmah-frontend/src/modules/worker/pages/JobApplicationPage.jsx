@@ -125,95 +125,188 @@ const JobApplicationPage = () => {
     setPage(1);
   };
 
+  const commonTextFieldStyles = {
+    '& label.Mui-focused': {
+      color: '#D4AF37', // Gold
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#D4AF37', // Gold
+    },
+    '& .MuiOutlinedInput-root': {
+      color: '#FFFFFF', // White input text
+      '& fieldset': {
+        borderColor: 'rgba(212, 175, 55, 0.3)', // Gold border
+      },
+      '&:hover fieldset': {
+        borderColor: '#D4AF37', // Gold
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#D4AF37', // Gold
+      },
+      '& .MuiSvgIcon-root': {
+        color: '#D4AF37', // Gold for icons in input
+      }
+    },
+    '& .MuiInputLabel-root': {
+      color: '#B0B0B0', // Light grey for label
+    },
+    backgroundColor: 'rgba(255, 255, 255, 0.05)', // Slight background tint for text fields
+    borderRadius: 1,
+  };
+
+  const commonSelectStyles = {
+    color: '#FFFFFF',
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: 'rgba(212, 175, 55, 0.3)',
+    },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#D4AF37',
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#D4AF37',
+    },
+    '& .MuiSvgIcon-root': { // Dropdown arrow
+      color: '#D4AF37',
+    },
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 1,
+  };
+
+  const menuItemStyles = {
+    backgroundColor: '#1F1F1F', // Dark background for menu items
+    color: '#FFFFFF',
+    '&:hover': {
+      backgroundColor: 'rgba(212, 175, 55, 0.1)', // Gold tint on hover
+    },
+    '&.Mui-selected': {
+      backgroundColor: 'rgba(212, 175, 55, 0.2)', // More prominent gold tint for selected
+      '&:hover': {
+        backgroundColor: 'rgba(212, 175, 55, 0.3)',
+      }
+    }
+  };
+
+
   return (
     <Grow in timeout={500}>
-      <Container sx={{ py: 4 }}>
-        <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
-          <Link component={RouterLink} to="/worker/dashboard" underline="hover" color="inherit">
+      <Container sx={{ py: 4, background: '#121212', color: '#FFFFFF', minHeight: 'calc(100vh - 64px)'}}>
+        <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2, '& .MuiLink-root': { color: '#D4AF37' }, '& .MuiTypography-root': { color: '#B0B0B0'} }}>
+          <Link component={RouterLink} to="/worker/dashboard" underline="hover">
             Dashboard
           </Link>
-          <Typography color="text.primary">Find Work</Typography>
+          <Typography>Find Work</Typography>
         </Breadcrumbs>
-        <Typography variant="h4" component="h1" gutterBottom sx={{ mb: 3 }}>
-          Find Work
+        <Typography variant="h4" component="h1" gutterBottom sx={{ mb: 3, color: '#D4AF37', fontWeight: 'bold' }}>
+          Find Work Opportunities
         </Typography>
         
         {/* Search and Filter Section */}
-        <Paper sx={{ p: 3, mb: 4 }}>
+        <Paper sx={{ p: 3, mb: 4, backgroundColor: '#1F1F1F', borderRadius: 2, boxShadow: '0 4px 12px rgba(212,175,55,0.1)' }}>
           <Grid container spacing={2}>
             <Grid item xs={12} md={4}>
                 <TextField
                   fullWidth
-                label="Search Jobs"
-                variant="outlined"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
+                  label="Search Jobs (e.g. Carpenter, Plumber)"
+                  variant="outlined"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon sx={{ color: '#D4AF37' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={commonTextFieldStyles}
+                />
             </Grid>
             <Grid item xs={12} md={3}>
                 <TextField
                   fullWidth
-                label="Location"
-                              variant="outlined"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                        InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LocationIcon />
-                    </InputAdornment>
-                  ),
-                        }}
-                      />
-                    </Grid>
-            <Grid item xs={12} md={2}>
-              <FormControl fullWidth>
+                  label="Location (e.g. Accra, Kumasi)"
+                  variant="outlined"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LocationIcon sx={{ color: '#D4AF37' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={commonTextFieldStyles}
+                />
+            </Grid>
+            <Grid item xs={12} md={2.5}>
+              <FormControl fullWidth variant="outlined" sx={{ '& .MuiInputLabel-root': { color: '#B0B0B0' } }}>
                 <InputLabel>Category</InputLabel>
                 <Select
                   value={category}
                   label="Category"
                   onChange={(e) => setCategory(e.target.value)}
+                  sx={commonSelectStyles}
+                  MenuProps={{ PaperProps: { sx: { backgroundColor: '#1F1F1F' } } }}
                 >
-                  <MenuItem value="">All Categories</MenuItem>
-                  <MenuItem value="Plumbing">Plumbing</MenuItem>
-                  <MenuItem value="Carpentry">Carpentry</MenuItem>
-                  <MenuItem value="Electrical">Electrical</MenuItem>
-                  <MenuItem value="HVAC">HVAC</MenuItem>
-                  <MenuItem value="Construction">Construction</MenuItem>
+                  <MenuItem value="" sx={menuItemStyles}>All Categories</MenuItem>
+                  <MenuItem value="Plumbing" sx={menuItemStyles}>Plumbing</MenuItem>
+                  <MenuItem value="Carpentry" sx={menuItemStyles}>Carpentry</MenuItem>
+                  <MenuItem value="Electrical" sx={menuItemStyles}>Electrical</MenuItem>
+                  <MenuItem value="HVAC" sx={menuItemStyles}>HVAC</MenuItem>
+                  <MenuItem value="Construction" sx={menuItemStyles}>Construction</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={2}>
-              <FormControl fullWidth>
+            <Grid item xs={12} md={2.5}>
+              <FormControl fullWidth variant="outlined" sx={{ '& .MuiInputLabel-root': { color: '#B0B0B0' } }}>
                 <InputLabel>Job Type</InputLabel>
                 <Select
                   value={jobType}
                   label="Job Type"
                   onChange={(e) => setJobType(e.target.value)}
+                  sx={commonSelectStyles}
+                  MenuProps={{ PaperProps: { sx: { backgroundColor: '#1F1F1F' } } }}
                 >
-                  <MenuItem value="">All Types</MenuItem>
-                  <MenuItem value="Contract">Contract</MenuItem>
-                  <MenuItem value="Full-time">Full-time</MenuItem>
-                  <MenuItem value="Part-time">Part-time</MenuItem>
+                  <MenuItem value="" sx={menuItemStyles}>All Types</MenuItem>
+                  <MenuItem value="Contract" sx={menuItemStyles}>Contract</MenuItem>
+                  <MenuItem value="Full-time" sx={menuItemStyles}>Full-time</MenuItem>
+                  <MenuItem value="Part-time" sx={menuItemStyles}>Part-time</MenuItem>
                 </Select>
               </FormControl>
-                    </Grid>
-            {/* Removed redundant Filter button */}
-                  </Grid>
-                </Paper>
+            </Grid>
+          </Grid>
+        </Paper>
 
-        {/* Clear all filters button */}
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-          <Button variant="outlined" color="secondary" onClick={clearFilters}>
+        {/* Clear all filters button and Sort By */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Button
+            variant="outlined"
+            onClick={clearFilters}
+            sx={{
+              color: '#D4AF37',
+              borderColor: 'rgba(212, 175, 55, 0.5)',
+              '&:hover': {
+                borderColor: '#D4AF37',
+                backgroundColor: 'rgba(212, 175, 55, 0.1)'
+              }
+            }}
+          >
             Clear Filters
           </Button>
+          <FormControl sx={{ minWidth: 180 }} size="small" variant="outlined">
+            <InputLabel sx={{ color: '#B0B0B0' }}>Sort By</InputLabel>
+            <Select
+              value={sortBy}
+              label="Sort By"
+              onChange={handleSortChange}
+              sx={commonSelectStyles}
+              MenuProps={{ PaperProps: { sx: { backgroundColor: '#1F1F1F' } } }}
+            >
+              <MenuItem value="recent" sx={menuItemStyles}>Most Recent</MenuItem>
+              <MenuItem value="relevant" sx={menuItemStyles}>Most Relevant</MenuItem>
+              <MenuItem value="salary-high" sx={menuItemStyles}>Highest Salary</MenuItem>
+              <MenuItem value="salary-low" sx={menuItemStyles}>Lowest Salary</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
 
         {/* Results Section */}
@@ -221,15 +314,15 @@ const JobApplicationPage = () => {
           <Grid container spacing={3} sx={{ p: 2 }}>
             {Array.from({ length: jobsPerPage }).map((_, idx) => (
               <Grid item xs={12} sm={6} key={idx}>
-                <Card sx={{ mb: 3, borderRadius: 2 }}>
+                <Card sx={{ mb: 3, borderRadius: 2, backgroundColor: '#1F1F1F' }}>
                   <CardContent>
-                    <Skeleton variant="text" width="40%" height={30} />
-                    <Skeleton variant="rectangular" height={150} sx={{ mt: 1 }} />
+                    <Skeleton variant="text" width="40%" height={30} sx={{ backgroundColor: 'rgba(255,255,255,0.1)' }}/>
+                    <Skeleton variant="rectangular" height={150} sx={{ mt: 1, backgroundColor: 'rgba(255,255,255,0.1)' }} />
                   </CardContent>
-                  <Divider />
+                  <Divider sx={{ borderColor: 'rgba(212,175,55,0.2)' }}/>
                   <CardActions>
-                    <Skeleton variant="rectangular" height={36} width="30%" />
-                    <Skeleton variant="rectangular" height={36} width="30%" sx={{ ml: 'auto' }} />
+                    <Skeleton variant="rectangular" height={36} width="30%" sx={{ backgroundColor: 'rgba(255,255,255,0.1)' }}/>
+                    <Skeleton variant="rectangular" height={36} width="30%" sx={{ ml: 'auto', backgroundColor: 'rgba(255,255,255,0.1)' }} />
                   </CardActions>
                 </Card>
               </Grid>
@@ -238,101 +331,94 @@ const JobApplicationPage = () => {
         ) : (
           <>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="h6" component="h2">
+              <Typography variant="h6" component="h2" sx={{ color: '#E0E0E0' }}>
                 {totalItems} jobs found
-                </Typography>
-              <FormControl sx={{ minWidth: 150 }} size="small">
-                <InputLabel>Sort By</InputLabel>
-                <Select
-                  value={sortBy}
-                  label="Sort By"
-                  onChange={handleSortChange}
-                >
-                  <MenuItem value="recent">Most Recent</MenuItem>
-                  <MenuItem value="relevant">Most Relevant</MenuItem>
-                  <MenuItem value="salary-high">Highest Salary</MenuItem>
-                  <MenuItem value="salary-low">Lowest Salary</MenuItem>
-                </Select>
-              </FormControl>
-                </Box>
+              </Typography>
+              {/* Sort By moved above */}
+            </Box>
                 
             {jobs.length === 0 ? (
-              <Paper sx={{ p: 4, textAlign: 'center' }}>
-                <WorkOutlineIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
-                <Typography variant="h6">No jobs found matching your criteria</Typography>
-                <Typography color="textSecondary">
-                  Try adjusting your search filters or search term
+              <Paper sx={{ p: 4, textAlign: 'center', backgroundColor: '#1F1F1F', color: '#FFFFFF', borderRadius: 2 }}>
+                <WorkOutlineIcon sx={{ fontSize: 60, color: '#D4AF37', mb: 2 }} />
+                <Typography variant="h6" sx={{color: '#E0E0E0'}}>No jobs found matching your criteria</Typography>
+                <Typography sx={{color: '#B0B0B0'}}>
+                  Try adjusting your search filters or search term.
                 </Typography>
               </Paper>
             ) : (
               <>
                 <Grid container spacing={3}>
                   {jobs.map((job) => (
-                    <Grid item xs={12} sm={6} key={job._id || job.id}>
+                    <Grid item xs={12} md={6} key={job._id || job.id}> {/* Changed sm to md for better layout on medium screens */}
                       <Card
                         sx={{
                           mb: 3,
                           borderRadius: 2,
-                          boxShadow: 3,
+                          boxShadow: '0 4px 12px rgba(212,175,55,0.15)',
                           transition: 'all 0.3s ease',
-                          '&:hover': { boxShadow: 6, transform: 'translateY(-2px)' },
+                          '&:hover': { boxShadow: '0 8px 20px rgba(212,175,55,0.25)', transform: 'translateY(-4px)' },
+                          backgroundColor: '#1F1F1F',
+                          color: '#FFFFFF'
                         }}
                       >
-                        <CardContent>
+                        <CardContent sx={{pb:1}}>
                           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <Box>
-                              <Typography variant="h5" component="h2" gutterBottom>
+                            <Box sx={{flexGrow: 1}}>
+                              <Typography variant="h5" component="h2" gutterBottom sx={{ color: '#D4AF37', fontWeight: 'bold' }}>
                                 {job.title}
-                          </Typography>
-                              <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+                              </Typography>
+                              <Stack direction="column" spacing={1} sx={{ mb: 2 }}> {/* Changed to column for better readability */}
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                  <BusinessIcon fontSize="small" sx={{ mr: 0.5, color: 'text.secondary' }} />
-                                  <Typography variant="body2" color="text.secondary">
-                                    {job.company}
-                            </Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                  <LocationIcon fontSize="small" sx={{ mr: 0.5, color: 'text.secondary' }} />
-                                  <Typography variant="body2" color="text.secondary">
-                                    {job.location}
-                            </Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                  <MoneyIcon fontSize="small" sx={{ mr: 0.5, color: 'text.secondary' }} />
-                                  <Typography variant="body2" color="text.secondary">
-                                    {job.salary}
+                                  <BusinessIcon fontSize="small" sx={{ mr: 1, color: '#B0B0B0' }} />
+                                  <Typography variant="body2" sx={{color: '#E0E0E0'}}>
+                                    {job.company || 'N/A'}
                                   </Typography>
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                  <AccessTimeIcon fontSize="small" sx={{ mr: 0.5, color: 'text.secondary' }} />
-                                  <Typography variant="body2" color="text.secondary">
-                                    {new Date(job.date).toLocaleDateString()}
+                                  <LocationIcon fontSize="small" sx={{ mr: 1, color: '#B0B0B0' }} />
+                                  <Typography variant="body2" sx={{color: '#E0E0E0'}}>
+                                    {job.location  || 'N/A'}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                  <MoneyIcon fontSize="small" sx={{ mr: 1, color: '#B0B0B0' }} />
+                                  <Typography variant="body2" sx={{color: '#E0E0E0'}}>
+                                    {job.salary || 'Not Disclosed'}
+                                  </Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                  <AccessTimeIcon fontSize="small" sx={{ mr: 1, color: '#B0B0B0' }} />
+                                  <Typography variant="body2" sx={{color: '#E0E0E0'}}>
+                                    Posted: {new Date(job.date).toLocaleDateString()}
                                   </Typography>
                                 </Box>
                               </Stack>
                             </Box>
-                            <IconButton onClick={() => handleSaveJob(job._id || job.id)}>
+                            <IconButton onClick={() => handleSaveJob(job._id || job.id)} sx={{color: savedJobs.includes(job._id || job.id) ? '#D4AF37' : '#B0B0B0'}}>
                               {savedJobs.includes(job._id || job.id) ? (
-                                <BookmarkIcon color="primary" />
+                                <BookmarkIcon />
                               ) : (
                                 <BookmarkBorderIcon />
                               )}
                             </IconButton>
                           </Box>
-                          <Typography variant="body1" paragraph>
+                          <Typography variant="body2" paragraph sx={{ color: '#E0E0E0', maxHeight: 80, overflow: 'hidden', textOverflow: 'ellipsis', mb: 2 }}>
                             {job.description}
                           </Typography>
-                          <Box sx={{ mb: 2 }}>
+                          <Box sx={{ mb: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                             <Chip 
                               label={job.type} 
                               size="small" 
-                              sx={{ mr: 1, backgroundColor: job.type === 'Contract' ? theme.palette.info.light : theme.palette.success.light }}
+                              sx={{
+                                backgroundColor: job.type === 'Contract' ? 'rgba(212,175,55,0.8)' : 'rgba(255,255,255,0.2)',
+                                color: job.type === 'Contract' ? '#000000' : '#FFFFFF',
+                                fontWeight: 'medium'
+                              }}
                             />
                             <Chip 
                               label={job.category} 
                               size="small" 
-                              sx={{ mr: 1 }}
-                              color="primary"
+                              sx={{ color: '#D4AF37', borderColor: '#D4AF37' }}
                               variant="outlined"
                             />
                             {job.skills.map((skill) => (
@@ -340,18 +426,23 @@ const JobApplicationPage = () => {
                                 key={skill} 
                                 label={skill} 
                                 size="small" 
-                                sx={{ mr: 1 }} 
+                                sx={{ backgroundColor: 'rgba(255,255,255,0.1)', color: '#E0E0E0' }}
                               />
                             ))}
                           </Box>
                         </CardContent>
-                        <Divider />
-                        <CardActions sx={{ justifyContent: 'flex-end' }}>
+                        <Divider sx={{ borderColor: 'rgba(212,175,55,0.2)' }}/>
+                        <CardActions sx={{ justifyContent: 'flex-end', p:2 }}>
                           <Button
                             size="small"
-                            variant="text"
+                            variant="outlined"
                             component={RouterLink}
                             to={`/jobs/${job._id || job.id}`}
+                            sx={{
+                              color: '#D4AF37',
+                              borderColor: 'rgba(212,175,55,0.5)',
+                              '&:hover': { borderColor: '#D4AF37', backgroundColor: 'rgba(212,175,55,0.1)'}
+                            }}
                           >
                             View Details
                           </Button>
@@ -360,6 +451,11 @@ const JobApplicationPage = () => {
                             variant="contained"
                             component={RouterLink}
                             to={`/jobs/${job._id || job.id}?apply=true`}
+                            sx={{
+                              backgroundColor: '#D4AF37',
+                              color: '#000000',
+                              '&:hover': { backgroundColor: '#BF953F'}
+                            }}
                           >
                             Apply Now
                           </Button>
@@ -375,7 +471,22 @@ const JobApplicationPage = () => {
                     count={totalPages} 
                     page={page} 
                     onChange={handleChangePage} 
-                      color="primary"
+                    sx={{
+                      '& .MuiPaginationItem-root': {
+                        color: '#B0B0B0',
+                      },
+                      '& .Mui-selected': {
+                        backgroundColor: 'rgba(212,175,55,0.2)',
+                        color: '#D4AF37',
+                        fontWeight: 'bold',
+                        '&:hover': {
+                           backgroundColor: 'rgba(212,175,55,0.3)',
+                        }
+                      },
+                       '& .MuiPaginationItem-ellipsis': {
+                         color: '#B0B0B0',
+                       }
+                    }}
                   />
               </Box>
               </>

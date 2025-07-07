@@ -91,13 +91,17 @@ const WorkerDashboard = ({ user = {} }) => {
 
   const MainContent = () => (
     <Grid item lg={8} md={7} xs={12} container spacing={3} alignContent="flex-start">
+      {/* These components would need internal styling for the dark theme */}
       <Grid item xs={12}>
+        {/* AvailableJobs should use dark background, gold/white text/accents */}
         <AvailableJobs />
       </Grid>
       <Grid item xs={12}>
+        {/* EarningsChart needs gold lines, white/light grey labels, dark tooltips */}
         <EarningsChart />
       </Grid>
       <Grid item xs={12}>
+        {/* Portfolio cards should be dark with gold/white text */}
         <Portfolio projects={mockProjects} />
       </Grid>
     </Grid>
@@ -105,19 +109,25 @@ const WorkerDashboard = ({ user = {} }) => {
 
   const RightSidebar = () => (
     <Grid item lg={4} md={5} xs={12} container spacing={3} alignContent="flex-start">
+        {/* These components would need internal styling for the dark theme */}
         <Grid item xs={12}>
+            {/* AvailabilityStatus: dark bg, gold/white text/indicators */}
             <AvailabilityStatus />
         </Grid>
         <Grid item xs={12}>
+          {/* ProfileCompletion: gold progress bar, white/light grey text */}
           <ProfileCompletion />
         </Grid>
         <Grid item xs={12}>
+          {/* UpcomingAppointments: dark list items, gold/white text */}
           <UpcomingAppointments />
         </Grid>
         <Grid item xs={12}>
-          <QuickActions actions={quickActions} />
+          {/* QuickActions: dark buttons/cards, gold/white icons/text, gold badges */}
+          <QuickActions actions={quickActions.map(action => ({...action, color: '#D4AF37'}))} />
         </Grid>
         <Grid item xs={12}>
+          {/* Credentials: dark bg, gold/white text for skills/licenses */}
           <Credentials skills={mockSkills} licenses={mockCerts} />
         </Grid>
     </Grid>
@@ -125,11 +135,20 @@ const WorkerDashboard = ({ user = {} }) => {
 
   return (
     <Grow in timeout={500}>
+      {/* The main Box already has a dark background from WorkerDashboardPage.jsx */}
       <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
         <Grid container spacing={3} sx={{ mb: 3 }}>
           {statistics.map((stat, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
-              <StatisticsCard {...stat} />
+              {/* StatisticsCard needs dark bg, gold/white text. Icon color passed as stat.color */}
+              <StatisticsCard
+                {...stat}
+                // Override color to ensure it's gold or a suitable highlight for dark theme
+                // For example, if stat.color was blue, it would look off.
+                // We are making all primary indicators/values gold.
+                color={stat.title === 'Pending Applications' ? '#FFFFFF' : '#D4AF37'} // Example: White for pending, Gold for others
+                sx={{ backgroundColor: '#1F1F1F', color: '#FFFFFF' }} // Dark card background
+              />
             </Grid>
           ))}
         </Grid>

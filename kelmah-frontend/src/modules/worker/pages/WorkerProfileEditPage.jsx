@@ -319,13 +319,48 @@ const WorkerProfileEditPage = () => {
     }));
   };
   
+  const commonTextFieldStyles = {
+    '& label.Mui-focused': { color: '#D4AF37' },
+    '& .MuiInput-underline:after': { borderBottomColor: '#D4AF37' },
+    '& .MuiOutlinedInput-root': {
+      color: '#FFFFFF',
+      '& fieldset': { borderColor: 'rgba(212, 175, 55, 0.3)' },
+      '&:hover fieldset': { borderColor: '#D4AF37' },
+      '&.Mui-focused fieldset': { borderColor: '#D4AF37' },
+      '& .MuiSvgIcon-root': { color: '#D4AF37' }
+    },
+    '& .MuiInputLabel-root': { color: '#B0B0B0' },
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 1,
+  };
+
+  const commonSelectStyles = {
+    color: '#FFFFFF',
+    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(212, 175, 55, 0.3)' },
+    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+    '& .MuiSvgIcon-root': { color: '#D4AF37' },
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 1,
+  };
+
+  const menuItemStyles = {
+    backgroundColor: '#1F1F1F',
+    color: '#FFFFFF',
+    '&:hover': { backgroundColor: 'rgba(212, 175, 55, 0.1)' },
+    '&.Mui-selected': {
+      backgroundColor: 'rgba(212, 175, 55, 0.2)',
+      '&:hover': { backgroundColor: 'rgba(212, 175, 55, 0.3)' }
+    }
+  };
+
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 4, background: '#121212', color: '#FFFFFF', minHeight: 'calc(100vh - 64px)' }}>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom fontWeight="bold">
+        <Typography variant="h4" gutterBottom fontWeight="bold" sx={{color: '#D4AF37'}}>
           Edit Your Profile
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body1" sx={{color: '#B0B0B0'}}>
           Complete your profile to attract more job opportunities
         </Typography>
       </Box>
@@ -336,29 +371,37 @@ const WorkerProfileEditPage = () => {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+        <Alert
+            onClose={handleCloseSnackbar}
+            severity={snackbar.severity}
+            sx={{
+                width: '100%',
+                backgroundColor: snackbar.severity === 'success' ? 'rgba(212,175,55,0.1)' : 'rgba(229,115,115,0.1)' , // Gold tint for success, red for error
+                color: snackbar.severity === 'success' ? '#D4AF37' : '#E57373',
+                '& .MuiAlert-icon': { color: snackbar.severity === 'success' ? '#D4AF37' : '#E57373' }
+            }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>
       
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity="error" sx={{ mb: 3, backgroundColor: 'rgba(229,115,115,0.1)', color: '#E57373', '& .MuiAlert-icon': { color: '#E57373'} }}>
           {error}
         </Alert>
       )}
       
       <form onSubmit={handleSubmit}>
-        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
-          <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main }}>
+        <Paper elevation={3} sx={{ p: {xs:2, md:3}, mb: 4, borderRadius: 2, backgroundColor: '#1F1F1F', boxShadow: '0 4px 12px rgba(212,175,55,0.1)' }}>
+          <Typography variant="h6" gutterBottom sx={{ color: '#D4AF37', fontWeight: 'medium', borderBottom: '1px solid rgba(212,175,55,0.2)', pb:1, mb:3 }}>
             Basic Information
           </Typography>
           
-          {/* Profile Image */}
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4 }}>
             <Avatar
               src={imagePreview}
               alt={`${formData.firstName} ${formData.lastName}`}
-              sx={{ width: 150, height: 150, mb: 2 }}
+              sx={{ width: 150, height: 150, mb: 2, border: '3px solid #D4AF37', backgroundColor: 'rgba(212,175,55,0.2)' }}
             />
             <label htmlFor="profile-image">
               <Input
@@ -371,6 +414,7 @@ const WorkerProfileEditPage = () => {
                 component="span"
                 variant="outlined"
                 startIcon={<CameraIcon />}
+                sx={{ color: '#D4AF37', borderColor: 'rgba(212,175,55,0.5)', '&:hover': {borderColor: '#D4AF37', backgroundColor: 'rgba(212,175,55,0.1)'} }}
               >
                 Change Profile Picture
               </Button>
@@ -386,13 +430,8 @@ const WorkerProfileEditPage = () => {
                 value={formData.firstName}
                 onChange={handleInputChange}
                 required
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PersonIcon />
-                    </InputAdornment>
-                  ),
-                }}
+                InputProps={{ startAdornment: (<InputAdornment position="start"><PersonIcon /></InputAdornment>),}}
+                sx={commonTextFieldStyles}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -403,13 +442,8 @@ const WorkerProfileEditPage = () => {
                 value={formData.lastName}
                 onChange={handleInputChange}
                 required
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PersonIcon />
-                    </InputAdornment>
-                  ),
-                }}
+                InputProps={{ startAdornment: (<InputAdornment position="start"><PersonIcon /></InputAdornment>),}}
+                sx={commonTextFieldStyles}
               />
             </Grid>
             <Grid item xs={12}>
@@ -421,13 +455,8 @@ const WorkerProfileEditPage = () => {
                 onChange={handleInputChange}
                 required
                 placeholder="e.g. Senior Plumber, Experienced Electrician"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <BusinessIcon />
-                    </InputAdornment>
-                  ),
-                }}
+                InputProps={{ startAdornment: (<InputAdornment position="start"><BusinessIcon /></InputAdornment>),}}
+                sx={commonTextFieldStyles}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -438,13 +467,8 @@ const WorkerProfileEditPage = () => {
                 value={formData.location}
                 onChange={handleInputChange}
                 placeholder="City, State/Province, Country"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LocationIcon />
-                    </InputAdornment>
-                  ),
-                }}
+                InputProps={{ startAdornment: (<InputAdornment position="start"><LocationIcon /></InputAdornment>),}}
+                sx={commonTextFieldStyles}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -454,14 +478,14 @@ const WorkerProfileEditPage = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}
+                sx={commonTextFieldStyles}
               />
             </Grid>
           </Grid>
         </Paper>
         
-        {/* Professional Info */}
-        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
-          <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main }}>
+        <Paper elevation={3} sx={{ p: {xs:2, md:3}, mb: 4, borderRadius: 2, backgroundColor: '#1F1F1F', boxShadow: '0 4px 12px rgba(212,175,55,0.1)' }}>
+          <Typography variant="h6" gutterBottom sx={{ color: '#D4AF37', fontWeight: 'medium', borderBottom: '1px solid rgba(212,175,55,0.2)', pb:1, mb:3 }}>
             Professional Information
           </Typography>
           
@@ -474,13 +498,8 @@ const WorkerProfileEditPage = () => {
                 type="number"
                 value={formData.hourlyRate}
                 onChange={handleInputChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <RateIcon />
-                    </InputAdornment>
-                  ),
-                }}
+                InputProps={{ startAdornment: (<InputAdornment position="start"><RateIcon /></InputAdornment>), }}
+                sx={commonTextFieldStyles}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -491,13 +510,8 @@ const WorkerProfileEditPage = () => {
                 type="number"
                 value={formData.experience}
                 onChange={handleInputChange}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <BusinessIcon />
-                    </InputAdornment>
-                  ),
-                }}
+                InputProps={{ startAdornment: (<InputAdornment position="start"><BusinessIcon /></InputAdornment>),}}
+                sx={commonTextFieldStyles}
               />
             </Grid>
             <Grid item xs={12}>
@@ -510,48 +524,37 @@ const WorkerProfileEditPage = () => {
                 multiline
                 rows={4}
                 placeholder="Tell potential clients about yourself, your experience, and why they should hire you."
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start" sx={{ alignSelf: 'flex-start', mt: 1.5 }}>
-                      <DescriptionIcon />
-                    </InputAdornment>
-                  ),
-                }}
+                InputProps={{ startAdornment: (<InputAdornment position="start" sx={{ alignSelf: 'flex-start', mt: 1.5 }}><DescriptionIcon /></InputAdornment>),}}
+                sx={commonTextFieldStyles}
               />
             </Grid>
           </Grid>
         </Paper>
         
-        {/* Skills */}
-        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
-          <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main }}>
+        <Paper elevation={3} sx={{ p: {xs:2, md:3}, mb: 4, borderRadius: 2, backgroundColor: '#1F1F1F', boxShadow: '0 4px 12px rgba(212,175,55,0.1)' }}>
+          <Typography variant="h6" gutterBottom sx={{ color: '#D4AF37', fontWeight: 'medium', borderBottom: '1px solid rgba(212,175,55,0.2)', pb:1, mb:3 }}>
             Skills
           </Typography>
           
           <Box sx={{ mb: 2 }}>
-            <Box sx={{ display: 'flex', mb: 2 }}>
+            <Box sx={{ display: 'flex', mb: 2, gap: 1 }}>
               <TextField
                 fullWidth
                 label="Add a Skill"
                 value={newSkill}
                 onChange={(e) => setNewSkill(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleAddSkill()}
+                onKeyPress={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddSkill();}}}
                 placeholder="e.g. Plumbing, Electrical Installation, Carpentry"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SkillsIcon />
-                    </InputAdornment>
-                  ),
-                }}
+                InputProps={{ startAdornment: (<InputAdornment position="start"><SkillsIcon /></InputAdornment>),}}
+                sx={commonTextFieldStyles}
               />
               <Button
                 variant="contained"
                 onClick={handleAddSkill}
-                sx={{ ml: 1 }}
                 startIcon={<AddIcon />}
+                sx={{ backgroundColor: '#D4AF37', color: '#000000', '&:hover': { backgroundColor: '#BF953F' }, whiteSpace: 'nowrap' }}
               >
-                Add
+                Add Skill
               </Button>
             </Box>
             
@@ -561,7 +564,12 @@ const WorkerProfileEditPage = () => {
                   key={index}
                   label={skill}
                   onDelete={() => handleRemoveSkill(skill)}
-                  color="primary"
+                  sx={{
+                    backgroundColor: 'rgba(212,175,55,0.2)',
+                    color: '#D4AF37',
+                    borderColor: 'rgba(212,175,55,0.5)',
+                    '& .MuiChip-deleteIcon': { color: '#D4AF37', '&:hover': {color: '#BF953F'} }
+                  }}
                   variant="outlined"
                 />
               ))}
@@ -569,13 +577,12 @@ const WorkerProfileEditPage = () => {
           </Box>
         </Paper>
         
-        {/* Education */}
-        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
-          <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main }}>
+        <Paper elevation={3} sx={{ p: {xs:2, md:3}, mb: 4, borderRadius: 2, backgroundColor: '#1F1F1F', boxShadow: '0 4px 12px rgba(212,175,55,0.1)' }}>
+          <Typography variant="h6" gutterBottom sx={{ color: '#D4AF37', fontWeight: 'medium', borderBottom: '1px solid rgba(212,175,55,0.2)', pb:1, mb:3 }}>
             Education & Certifications
           </Typography>
           
-          <Grid container spacing={2} sx={{ mb: 2 }}>
+          <Grid container spacing={2} sx={{ mb: 2 }} alignItems="flex-end">
             <Grid item xs={12} sm={5}>
               <TextField
                 fullWidth
@@ -583,14 +590,9 @@ const WorkerProfileEditPage = () => {
                 name="degree"
                 value={newEducation.degree}
                 onChange={handleEducationChange}
-                placeholder="e.g. Certified Plumber, Electrical Engineer"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <EducationIcon />
-                    </InputAdornment>
-                  ),
-                }}
+                placeholder="e.g. Certified Plumber"
+                InputProps={{ startAdornment: (<InputAdornment position="start"><EducationIcon /></InputAdornment>),}}
+                sx={commonTextFieldStyles}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -600,7 +602,8 @@ const WorkerProfileEditPage = () => {
                 name="institution"
                 value={newEducation.institution}
                 onChange={handleEducationChange}
-                placeholder="e.g. Trade School, University"
+                placeholder="e.g. Trade School"
+                sx={commonTextFieldStyles}
               />
             </Grid>
             <Grid item xs={12} sm={2}>
@@ -611,14 +614,15 @@ const WorkerProfileEditPage = () => {
                 value={newEducation.year}
                 onChange={handleEducationChange}
                 placeholder="e.g. 2018"
+                sx={commonTextFieldStyles}
               />
             </Grid>
-            <Grid item xs={12} sm={1}>
+            <Grid item xs={12} sm={1} sx={{display: 'flex', alignItems: 'center'}}>
               <Button
                 variant="contained"
                 onClick={handleAddEducation}
                 fullWidth
-                sx={{ height: '100%' }}
+                sx={{ height: 56, backgroundColor: '#D4AF37', color: '#000000', '&:hover': { backgroundColor: '#BF953F' } }}
               >
                 <AddIcon />
               </Button>
@@ -627,27 +631,27 @@ const WorkerProfileEditPage = () => {
           
           {formData.education.length > 0 && (
             <Box>
-              <Divider sx={{ my: 2 }} />
-              <Typography variant="subtitle1" gutterBottom>
+              <Divider sx={{ my: 2, borderColor: 'rgba(212,175,55,0.2)' }} />
+              <Typography variant="subtitle1" gutterBottom sx={{color: '#E0E0E0'}}>
                 Added Education & Certifications
               </Typography>
               
               {formData.education.map((edu, index) => (
-                <Card key={index} variant="outlined" sx={{ mb: 1 }}>
-                  <CardContent sx={{ py: 1, '&:last-child': { pb: 1 } }}>
+                <Card key={index} variant="outlined" sx={{ mb: 1, backgroundColor: '#2C2C2C', borderColor: 'rgba(212,175,55,0.3)' }}>
+                  <CardContent sx={{ py: '12px !important', '&:last-child': { pb: '12px !important' } }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Box>
-                        <Typography variant="subtitle1">
+                        <Typography variant="subtitle1" sx={{color: '#FFFFFF'}}>
                           {edu.degree}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{color: '#B0B0B0'}}>
                           {edu.institution} {edu.year && `(${edu.year})`}
                         </Typography>
                       </Box>
                       <IconButton
                         size="small"
                         onClick={() => handleRemoveEducation(index)}
-                        color="error"
+                        sx={{color: '#E57373', '&:hover': {color: '#D32F2F'}}}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -659,32 +663,26 @@ const WorkerProfileEditPage = () => {
           )}
         </Paper>
         
-        {/* Languages */}
-        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
-          <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main }}>
+        <Paper elevation={3} sx={{ p: {xs:2, md:3}, mb: 4, borderRadius: 2, backgroundColor: '#1F1F1F', boxShadow: '0 4px 12px rgba(212,175,55,0.1)' }}>
+          <Typography variant="h6" gutterBottom sx={{ color: '#D4AF37', fontWeight: 'medium', borderBottom: '1px solid rgba(212,175,55,0.2)', pb:1, mb:3 }}>
             Languages
           </Typography>
           
-          <Grid container spacing={2} sx={{ mb: 2 }}>
-            <Grid item xs={12} sm={6}>
+          <Grid container spacing={2} sx={{ mb: 2 }} alignItems="flex-end">
+            <Grid item xs={12} sm={5}> {/* Adjusted sm for better spacing */}
               <TextField
                 fullWidth
                 label="Language"
                 name="language"
                 value={newLanguage.language}
                 onChange={handleLanguageChange}
-                placeholder="e.g. English, Spanish, French"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LanguageIcon />
-                    </InputAdornment>
-                  ),
-                }}
+                placeholder="e.g. English, Spanish"
+                InputProps={{ startAdornment: (<InputAdornment position="start"><LanguageIcon /></InputAdornment>),}}
+                sx={commonTextFieldStyles}
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
-              <FormControl fullWidth>
+            <Grid item xs={12} sm={isMobile ? 5 : 4}> {/* Adjusted sm for better spacing */}
+              <FormControl fullWidth variant="outlined" sx={{ '& .MuiInputLabel-root': { color: '#B0B0B0' } }}>
                 <InputLabel id="language-proficiency-label">Proficiency</InputLabel>
                 <Select
                   labelId="language-proficiency-label"
@@ -692,20 +690,22 @@ const WorkerProfileEditPage = () => {
                   value={newLanguage.proficiency}
                   onChange={handleLanguageChange}
                   label="Proficiency"
+                  sx={commonSelectStyles}
+                  MenuProps={{ PaperProps: { sx: { backgroundColor: '#1F1F1F' }}}}
                 >
-                  <MenuItem value="Beginner">Beginner</MenuItem>
-                  <MenuItem value="Intermediate">Intermediate</MenuItem>
-                  <MenuItem value="Advanced">Advanced</MenuItem>
-                  <MenuItem value="Native">Native/Fluent</MenuItem>
+                  <MenuItem value="Beginner" sx={menuItemStyles}>Beginner</MenuItem>
+                  <MenuItem value="Intermediate" sx={menuItemStyles}>Intermediate</MenuItem>
+                  <MenuItem value="Advanced" sx={menuItemStyles}>Advanced</MenuItem>
+                  <MenuItem value="Native" sx={menuItemStyles}>Native/Fluent</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={1}>
+            <Grid item xs={12} sm={isMobile ? 2 : 1} sx={{display: 'flex', alignItems: 'center'}}>
               <Button
                 variant="contained"
                 onClick={handleAddLanguage}
                 fullWidth
-                sx={{ height: '100%' }}
+                sx={{ height: 56, backgroundColor: '#D4AF37', color: '#000000', '&:hover': { backgroundColor: '#BF953F' } }}
               >
                 <AddIcon />
               </Button>
@@ -714,27 +714,27 @@ const WorkerProfileEditPage = () => {
           
           {formData.languages.length > 0 && (
             <Box>
-              <Divider sx={{ my: 2 }} />
-              <Typography variant="subtitle1" gutterBottom>
+              <Divider sx={{ my: 2, borderColor: 'rgba(212,175,55,0.2)' }} />
+              <Typography variant="subtitle1" gutterBottom sx={{color: '#E0E0E0'}}>
                 Added Languages
               </Typography>
               
               {formData.languages.map((lang, index) => (
-                <Card key={index} variant="outlined" sx={{ mb: 1 }}>
-                  <CardContent sx={{ py: 1, '&:last-child': { pb: 1 } }}>
+                <Card key={index} variant="outlined" sx={{ mb: 1, backgroundColor: '#2C2C2C', borderColor: 'rgba(212,175,55,0.3)' }}>
+                  <CardContent sx={{ py: '12px !important', '&:last-child': { pb: '12px !important' } }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Box>
-                        <Typography variant="subtitle1">
+                        <Typography variant="subtitle1" sx={{color: '#FFFFFF'}}>
                           {lang.language}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{color: '#B0B0B0'}}>
                           {lang.proficiency}
                         </Typography>
                       </Box>
                       <IconButton
                         size="small"
                         onClick={() => handleRemoveLanguage(index)}
-                        color="error"
+                        sx={{color: '#E57373', '&:hover': {color: '#D32F2F'}}}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -746,13 +746,12 @@ const WorkerProfileEditPage = () => {
           )}
         </Paper>
         
-        {/* Portfolio */}
-        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
-          <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main }}>
+        <Paper elevation={3} sx={{ p: {xs:2, md:3}, mb: 4, borderRadius: 2, backgroundColor: '#1F1F1F', boxShadow: '0 4px 12px rgba(212,175,55,0.1)' }}>
+          <Typography variant="h6" gutterBottom sx={{ color: '#D4AF37', fontWeight: 'medium', borderBottom: '1px solid rgba(212,175,55,0.2)', pb:1, mb:3 }}>
             Portfolio
           </Typography>
           
-          <Typography variant="body2" color="text.secondary" gutterBottom>
+          <Typography variant="body2" sx={{color: '#B0B0B0'}} gutterBottom>
             Add examples of your previous work to showcase your skills
           </Typography>
           
@@ -760,7 +759,7 @@ const WorkerProfileEditPage = () => {
             variant="outlined"
             onClick={handleAddPortfolioItem}
             startIcon={<AddIcon />}
-            sx={{ mb: 3 }}
+            sx={{ mb: 3, color: '#D4AF37', borderColor: 'rgba(212,175,55,0.5)', '&:hover': {borderColor: '#D4AF37', backgroundColor: 'rgba(212,175,55,0.1)'} }}
           >
             Add Portfolio Item
           </Button>
@@ -768,17 +767,16 @@ const WorkerProfileEditPage = () => {
           <Grid container spacing={3}>
             {formData.portfolio.map((item, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card variant="outlined">
-                  <CardContent>
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="subtitle1" gutterBottom>
+                <Card variant="outlined" sx={{backgroundColor: '#2C2C2C', borderColor: 'rgba(212,175,55,0.3)', height: '100%', display:'flex', flexDirection:'column'}}>
+                  <CardContent sx={{flexGrow: 1}}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                      <Typography variant="subtitle1" gutterBottom sx={{color: '#E0E0E0'}}>
                         Portfolio Item #{index + 1}
                       </Typography>
                       <IconButton
                         size="small"
                         onClick={() => handleRemovePortfolioItem(index)}
-                        color="error"
-                        sx={{ position: 'absolute', top: 8, right: 8 }}
+                        sx={{color: '#E57373', '&:hover': {color: '#D32F2F'}}}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -789,7 +787,7 @@ const WorkerProfileEditPage = () => {
                       label="Title"
                       value={item.title || ''}
                       onChange={(e) => handlePortfolioItemChange(index, 'title', e.target.value)}
-                      sx={{ mb: 2 }}
+                      sx={{ ...commonTextFieldStyles, mb: 2 }}
                     />
                     
                     <TextField
@@ -799,21 +797,22 @@ const WorkerProfileEditPage = () => {
                       onChange={(e) => handlePortfolioItemChange(index, 'description', e.target.value)}
                       multiline
                       rows={2}
-                      sx={{ mb: 2 }}
+                      sx={{ ...commonTextFieldStyles, mb: 2 }}
                     />
                     
-                    <Box sx={{ textAlign: 'center' }}>
+                    <Box sx={{ textAlign: 'center', mt: 'auto' }}>
                       {item.imagePreview || item.image ? (
                         <Box
                           component="img"
-                          src={item.imagePreview || item.image}
-                          alt={item.title}
+                          src={item.imagePreview || (typeof item.image === 'string' ? item.image : '')} // Handle existing image URL
+                          alt={item.title || 'Portfolio image'}
                           sx={{
                             width: '100%',
                             height: 150,
                             objectFit: 'cover',
                             mb: 2,
-                            borderRadius: 1
+                            borderRadius: 1,
+                            border: '1px solid rgba(212,175,55,0.3)'
                           }}
                         />
                       ) : (
@@ -821,7 +820,8 @@ const WorkerProfileEditPage = () => {
                           sx={{
                             width: '100%',
                             height: 150,
-                            backgroundColor: 'rgba(0,0,0,0.1)',
+                            backgroundColor: 'rgba(255,255,255,0.05)',
+                            border: '1px dashed rgba(212,175,55,0.4)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -829,7 +829,7 @@ const WorkerProfileEditPage = () => {
                             borderRadius: 1
                           }}
                         >
-                          <Typography variant="body2" color="text.secondary">
+                          <Typography variant="body2" sx={{color: '#B0B0B0'}}>
                             No image selected
                           </Typography>
                         </Box>
@@ -847,6 +847,7 @@ const WorkerProfileEditPage = () => {
                           variant="outlined"
                           size="small"
                           startIcon={<CameraIcon />}
+                          sx={{ color: '#D4AF37', borderColor: 'rgba(212,175,55,0.5)', '&:hover': {borderColor: '#D4AF37', backgroundColor: 'rgba(212,175,55,0.1)'} }}
                         >
                           {item.imagePreview || item.image ? 'Change Image' : 'Add Image'}
                         </Button>
@@ -863,10 +864,14 @@ const WorkerProfileEditPage = () => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
           <Button
             variant="outlined"
-            color="error"
             startIcon={<CancelIcon />}
             onClick={handleCancel}
             size="large"
+            sx={{
+                color: '#B0B0B0',
+                borderColor: 'rgba(255,255,255,0.3)',
+                '&:hover': {borderColor: '#FFFFFF', backgroundColor: 'rgba(255,255,255,0.08)'}
+            }}
           >
             Cancel
           </Button>
@@ -874,10 +879,15 @@ const WorkerProfileEditPage = () => {
           <Button
             type="submit"
             variant="contained"
-            color="primary"
             startIcon={<SaveIcon />}
             size="large"
             disabled={loading}
+            sx={{
+                backgroundColor: '#D4AF37',
+                color: '#000000',
+                '&:hover': { backgroundColor: '#BF953F' },
+                '&.Mui-disabled': {backgroundColor: 'rgba(212,175,55,0.5)', color: 'rgba(0,0,0,0.5)'}
+            }}
           >
             {loading ? 'Saving...' : 'Save Profile'}
           </Button>

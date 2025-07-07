@@ -105,10 +105,20 @@ const changePassword = Joi.object({
     })
 });
 
+// Refresh token validation schema
+const refreshToken = Joi.object({
+  refreshToken: Joi.string().trim().required()
+    .messages({
+      'string.empty': 'Refresh token is required',
+      'any.required': 'Refresh token is required'
+    })
+});
+
 module.exports = {
   register,
   login,
   forgotPassword,
   resetPassword,
-  changePassword
+  changePassword,
+  refreshToken
 };

@@ -156,55 +156,95 @@ const EarningsTracker = () => {
     }
   };
 
+  const theme = useTheme(); // Ensure useTheme is imported
+
+  const summaryCardSx = {
+    backgroundColor: '#1F1F1F',
+    color: '#FFFFFF',
+    borderRadius: 2,
+    boxShadow: '0 4px 12px rgba(212,175,55,0.1)',
+    height: '100%'
+  };
+
+  const commonSelectStyles = {
+    color: '#FFFFFF',
+    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(212, 175, 55, 0.3)' },
+    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#D4AF37' },
+    '& .MuiSvgIcon-root': { color: '#D4AF37' },
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 1,
+    '.MuiSelect-select': {paddingTop: '8px', paddingBottom: '8px'}
+  };
+
+  const menuItemStyles = {
+    backgroundColor: '#1F1F1F',
+    color: '#FFFFFF',
+    '&:hover': { backgroundColor: 'rgba(212, 175, 55, 0.1)' },
+    '&.Mui-selected': {
+      backgroundColor: 'rgba(212, 175, 55, 0.2)',
+      '&:hover': { backgroundColor: 'rgba(212, 175, 55, 0.3)' }
+    }
+  };
+
+  const getStatusChipProps = (status) => {
+    const s = status.toLowerCase();
+    const commonStyles = { fontWeight: 'medium', color: '#000000' };
+    if (s === 'completed') return { sx: { ...commonStyles, backgroundColor: '#81C784'} }; // Light Green
+    if (s === 'pending') return { sx: { ...commonStyles, backgroundColor: '#FFB74D'} }; // Amber
+    return { sx: { backgroundColor: '#9E9E9E', color: '#FFFFFF'} }; // Grey for others
+  };
+
+
   const renderSummaryCards = () => (
-    <Grid container spacing={3}>
+    <Grid container spacing={2}> {/* Reduced spacing */}
       <Grid item xs={12} sm={6} md={3}>
-        <Card>
+        <Card sx={summaryCardSx}>
           <CardContent>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <AttachMoneyIcon color="primary" sx={{ mr: 1 }} />
-              <Typography variant="h6">Total Earnings</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+              <AttachMoneyIcon sx={{ color: '#D4AF37', mr: 1 }} />
+              <Typography variant="subtitle1" sx={{color: '#B0B0B0'}}>Total Earnings</Typography>
             </Box>
-            <Typography variant="h4">
+            <Typography variant="h4" sx={{color: '#D4AF37', fontWeight: 'bold'}}>
               ${summary.totalEarnings.toFixed(2)}
             </Typography>
           </CardContent>
         </Card>
       </Grid>
       <Grid item xs={12} sm={6} md={3}>
-        <Card>
+        <Card sx={summaryCardSx}>
           <CardContent>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <TrendingUpIcon color="primary" sx={{ mr: 1 }} />
-              <Typography variant="h6">Monthly Earnings</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+              <TrendingUpIcon sx={{ color: '#D4AF37', mr: 1 }} />
+              <Typography variant="subtitle1" sx={{color: '#B0B0B0'}}>Monthly Earnings</Typography>
             </Box>
-            <Typography variant="h4">
+            <Typography variant="h4" sx={{color: '#D4AF37', fontWeight: 'bold'}}>
               ${summary.monthlyEarnings.toFixed(2)}
             </Typography>
           </CardContent>
         </Card>
       </Grid>
       <Grid item xs={12} sm={6} md={3}>
-        <Card>
+        <Card sx={summaryCardSx}>
           <CardContent>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <PendingIcon color="warning" sx={{ mr: 1 }} />
-              <Typography variant="h6">Pending Earnings</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+              <AccessTimeIcon sx={{ color: '#FFB74D', mr: 1 }} /> {/* Changed PendingIcon to AccessTimeIcon and color */}
+              <Typography variant="subtitle1" sx={{color: '#B0B0B0'}}>Pending Earnings</Typography>
             </Box>
-            <Typography variant="h4">
+            <Typography variant="h4" sx={{color: '#FFB74D', fontWeight: 'bold'}}>
               ${summary.pendingEarnings.toFixed(2)}
             </Typography>
           </CardContent>
         </Card>
       </Grid>
       <Grid item xs={12} sm={6} md={3}>
-        <Card>
+        <Card sx={summaryCardSx}>
           <CardContent>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <CalendarIcon color="primary" sx={{ mr: 1 }} />
-              <Typography variant="h6">Completed Jobs</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+              <CheckCircleIcon sx={{ color: '#81C784', mr: 1 }} /> {/* Changed CalendarIcon and color */}
+              <Typography variant="subtitle1" sx={{color: '#B0B0B0'}}>Completed Jobs</Typography>
             </Box>
-            <Typography variant="h4">
+            <Typography variant="h4" sx={{color: '#81C784', fontWeight: 'bold'}}>
               {summary.completedJobs}
             </Typography>
           </CardContent>
@@ -214,35 +254,45 @@ const EarningsTracker = () => {
   );
 
   const renderEarningsChart = () => (
-    <Paper sx={{ p: 2, mb: 3 }}>
+    <Paper sx={{ ...summaryCardSx, p: {xs:1, sm:2}, mb: 3, mt:2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h6">Earnings Trend</Typography>
-        <FormControl size="small">
+        <Typography variant="h6" sx={{color: '#E0E0E0'}}>Earnings Trend</Typography>
+        <FormControl size="small" variant="outlined">
+          <InputLabel sx={{color: '#B0B0B0', '&.Mui-focused': {color: '#D4AF37'}}}>Period</InputLabel>
           <Select
             value={timeRange}
             onChange={handleTimeRangeChange}
-            sx={{ minWidth: 120 }}
+            label="Period"
+            sx={{ ...commonSelectStyles, minWidth: 120 }}
+            MenuProps={{ PaperProps: { sx: { backgroundColor: '#2C2C2C' }}}}
           >
-            <MenuItem value="week">Last Week</MenuItem>
-            <MenuItem value="month">Last Month</MenuItem>
-            <MenuItem value="quarter">Last Quarter</MenuItem>
-            <MenuItem value="year">Last Year</MenuItem>
+            <MenuItem value="week" sx={menuItemStyles}>Last Week</MenuItem>
+            <MenuItem value="month" sx={menuItemStyles}>Last Month</MenuItem>
+            <MenuItem value="quarter" sx={menuItemStyles}>Last Quarter</MenuItem>
+            <MenuItem value="year" sx={menuItemStyles}>Last Year</MenuItem>
           </Select>
         </FormControl>
       </Box>
       <Box sx={{ height: 300 }}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <ChartTooltip />
-            <Legend />
+          <LineChart data={chartData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(212,175,55,0.2)" />
+            <XAxis dataKey="date" tick={{ fill: '#B0B0B0' }} stroke="rgba(212,175,55,0.3)" />
+            <YAxis tick={{ fill: '#B0B0B0' }} stroke="rgba(212,175,55,0.3)" />
+            <ChartTooltip
+                contentStyle={{backgroundColor: '#2C2C2C', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '4px'}}
+                labelStyle={{color: '#D4AF37', fontWeight:'bold'}}
+                itemStyle={{color: '#E0E0E0'}}
+            />
+            <Legend wrapperStyle={{color: '#B0B0B0'}}/>
             <Line
               type="monotone"
               dataKey="earnings"
-              stroke="#1976d2"
-              name="Earnings"
+              stroke="#D4AF37" // Gold line
+              strokeWidth={2}
+              dot={{ r: 4, fill: '#D4AF37' }}
+              activeDot={{ r: 6, stroke: '#FFFFFF', fill: '#D4AF37' }}
+              name="Earnings ($)"
             />
           </LineChart>
         </ResponsiveContainer>
@@ -251,25 +301,31 @@ const EarningsTracker = () => {
   );
 
   const renderEarningsTable = () => (
-    <Paper sx={{ p: 2 }}>
+    <Paper sx={{ ...summaryCardSx, p: {xs:1, sm:2} }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h6">Earnings History</Typography>
+        <Typography variant="h6" sx={{color: '#E0E0E0'}}>Earnings History</Typography>
         <Button
           startIcon={<DownloadIcon />}
           onClick={() => {/* Implement export functionality */}}
+          sx={{color: '#D4AF37', borderColor: 'rgba(212,175,55,0.5)', '&:hover': {backgroundColor: 'rgba(212,175,55,0.1)', borderColor: '#D4AF37'}}}
+          variant="outlined"
         >
           Export
         </Button>
       </Box>
       <TableContainer>
-        <Table>
+        <Table sx={{
+            '& .MuiTableCell-head': { color: '#D4AF37', fontWeight: 'bold', borderBottom: '1px solid rgba(212,175,55,0.3)' },
+            '& .MuiTableCell-body': { color: '#E0E0E0', borderBottom: '1px solid rgba(212,175,55,0.2)'},
+            '& .MuiTableRow-root:hover': {backgroundColor: 'rgba(212,175,55,0.05)'}
+        }}>
           <TableHead>
             <TableRow>
               <TableCell>Date</TableCell>
               <TableCell>Job Title</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell align="right">Amount</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -279,29 +335,31 @@ const EarningsTracker = () => {
                 <TableRow key={earning.id}>
                   <TableCell>{format(new Date(earning.date), 'MMM dd, yyyy')}</TableCell>
                   <TableCell>{earning.jobTitle}</TableCell>
-                  <TableCell>${earning.amount.toFixed(2)}</TableCell>
-                  <TableCell>
+                  <TableCell align="right">${earning.amount.toFixed(2)}</TableCell>
+                  <TableCell align="center">
                     <Chip
-                      label={earning.status}
-                      color={earning.status === 'completed' ? 'success' : 'warning'}
+                      label={earning.status.charAt(0).toUpperCase() + earning.status.slice(1)}
                       size="small"
+                      {...getStatusChipProps(earning.status)}
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
                     <Tooltip title="View Details">
                       <IconButton
                         size="small"
                         onClick={() => handleDialogOpen(earning)}
+                        sx={{color: '#D4AF37'}}
                       >
-                        <ReceiptIcon />
+                        <ReceiptIcon fontSize="small"/>
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Download Receipt">
                       <IconButton
                         size="small"
                         onClick={() => handleDownloadReceipt(earning.id)}
+                        sx={{color: '#D4AF37'}}
                       >
-                        <DownloadIcon />
+                        <DownloadIcon fontSize="small"/>
                       </IconButton>
                     </Tooltip>
                   </TableCell>
@@ -318,34 +376,41 @@ const EarningsTracker = () => {
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={handleRowsPerPageChange}
         rowsPerPageOptions={[5, 10, 25]}
+        sx={{
+            color: '#B0B0B0',
+            '& .MuiSelect-icon': { color: '#D4AF37'},
+            '& .MuiButtonBase-root': {color: '#D4AF37', '&.Mui-disabled': {color: 'rgba(212,175,55,0.3)'}}
+        }}
       />
     </Paper>
   );
 
   return (
-    <Box>
+    <Box sx={{color: '#FFFFFF'}}> {/* Assuming parent page handles overall dark background */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h5">
+        <Typography variant="h5" sx={{color: '#D4AF37', fontWeight: 'bold'}}>
           Earnings Tracker
         </Typography>
         <Button
           startIcon={<RefreshIcon />}
           onClick={fetchEarnings}
           disabled={loading}
+          variant="outlined"
+          sx={{color: '#D4AF37', borderColor: 'rgba(212,175,55,0.5)', '&:hover': {backgroundColor: 'rgba(212,175,55,0.1)', borderColor: '#D4AF37'}, '&.Mui-disabled': {borderColor: 'rgba(212,175,55,0.2)', color: 'rgba(212,175,55,0.5)'} }}
         >
           Refresh
         </Button>
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert severity="error" sx={{ mb: 2, backgroundColor: 'rgba(229,115,115,0.1)', color: '#E57373', '& .MuiAlert-icon': {color: '#E57373'} }}>
           {error}
         </Alert>
       )}
 
       {loading ? (
         <Box display="flex" justifyContent="center" p={3}>
-          <CircularProgress />
+          <CircularProgress sx={{color: '#D4AF37'}}/>
         </Box>
       ) : (
         <>
@@ -360,63 +425,52 @@ const EarningsTracker = () => {
         onClose={handleDialogClose}
         maxWidth="sm"
         fullWidth
+        PaperProps={{sx: {backgroundColor: '#1F1F1F', color: '#FFFFFF', borderRadius: 2, border:'1px solid rgba(212,175,55,0.3)'}}}
       >
-        <DialogTitle>
-          Earning Details
+        <DialogTitle sx={{color: '#D4AF37', fontWeight: 'bold', borderBottom: '1px solid rgba(212,175,55,0.2)'}}>
+          Earning Details: {selectedEarning?.jobTitle}
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{pt: '20px !important'}}>
           {selectedEarning && (
-            <Box sx={{ pt: 2 }}>
+            <Box> {/* Removed pt:2 */}
               <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Date
-                  </Typography>
-                  <Typography variant="body1">
-                    {format(new Date(selectedEarning.date), 'MMM dd, yyyy')}
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="caption" sx={{color: '#B0B0B0'}}>Date:</Typography>
+                  <Typography variant="body1" sx={{color: '#E0E0E0'}}>
+                    {format(new Date(selectedEarning.date), 'MMMM dd, yyyy')}
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Amount
-                  </Typography>
-                  <Typography variant="body1">
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="caption" sx={{color: '#B0B0B0'}}>Amount:</Typography>
+                  <Typography variant="body1" sx={{color: '#D4AF37', fontWeight: 'bold'}}>
                     ${selectedEarning.amount.toFixed(2)}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="body2" color="text.secondary">
-                    Job Title
-                  </Typography>
-                  <Typography variant="body1">
+                  <Typography variant="caption" sx={{color: '#B0B0B0'}}>Job Title:</Typography>
+                  <Typography variant="body1" sx={{color: '#E0E0E0'}}>
                     {selectedEarning.jobTitle}
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Status
-                  </Typography>
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="caption" sx={{color: '#B0B0B0'}}>Status:</Typography>
                   <Chip
-                    label={selectedEarning.status}
-                    color={selectedEarning.status === 'completed' ? 'success' : 'warning'}
+                    label={selectedEarning.status.charAt(0).toUpperCase() + selectedEarning.status.slice(1)}
                     size="small"
-                    sx={{ mt: 0.5 }}
+                    {...getStatusChipProps(selectedEarning.status)}
+                    sx={{ ...getStatusChipProps(selectedEarning.status).sx, mt: 0.5 }}
                   />
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body2" color="text.secondary">
-                    Payment Method
-                  </Typography>
-                  <Typography variant="body1">
-                    {selectedEarning.paymentMethod}
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="caption" sx={{color: '#B0B0B0'}}>Payment Method:</Typography>
+                  <Typography variant="body1" sx={{color: '#E0E0E0'}}>
+                    {selectedEarning.paymentMethod || 'N/A'}
                   </Typography>
                 </Grid>
                 {selectedEarning.notes && (
                   <Grid item xs={12}>
-                    <Typography variant="body2" color="text.secondary">
-                      Notes
-                    </Typography>
-                    <Typography variant="body1">
+                    <Typography variant="caption" sx={{color: '#B0B0B0'}}>Notes:</Typography>
+                    <Typography variant="body2" sx={{color: '#E0E0E0', whiteSpace:'pre-wrap', p:1, border:'1px solid rgba(255,255,255,0.1)', borderRadius:1}}>
                       {selectedEarning.notes}
                     </Typography>
                   </Grid>
@@ -425,12 +479,17 @@ const EarningsTracker = () => {
             </Box>
           )}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose}>Close</Button>
+        <DialogActions sx={{borderTop: '1px solid rgba(212,175,55,0.2)', p:2}}>
+          <Button onClick={handleDialogClose} sx={{color: '#B0B0B0'}}>Close</Button>
           <Button
             variant="contained"
             startIcon={<DownloadIcon />}
             onClick={() => handleDownloadReceipt(selectedEarning?.id)}
+            sx={{
+                backgroundColor: '#D4AF37',
+                color: '#000000',
+                '&:hover': { backgroundColor: '#BF953F' }
+            }}
           >
             Download Receipt
           </Button>

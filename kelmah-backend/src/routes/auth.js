@@ -3,121 +3,75 @@
  */
 
 const express = require('express');
-const { body } = require('express-validator');
+// Remove express-validator body as Joi will handle it
 const authController = require('../controllers/auth');
 const { authenticate } = require('../middlewares/auth');
 const { createLimiter } = require('../middlewares/rateLimiter');
-const { validate } = require('../utils/validation');
+const validateWithJoi = require('../middlewares/validateJoi'); // Import new Joi middleware
+const authValidationSchemas = require('../validations/auth.validation'); // Import Joi schemas
 const passport = require('../config/passport');
 const { logger } = require('../utils/logger');
 
 const router = express.Router();
 
-// Registration route with validation
+// Registration route with Joi validation
 router.post(
   '/register',
   createLimiter('register'),
-  [
-    body('email').isEmail().withMessage('Please enter a valid email address'),
-    body('password')
-      .isLength({ min: 8 })
-      .withMessage('Password must be at least 8 characters long')
-      .matches(/\d/)
-      .withMessage('Password must contain at least one number')
-      .matches(/[A-Z]/)
-      .withMessage('Password must contain at least one uppercase letter'),
-    body('firstName').trim().notEmpty().withMessage('First name is required'),
-    body('lastName').trim().notEmpty().withMessage('Last name is required'),
-    body('role')
-      .optional()
-      .isIn(['worker', 'hirer'])
-      .withMessage('Role must be either worker or hirer'),
-  ],
-  validate,
+  validateWithJoi(authValidationSchemas.register),
   authController.register
 );
 
-// Login route with validation
+// Login route with Joi validation
 router.post(
   '/login',
   createLimiter('login'),
-  [
-    body('email').isEmail().withMessage('Please enter a valid email address'),
-    body('password').notEmpty().withMessage('Password is required'),
-  ],
-  validate,
+  validateWithJoi(authValidationSchemas.login),
   authController.login
 );
 
-// Email verification route
+// Email verification route - No body validation needed, token is in params
 router.get('/verify/:token', authController.verifyEmail);
 
-// Resend verification email
+// Resend verification email - Joi validation for email
 router.post(
   '/resend-verification',
   createLimiter('emailVerification'),
-  [
-    body('email').isEmail().withMessage('Please enter a valid email address'),
-  ],
-  validate,
+  validateWithJoi(authValidationSchemas.forgotPassword), // forgotPassword schema just checks for email
   authController.resendVerificationEmail
 );
 
-// Forgot password
+// Forgot password - Joi validation for email
 router.post(
   '/forgot-password',
   createLimiter('forgotPassword'),
-  [
-    body('email').isEmail().withMessage('Please enter a valid email address'),
-  ],
-  validate,
+  validateWithJoi(authValidationSchemas.forgotPassword),
   authController.forgotPassword
 );
 
-// Reset password
+// Reset password - Joi validation for new password
+// Token is in params, password in body
 router.post(
-  '/reset-password/:token',
-  [
-    body('password')
-      .isLength({ min: 8 })
-      .withMessage('Password must be at least 8 characters long')
-      .matches(/\d/)
-      .withMessage('Password must contain at least one number')
-      .matches(/[A-Z]/)
-      .withMessage('Password must contain at least one uppercase letter'),
-  ],
-  validate,
+  '/reset-password/:token', // Token will be handled by controller
+  validateWithJoi(authValidationSchemas.resetPassword), // Validates req.body for password fields
   authController.resetPassword
 );
 
-// Logout route
+// Logout route - No body validation needed
 router.post('/logout', authController.logout);
 
-// Refresh token
+// Refresh token - Joi validation for refreshToken
 router.post(
   '/refresh-token',
-  [
-    body('refreshToken').notEmpty().withMessage('Refresh token is required'),
-  ],
-  validate,
+  validateWithJoi(authValidationSchemas.refreshToken),
   authController.refreshToken
 );
 
-// Change password (protected route)
+// Change password (protected route) - Joi validation
 router.post(
   '/change-password',
   authenticate,
-  [
-    body('currentPassword').notEmpty().withMessage('Current password is required'),
-    body('newPassword')
-      .isLength({ min: 8 })
-      .withMessage('Password must be at least 8 characters long')
-      .matches(/\d/)
-      .withMessage('Password must contain at least one number')
-      .matches(/[A-Z]/)
-      .withMessage('Password must contain at least one uppercase letter'),
-  ],
-  validate,
+  validateWithJoi(authValidationSchemas.changePassword),
   authController.changePassword
 );
 

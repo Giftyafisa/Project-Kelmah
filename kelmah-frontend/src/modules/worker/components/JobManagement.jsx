@@ -145,86 +145,113 @@ const JobManagement = () => {
     // Implement review submission
   };
 
-  const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
+  const theme = useTheme(); // Make sure useTheme is imported and used if needed for direct theme access
+
+  const getStatusChipProps = (status) => {
+    const s = status.toLowerCase();
+    const commonStyles = { fontWeight: 'medium', color: '#000000' };
+    let specificSx = {};
+
+    switch (s) {
       case 'active':
-        return 'primary';
+        specificSx = { ...commonStyles, backgroundColor: '#D4AF37' }; // Gold
+        break;
       case 'completed':
-        return 'success';
-      case 'pending':
-        return 'warning';
+        specificSx = { ...commonStyles, backgroundColor: '#81C784' }; // Light Green
+        break;
+      case 'pending': // Assuming 'available' might map to a 'pending worker action' or similar
+      case 'available':
+        specificSx = { ...commonStyles, backgroundColor: '#FFB74D' }; // Orange/Amber for pending/available
+        break;
       case 'cancelled':
-        return 'error';
+        specificSx = { ...commonStyles, backgroundColor: '#E57373' }; // Light Red
+        break;
       default:
-        return 'default';
+        specificSx = { backgroundColor: '#9E9E9E', color: '#FFFFFF' }; // Grey
+        break;
     }
+    return { sx: specificSx };
+  };
+
+  const commonTextFieldStyles = {
+    '& label.Mui-focused': { color: '#D4AF37' },
+    '& .MuiInput-underline:after': { borderBottomColor: '#D4AF37' },
+    '& .MuiOutlinedInput-root': {
+      color: '#FFFFFF',
+      '& fieldset': { borderColor: 'rgba(212, 175, 55, 0.3)' },
+      '&:hover fieldset': { borderColor: '#D4AF37' },
+      '&.Mui-focused fieldset': { borderColor: '#D4AF37' },
+    },
+    '& .MuiInputLabel-root': { color: '#B0B0B0' },
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 1,
+    mt: 1 // Add margin top for better spacing in dialog
   };
 
   const renderJobCard = (job) => (
-    <Card key={job.id} sx={{ mb: 2 }}>
-      <CardContent>
+    <Card key={job.id} sx={{ mb: 2, backgroundColor: '#1F1F1F', color: '#FFFFFF', borderRadius: 2, boxShadow: '0 4px 12px rgba(212,175,55,0.1)' }}>
+      <CardContent sx={{pb: 1}}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
           <Box>
-            <Typography variant="h6">{job.title}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              {job.hirerName}
+            <Typography variant="h6" sx={{color: '#D4AF37', fontWeight: 'bold'}}>{job.title}</Typography>
+            <Typography variant="body2" sx={{color: '#B0B0B0'}}>
+              Hirer: {job.hirerName || 'N/A'}
             </Typography>
           </Box>
           <Chip
-            label={job.status}
-            color={getStatusColor(job.status)}
+            label={job.status.charAt(0).toUpperCase() + job.status.slice(1)}
             size="small"
+            {...getStatusChipProps(job.status)}
           />
         </Box>
-        <Divider sx={{ my: 2 }} />
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Typography variant="body2" color="text.secondary">
-              Budget
-            </Typography>
-            <Typography variant="body1">
-              ${job.budget}
+        <Divider sx={{ my: 2, borderColor: 'rgba(212,175,55,0.2)' }} />
+        <Grid container spacing={1}> {/* Reduced spacing for denser info */}
+          <Grid item xs={12} sm={6}>
+            <Typography variant="caption" sx={{color: '#B0B0B0'}}>Budget:</Typography>
+            <Typography variant="body1" sx={{color: '#E0E0E0', fontWeight:'medium'}}>
+              ${job.budget || 'N/A'}
             </Typography>
           </Grid>
-          <Grid item xs={6}>
-            <Typography variant="body2" color="text.secondary">
-              Deadline
-            </Typography>
-            <Typography variant="body1">
-              {format(new Date(job.deadline), 'MMM dd, yyyy')}
+          <Grid item xs={12} sm={6}>
+            <Typography variant="caption" sx={{color: '#B0B0B0'}}>Deadline:</Typography>
+            <Typography variant="body1" sx={{color: '#E0E0E0', fontWeight:'medium'}}>
+              {job.deadline ? format(new Date(job.deadline), 'MMM dd, yyyy') : 'N/A'}
             </Typography>
           </Grid>
-          <Grid item xs={12}>
-            <Typography variant="body2" color="text.secondary">
-              Description
-            </Typography>
-            <Typography variant="body1">
-              {job.description}
+          <Grid item xs={12} sx={{mt:1}}>
+            <Typography variant="caption" sx={{color: '#B0B0B0'}}>Description:</Typography>
+            <Typography variant="body2" sx={{color: '#E0E0E0', maxHeight: 60, overflow: 'hidden', textOverflow: 'ellipsis'}}>
+              {job.description || 'No description provided.'}
             </Typography>
           </Grid>
         </Grid>
       </CardContent>
-      <Divider />
-      <CardActions>
-        <Button
-          size="small"
-          startIcon={<MessageIcon />}
-          onClick={() => handleDialogOpen('message')}
-        >
-          Message
-        </Button>
-        {job.status === 'active' && (
-          <Button
-            size="small"
-            startIcon={<AssessmentIcon />}
-            onClick={() => handleDialogOpen('milestone')}
-          >
-            Submit Milestone
-          </Button>
-        )}
+      <Divider sx={{ borderColor: 'rgba(212,175,55,0.2)' }}/>
+      <CardActions sx={{ justifyContent: 'space-between', p:1.5 }}> {/* Adjusted padding and justification */}
+        <Box>
+            <Button
+              size="small"
+              startIcon={<MessageIcon />}
+              onClick={() => handleDialogOpen('message')}
+              sx={{color: '#D4AF37', '&:hover': {backgroundColor: 'rgba(212,175,55,0.1)'}}}
+            >
+              Message Hirer
+            </Button>
+            {job.status === 'active' && (
+              <Button
+                size="small"
+                startIcon={<AssessmentIcon />}
+                onClick={() => handleDialogOpen('milestone')}
+                sx={{color: '#D4AF37', ml:1, '&:hover': {backgroundColor: 'rgba(212,175,55,0.1)'}}}
+              >
+                Submit Milestone
+              </Button>
+            )}
+        </Box>
         <IconButton
           size="small"
           onClick={(e) => handleMenuOpen(e, job)}
+          sx={{color: '#D4AF37'}}
         >
           <MoreVertIcon />
         </IconButton>
@@ -233,18 +260,28 @@ const JobManagement = () => {
   );
 
   return (
-    <Box>
-      <Typography variant="h5" gutterBottom>
-        Job Management
+    <Box sx={{color: '#FFFFFF'}}> {/* Assuming parent page sets dark background */}
+      <Typography variant="h5" gutterBottom sx={{color: '#D4AF37', fontWeight:'bold', mb:2}}>
+        My Jobs
       </Typography>
 
-      <Paper sx={{ mb: 3 }}>
+      <Paper sx={{ mb: 3, backgroundColor: '#1F1F1F', borderRadius: 2, boxShadow: '0 4px 12px rgba(212,175,55,0.1)' }}>
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
           variant="scrollable"
           scrollButtons="auto"
-          sx={{ borderBottom: 1, borderColor: 'divider' }}
+          sx={{
+            borderBottom: 1,
+            borderColor: 'rgba(212,175,55,0.2)',
+            '& .MuiTabs-indicator': { backgroundColor: '#D4AF37' },
+            '& .MuiTab-root': {
+              color: '#B0B0B0',
+              '&.Mui-selected': { color: '#D4AF37', fontWeight: 'bold' },
+              '& .MuiSvgIcon-root': { mr: 1 }
+            },
+            '& .MuiTabs-scrollButtons': { color: '#D4AF37' }
+          }}
         >
           <Tab
             icon={<WorkIcon />}
@@ -256,28 +293,29 @@ const JobManagement = () => {
             label="Completed"
             iconPosition="start"
           />
-          <Tab
+          <Tab // Consider renaming "Available" if it means something specific like "Invitations"
             icon={<PendingIcon />}
-            label="Available"
+            label="Invitations" // Tentatively renaming for clarity
             iconPosition="start"
           />
         </Tabs>
       </Paper>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert severity="error" sx={{ mb: 2, backgroundColor: 'rgba(229,115,115,0.1)', color: '#E57373', '& .MuiAlert-icon': {color: '#E57373'} }}>
           {error}
         </Alert>
       )}
 
       {loading ? (
         <Box display="flex" justifyContent="center" p={3}>
-          <CircularProgress />
+          <CircularProgress sx={{color: '#D4AF37'}}/>
         </Box>
       ) : jobs.length === 0 ? (
-        <Paper sx={{ p: 3, textAlign: 'center' }}>
-          <Typography color="text.secondary">
-            No jobs found
+        <Paper sx={{ p: 3, textAlign: 'center', backgroundColor: '#1F1F1F', borderRadius: 2 }}>
+          <WorkOutlineIcon sx={{ fontSize: 60, color: '#D4AF37', mb: 2 }} />
+          <Typography sx={{color: '#B0B0B0'}}>
+            No jobs found in this category.
           </Typography>
         </Paper>
       ) : (
@@ -290,18 +328,20 @@ const JobManagement = () => {
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
+        PaperProps={{sx: {backgroundColor: '#2C2C2C', color: '#FFFFFF', border: '1px solid rgba(212,175,55,0.3)'}}}
       >
-        <MenuItem onClick={() => handleDialogOpen('message')}>
-          <MessageIcon sx={{ mr: 1 }} /> Send Message
+        <MenuItem onClick={() => handleDialogOpen('message')} sx={{ '&:hover': {backgroundColor: 'rgba(212,175,55,0.1)'} }}>
+          <MessageIcon sx={{ mr: 1, color: '#D4AF37' }} /> Send Message
         </MenuItem>
         {selectedJob?.status === 'active' && (
-          <MenuItem onClick={() => handleDialogOpen('milestone')}>
-            <AssessmentIcon sx={{ mr: 1 }} /> Submit Milestone
+          <MenuItem onClick={() => handleDialogOpen('milestone')} sx={{ '&:hover': {backgroundColor: 'rgba(212,175,55,0.1)'} }}>
+            <AssessmentIcon sx={{ mr: 1, color: '#D4AF37' }} /> Submit Milestone
           </MenuItem>
         )}
         {selectedJob?.status === 'completed' && (
-          <MenuItem onClick={() => handleDialogOpen('review')}>
-            <ReceiptIcon sx={{ mr: 1 }} /> Submit Review
+          // Assuming review is by hirer, so this might be "View Review" or not present for worker
+          <MenuItem onClick={() => handleDialogOpen('review')} sx={{ '&:hover': {backgroundColor: 'rgba(212,175,55,0.1)'} }}>
+            <ReceiptIcon sx={{ mr: 1, color: '#D4AF37' }} /> View Details/Review
           </MenuItem>
         )}
       </Menu>
@@ -311,58 +351,62 @@ const JobManagement = () => {
         onClose={handleDialogClose}
         maxWidth="sm"
         fullWidth
+        PaperProps={{sx: {backgroundColor: '#1F1F1F', color: '#FFFFFF', borderRadius: 2, border:'1px solid rgba(212,175,55,0.3)'}}}
       >
-        <DialogTitle>
-          {dialogType === 'message' && 'Send Message'}
-          {dialogType === 'milestone' && 'Submit Milestone'}
-          {dialogType === 'review' && 'Submit Review'}
+        <DialogTitle sx={{color: '#D4AF37', fontWeight: 'bold', borderBottom: '1px solid rgba(212,175,55,0.2)'}}>
+          {dialogType === 'message' && `Message Hirer for "${selectedJob?.title}"`}
+          {dialogType === 'milestone' && `Submit Milestone for "${selectedJob?.title}"`}
+          {dialogType === 'review' && `Details for "${selectedJob?.title}"`}
         </DialogTitle>
-        <DialogContent>
-          <Box sx={{ pt: 2 }}>
+        <DialogContent sx={{pt: '20px !important'}}>
+          <Box> {/* Removed pt:2, relying on DialogContent's default or adjusted padding */}
             {dialogType === 'message' && (
               <TextField
                 fullWidth
-                label="Message"
+                label="Your Message"
                 multiline
                 rows={4}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                margin="normal"
+                sx={commonTextFieldStyles}
+                autoFocus
               />
             )}
             {dialogType === 'milestone' && (
               <TextField
                 fullWidth
-                label="Milestone Description"
+                label="Milestone Description / Update"
                 multiline
                 rows={4}
                 value={formData.milestone}
                 onChange={(e) => setFormData({ ...formData, milestone: e.target.value })}
-                margin="normal"
+                sx={commonTextFieldStyles}
+                autoFocus
               />
             )}
             {dialogType === 'review' && (
-              <TextField
-                fullWidth
-                label="Review"
-                multiline
-                rows={4}
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                margin="normal"
-              />
+              // This section might display job details or review if available
+              <Typography sx={{color: '#E0E0E0'}}>Details about the completed job or review would be displayed here.</Typography>
             )}
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose}>Cancel</Button>
-          <Button
-            onClick={handleSubmit}
-            variant="contained"
-            disabled={!formData.message && !formData.milestone}
-          >
-            Submit
-          </Button>
+        <DialogActions sx={{borderTop: '1px solid rgba(212,175,55,0.2)', p:2}}>
+          <Button onClick={handleDialogClose} sx={{color: '#B0B0B0'}}>Cancel</Button>
+          {dialogType !== 'review' && ( // Only show submit for message/milestone
+            <Button
+              onClick={handleSubmit}
+              variant="contained"
+              disabled={dialogType === 'message' ? !formData.message.trim() : !formData.milestone.trim()}
+              sx={{
+                backgroundColor: '#D4AF37',
+                color: '#000000',
+                '&:hover': { backgroundColor: '#BF953F' },
+                '&.Mui-disabled': {backgroundColor: 'rgba(212,175,55,0.5)', color: 'rgba(0,0,0,0.5)'}
+              }}
+            >
+              Submit
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </Box>
